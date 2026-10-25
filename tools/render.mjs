@@ -10,7 +10,7 @@ const volDir = join(root, 'volumes');
 const siteDir = join(root, 'site');
 mkdirSync(siteDir, { recursive: true });
 
-const REPO = 'https://github.com/JaleWang-BUPT/ebodied-interview-chains';
+const REPO = 'https://github.com/JaleWang-BUPT/embodied-interview-chains';
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 function inline(s) {
