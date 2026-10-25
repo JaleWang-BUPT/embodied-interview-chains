@@ -1,0 +1,33 @@
+{
+  "target": "volumes/vol2_rl_motion.md",
+  "round": 3,
+  "date": "2026-10-26",
+  "reviewer": "独立审查代理 round3（fresh thread）",
+  "verdict": "PASS",
+  "round2_fixes_verified": [
+    "fix-1 C09 覆盖括注改准（round2 唯一 blocking）：VERIFIED——volumes/vol2_rl_motion.md C09 实录行现为：活帖〔牛客·秋招记录(9) 安克创新机器人控制算法一面〕(679003b65a1a404c9e1d755e7e1c4fd7) 仅括注（\"lqr、pid、mpc 三种控制方法的区别\"原题，2024-10），实时性/求解失败/qpOASES vs OSQP 三层改记'出自另一安克场次（2026-02）原帖已删，三问原文见存证 #1'，不再把已删帖内容记到可访问帖名下，与 round2 实测帖文（该帖仅 lqr/pid/mpc 区别 + stl 容器两问）完全一致；research/sources-vol2.md 可访问来源表安克行同步改为（\"lqr、pid、mpc 三种控制方法的区别\"原题；2024-10 发布、2026-10 编辑。MPC 实时性/求解失败/qpOASES vs OSQP 三层见已删安克帖存证 #1），失实括注消除；存证 #1 标题已含 C09（'策略梯度链唯一实录源 → C01；MPC 后三层 → C09'）且正文确含实时性/求解失败/qpOASES 与 OSQP 对比三问原文，归属链闭合；活帖本轮匿名 curl 复核仍 200。该表其余行括注逐行复读，与 round2 实测结论（云鲸/TPLink/Cgxiaoxin/知乎整理/Xbotics）一致，无新失实",
+    "fix-2 跨维字样移除（round2 warning-2）：VERIFIED——volumes/vol2_rl_motion.md 全文 grep '跨维' 0 命中（全仓仅 research/题单初稿.md 调研底稿仍含，属未发布调研文件、不在本卷范围）；C06 实录行的已删场次改指'北京人形场次（真机RL/gap/模仿学习三问）原帖已删'，该三问在存证 #4（08d1e542 帖）中有题目引用原文（'真机上用RL成功吗/sim2real gap怎么解决/为什么用模仿学习'），存证指向落空问题一并解决；C06×3 计数不变（TPLink + Cgxiaoxin + 知乎整理）",
+    "fix-3 追答题字数超标 3 处收敛（round2 warning-3）：VERIFIED——按 round2 同口径（剥离 $数学式$ 与 **、〔〕、空白后计可见字符；计数脚本先以 round2 已核实数字 C03 主答 33/追 62/105、C09 主答 218/追 84/99/112、C13 主答 154/追 87/74、全卷最大主答 223 校准，全部精确复现后采信）实测：C02 追问3=111（原 162）、C16 追问1=137（原 183）、C16 追问2=129（原 180），C11 全部追问答=82/106/96/87/120，均 ≤150；并做全量扫描：55 条追问答 + 16 条主答无任何一条超 150，最大主答 223 ≤ 350，全卷字数合规",
+    "fix-4 offerseed 注明（round2 warning-4）：VERIFIED——题源说明'当前可访问来源'行现为'offerseed #6——可访问但卷内未直接引用，保留作语境参考不计频'，如实披露，读者不会在实录行寻找落空",
+    "fix-5 卷头年份（round2 warning-5）：VERIFIED——卷头改为'牛客 / GitHub / 知乎一手面经与面试实录（2024-2026）'，覆盖 2024-10 发布的安克秋招9 帖（该帖实录行同时注明 2024-10），按 round2 建议方向修复",
+    "fix-6 无回归：VERIFIED——①8 个死链 id（81c435929b、8bb49b11b、85b76488、08d1e542、67877c8a、b3282429、f72297eb、93c9e5e7，另查 9 位变体 b32824297）在 volumes/vol2_rl_motion.md grep 计数均为 0；卷内牛客 URL 仅剩云鲸 b18ddc54（3 处）、安克秋招9 679003b6（1 处）、TPLink f79996d0（2 处），均为可访问帖；②16 徽章逐条比对与 round2 要求完全一致：C01/C07/C08/C10/C15=〔实录·原帖已删〕、C02=🔥×2、C06=🔥×3、其余 9 链（C03/C04/C05/C09/C11/C12/C13/C14/C16）=🔥×1，16/16（题源说明另 2 处〔实录·原帖已删〕为说明文字非徽章）；③实跑 node tools/render.mjs 无报错，输出 'rendered vol2_rl_motion.html: 16 链 / 71 节点'，site/vol2_rl_motion.html 含 16 个 details.chain；独立清点 markdown 55 条追问行 + 16 条主答 = 71 节点，与卷首'16 条链 · 71 个问答节点'一致；难度 L1×2（C02/C08）/L2×10/L3×4（C03/C07/C10/C11）与卷头一致；〔整理〕/〔推断〕行内标注（C06 追2〔整理〕、C06 追3〔推断〕、C07 追7/8、C08 追1/3、C11 追5）与题源说明枚举一致",
+    "fix-7 三处改动答案技术抽查（C02 追问3、C16 追问1/2、C11 追问3）：VERIFIED 零硬伤——C02 追问3'能否用总 loss 更新两个网络'：共享骨干时 PPO 原论文（Schulman 2017）即总损失 L=L^CLIP−c1·L^VF+c2·S 相加（c1=0.5），独立网络分开更新更干净，'相加要压 value 项系数、否则 MSE 量级盖过 policy 梯度'与原论文系数设定及通行实践一致；C16 追问1：model-free（PPO/SAC）不学环境转移/样本效率低/更稳，model-based（Dreamer 类）学转移模型可想象规划/样本效率高但模型误差累积，'仿真充当 model（域随机化）+ model-free 训练'的具身组合框架正确；C16 追问2：CQL/IQL 为 offline RL 代表算法、固定数据集不交互、分布外动作为核心难点，'BC 属监督拟合不算 RL'保留了 round2 修正后的语义，先 BC/offline 预训练再 online 微调路线正确；C11 追问3：机器人动力学对惯性参数线性 τ=Y(q,q̇,q̈)θ，傅里叶级数参数化激励轨迹并优化 Y 条件数（Swevers 经典方法），堆叠回归最小二乘解 θ̂=(YᵀY)⁻¹Yᵀτ，物理一致性筛选（质量为正、惯量正定）——标准参数辨识流程，表述准确"
+  ],
+  "verified_by_reviewer": [
+    "审查范围声明：fresh thread，仅按 round2 JSON 的 1 blocking + 5 warnings 验证修复，未做全量重审；被审文件仅读取未修改（除新增本审查记录）",
+    "字数口径校准：计数脚本先复算 round2 已核实数字（C03=33/62/105、C09=218/84/99/112、C13=154/87/74、最大主答 223），逐位复现后方采信本轮 C02/C11/C16 计数，排除口径漂移导致的假合格",
+    "活帖可用性抽核：安克秋招9（679003b6）匿名 curl 200，与修正后的 C09 引用关系（活帖仅计主问层、🔥×1）自洽",
+    "C09 归属链闭合核验：卷内实录行 → 存证 #1（标题含 C09、正文含三问原文）→ 原 URL（81c43592 已删）逐环可对账；sources 表安克行括注与卷内实录行不再矛盾",
+    "round2 五条 warnings 处置去向：warning-1（存证链接未 push 线上 404）为发布前置事项仍开放（见 warnings_applied）；warning-2/3/4/5 均已修复验证"
+  ],
+  "blocking_issues": [],
+  "warnings_applied": [
+    "本轮无新增 warning。继承 round2 warning-1 的发布前置事项仍未完成：volumes/vol2_rl_motion.md、research/sources-vol2.md、site/vol2_rl_motion.html 及三轮审查记录均为 git 未跟踪文件（HEAD=e08ca92 不含），卷内 11 处 GitHub 存证永久链接在 commit+push 前线上仍 404——属发布流程事项而非内容缺陷，不阻塞 PASS；发布时随 commit+push 后复测 200 即可关闭"
+  ],
+  "pending_human_verification": [
+    "8 个已删牛客帖的存在性仍仅由起草方调研记录自证（sources-vol2.md 题录为唯一凭据，Wayback 429 未取得第三方快照）——与 round1/2 相同局限，起草方已如实披露",
+    "安克秋招9 帖是否存在 App 端独有楼层（含 qpOASES 内容）——两轮均以匿名网页渲染判定为无，登录态复核可关闭此问题"
+  ],
+  "rounds": 3,
+  "outcome": "PASS：round2 的唯一 blocking（C09 覆盖括注失实）与 5 条 warnings（存证链接未 push、跨维字样与存证指向落空、3 处追答题超字数、offerseed 未注明、卷头年份）中 4 条内容性问题全部修复并经独立验证，存证链接一条转为发布前置事项；死链 8 id 零回归、16 徽章与 round2 要求逐条一致、渲染实跑 16 链/71 节点、三处改动答案技术表述零硬伤、字数全卷合规（计数口径经 round2 数字校准）。遗留事项均为流程性：文件 commit+push 后复测存证链接。局限说明：审查代理为 GLM 模型（fresh thread，与起草方同源模型不同上下文），牛客/知乎可访问性以匿名请求为准，技术核对基于模型内知识。"
+}
