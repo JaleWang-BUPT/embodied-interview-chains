@@ -1,0 +1,99 @@
+{
+  "target": "volumes/vol4_deployment_systems.md",
+  "round": 1,
+  "date": "2026-10-26",
+  "reviewer_model": "gpt-6-astra",
+  "reviewer_model_provenance": "委派任务指定的模型标签；审查代理未获底层部署模型标识，不能独立验证该标签。",
+  "independent_context": true,
+  "reviewer_role": "独立审查子代理，未参与正文或 renderer 起草、修订；未调用子代理；仅写此审查记录。",
+  "verdict": "FAIL",
+  "snapshot_sha256": {
+    "WORKFLOW.md": "719305de6f099ee188528b85195250ddd882022e1d6a3ea2a3736411394fb927",
+    "docs/format-spec.md": "e9b0d63ce3f4a800fad45c52f33ee68566bf79d715dfaccdc56713f5b4354fb2",
+    "volumes/vol4_deployment_systems.md": "a55dc546a444a8c35fff59ea0335a1f5e85409746a2b37d57f5edf8e8c8fc2d4",
+    "research/sources-vol4.md": "1474b54b94df6837017396932da1670aaff07b71f795b35dd30adbcb65ece1b4"
+  },
+  "blocking_issues": [
+    {
+      "id": "B01",
+      "category": "技术事实",
+      "location": "volumes/vol4_deployment_systems.md:286",
+      "finding": "C14 将 eye-in-hand 和 eye-to-hand 都纳入主答，却统一要求静态标定板。标准 eye-to-hand 采集需相机固定、标定板安装在运动末端；相机和板都相对世界静止时，不能仅靠机器人运动获得该手眼方程所需的成对视觉运动。",
+      "evidence_url": "https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html",
+      "evidence": "calibrateHandEye 文档明确区分末端相机配固定标定板，以及固定相机配末端标定板，并给出两套变换关系。",
+      "fix": "写清两种安装方案：eye-in-hand 的相机随末端运动、板固定；eye-to-hand 的相机固定、板随末端运动。随后说明记录与求解的变换方向。"
+    },
+    {
+      "id": "B02",
+      "category": "逐层推断标记",
+      "location": "volumes/vol4_deployment_systems.md:118",
+      "finding": "C06 追问1未标〔推断〕，但第126行已经说明绑核是题单工程展开；所引宇树索引可见资源竞争与多模型调度，不能证明独立的优先级/绑核追问。",
+      "evidence": "format-spec 规则7要求推理补全层在行内标记。正文自己的来源说明与追问标签不一致。",
+      "fix": "在追问1行内补〔推断〕，并将整链徽章相应标为实录/索引证据与推断混合。"
+    },
+    {
+      "id": "B03",
+      "category": "可追溯存证",
+      "locations": ["research/sources-vol4.md:7", "research/sources-vol4.md:8", "research/sources-vol4.md:9", "research/sources-vol4.md:13", "research/sources-vol4.md:15"],
+      "finding": "题源文件只保存主题概括与链编号，没有落盘足以还原逐层覆盖/顺序的原题短摘录，部分来源也缺作者和原帖日期。尤其宇树详情不可读且索引会变化，目前的“索引存证”实际只存了编者摘要，无法复验 C01–C06/C08 的具体层。",
+      "evidence": "WORKFLOW.md 要求调研当刻将题目原文引用、作者/日期、URL落盘。sources 第17行承认只保存主题范围，不是原文存档。当前能核验的公开记录足以补充短摘录，不必伪称完整正文归档。",
+      "fix": "为采用来源补作者、可核实发布日期（未知明确写未知）、抓取日期/方式、少量原题短摘录及 Cxx/主问/追问逐层映射。宇树只写搜索索引可见范围，保留 canonical 详情不可读状态；没有对应摘录支撑的层标推断，不把摘要扩写成原文。"
+    }
+  ],
+  "warnings": [
+    {
+      "id": "W01",
+      "location": "volumes/vol4_deployment_systems.md:258",
+      "finding": "C13 主答建议转交 workqueue，追问1虽用“通常”限定线程上下文，但未解释当前 Linux 的 WQ_BH 例外；读者可能误以为任意 workqueue 都可睡眠。",
+      "fix": "明确可睡眠的是线程型 workqueue；WQ_BH 在 softirq 上下文执行，不能睡眠。压缩其他文字以保持追问答案≤150字。",
+      "evidence_url": "https://docs.kernel.org/core-api/workqueue.html#flags"
+    },
+    {
+      "id": "W02",
+      "location": "volumes/vol4_deployment_systems.md:270",
+      "finding": "启动描述已强调依赖架构，整体正确；可用 ARM32 zImage 与 ARM64 Image.gz 的对照消除“内核入口自行解压”在常见 ARM64 板上被误用的风险。",
+      "fix": "可补一句 ARM64 Image.gz 通常需 bootloader 先解压，ARM32 zImage 等可自解压；不必扩展为完整启动教程。",
+      "evidence_url": "https://docs.kernel.org/arch/arm64/booting.html"
+    },
+    {
+      "id": "W03",
+      "location": "research/sources-vol4.md:13",
+      "finding": "检索还出现同作者的927490956981436416，题目高度相近并推广同一专栏。当前不增加频次是正确的，但营销相似性不是可以忽略的来源质量问题；本轮仅能核实公开文本，不能证明真实线下面试发生，也不能仅凭营销断言伪造。",
+      "fix": "保留有限证据声明与不计独立频次策略；后续若确认批量编造，按 WORKFLOW 剔除实录身份。",
+      "evidence_url": "https://api-cdn.nowcoder.com/discuss/927490956981436416?sourceSSR=post"
+    },
+    {
+      "id": "W04",
+      "location": "volumes/vol4_deployment_systems.md",
+      "finding": "易错项均具体有用，但多数是工程归纳；未提供能够证明候选人实际犯过该错的记录，尚未充分满足 format-spec 规则5的实测要求。",
+      "fix": "对无实测证据的易错项明确标注编者工程提醒/推断，勿让读者以为这些失误均来自原面试记录。"
+    }
+  ],
+  "checks": {
+    "structure": {"status": "PASS", "chains": 14, "qa_nodes": 61, "ids": "C01-C14 连续且唯一", "nodes_per_chain": [6, 3, 4, 3, 4, 3, 5, 7, 5, 5, 4, 2, 7, 3]},
+    "difficulty": {"status": "PASS", "L1": 1, "L2": 11, "L3": 2, "note": "统计与导语一致。C05 roofline诊断和C07 CUDA访存分析定L3可接受；其他链未发现明显低标。"},
+    "length": {"status": "PASS", "method": "逐答案Unicode码点计数，连空格、英文、标点及公式源代码一并计入；这一保守口径仍全部合格。", "max_main_answer": 202, "max_followup_answer": 144, "limits": {"main": 350, "followup": 150}},
+    "required_fields": {"status": "PASS", "note": "14链均有主答、易错、来源行；导语和使用建议齐全。"},
+    "frequency": {"status": "PASS", "note": "只有C09报🔥×1，确为一个原作者记录；拼接链不虚报整链频次，营销相似帖未叠加。"},
+    "quantization": {"status": "PASS", "note": "一般仿射量化公式、PTQ/QAT和FP8区别无明显错误；正文已限制具体后端能力，不把TensorRT的对称实现误说成通用非对称支持。", "evidence_url": "https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-schemes.html"},
+    "cuda": {"status": "PASS", "note": "global/local/shared区别、广播与bank conflict、合并访存及float4非必然提速正确；float4失败诊断标实录+推断。", "evidence_url": "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html"},
+    "ros": {"status": "PASS", "note": "ROS1 master不转发全部数据、ROS2 RMW抽象、QoS兼容与可靠不等于实时、shared_ptr引用计数不保护对象数据等表述合理。", "evidence_url": "https://design.ros2.org/articles/qos.html"},
+    "boot_and_interrupts": {"status": "PASS_WITH_WARNINGS", "note": "C13全链推断身份正确；启动分平台、DTB早期使用和hard IRQ禁睡眠正确，参见W01/W02。"},
+    "hand_eye": {"status": "FAIL", "issue": "B01"},
+    "per_layer_provenance": {"status": "FAIL", "issues": ["B02", "B03"], "note": "C09原作者顺序可核验；C10/C14按不同来源拼接已经说明；C13没有冒称智元实录。"}
+  },
+  "source_access_checks": [
+    {"url": "https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md", "status": "web open可读正文", "coverage": "安努量化评估与动态标定、湃特纳智能指针/异常安全/线程进程、地瓜ROS/DDS/接口/FP8均可核验"},
+    {"url": "https://www.nowcoder.com/users/159227329", "status": "直接open超时；search索引返回作者动态及日期", "coverage": "2025-02-26一面union、2025-02-27二面ROS/手眼/Socket；本审查不把搜索输出升级为当前匿名正文抓取"},
+    {"url": "https://www.nowcoder.com/feed/main/detail/202d73d6968b458389a738ba0d70e6e3", "status": "详情访问与索引状态不稳定；带urlSource=home-api的搜索结果含转引作者动态", "coverage": "不能作为第二个独立作者或独立场次计数"},
+    {"url": "https://www.nowcoder.com/discuss/738696660653551616", "status": "web open可读正文", "coverage": "逆袭的哈萨维，2025-04-07编辑；GPU内存、GEMM、bank conflict"},
+    {"url": "https://www.nowcoder.com/feed/main/detail/d8c2f7acc55745ea8caa24257d8da1c9", "status": "web open可读正文", "coverage": "寄了的秋招侠很靠谱，2023-09-01；原问为float4读写gmem为何更快、bank conflict粒度等。正文的可能不加速是推断扩展，已有标记"},
+    {"url": "https://www.nowcoder.com/discuss/938361742734655488", "status": "canonical open不可读；api-cdn同ID的search索引含面经文字，但open该地址只有4行导航", "coverage": "只能认可索引可见的题目，不能宣称已读当前详情全文；不是因为HTTP成功就可认定正文完整"},
+    {"url": "https://www.nowcoder.com/discuss/919881358401372160", "status": "非采用来源，本轮未将它用作独立证据或频次", "coverage": "不据正文的营销相似说明额外认定其可读或真实"}
+  ],
+  "scope_limits": [
+    "审查是公开文本/官方技术文档与本地格式规则校核，不保证面经自述事件的真实性。",
+    "未修改正文、来源文件或renderer，未commit/push。",
+    "修订后须复核新文件哈希；本轮FAIL不能自动变为PASS。"
+  ]
+}

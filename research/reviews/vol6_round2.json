@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-26",
+  "model": "gpt-6-astra",
+  "model_provenance": "主代理提供的spawn_agent配置标签；底层模型身份不能由审查代理独立验证。",
+  "independent_context": true,
+  "independent_context_detail": "原独立审查代理续做修订复检，未参与正文/代码起草或修改，未调用子代理。",
+  "scope_limits": [
+    "只写审查JSON，未修改正文、代码或renderer，未commit/push。",
+    "结论仅覆盖记录的内容哈希；旧轮次保留，不自动覆盖后续变更。"
+  ],
+  "target": "volumes/vol6_perception_slam.md",
+  "round": 2,
+  "verdict": "PASS",
+  "snapshot_sha256": {
+    "WORKFLOW.md": "719305de6f099ee188528b85195250ddd882022e1d6a3ea2a3736411394fb927",
+    "docs/format-spec.md": "73b7c94c3677cd103301a8090753f84e018b29016005d5299da45e613820e87c",
+    "volumes/vol6_perception_slam.md": "73e01d55ea44018b28b37c6fd576a6875d3168b18d10aae1712ea818a5d82fab",
+    "research/sources-vol6.md": "18801eb45f4fab91574d67d3783e521e58ef55e092b1f16fcd668b7f06c06ce6"
+  },
+  "blocking": [],
+  "warnings": [],
+  "resolved": [
+    {
+      "id": "round1-W01",
+      "note": "PnP小视差改为点近共线、空间/图像覆盖窄，消除三角化与单视图位姿估计混淆。"
+    },
+    {
+      "id": "round1-W02",
+      "note": "卷首将易错明确为编者工程归纳。"
+    },
+    {
+      "id": "round1-W03",
+      "note": "卷首明确C03节选、略去深度网络/蒸馏，不声称完整逐字转录。"
+    },
+    {
+      "id": "round1-W04",
+      "note": "浮点改为漂浮伪影。"
+    }
+  ],
+  "checks": {
+    "structure": {
+      "chains": 3,
+      "qa_nodes": 18,
+      "nodes_per_chain": [
+        5,
+        4,
+        9
+      ]
+    },
+    "difficulty": {
+      "L1": 0,
+      "L2": 2,
+      "L3": 1
+    },
+    "length": {
+      "status": "PASS",
+      "method": "Unicode码点，包含英文/标点/空格及公式源码",
+      "max_main": 139,
+      "max_followup": 126
+    },
+    "provenance": "PASS；C01推断、C02/C03作者原题节选与频次范围保持准确",
+    "technical_facts": "PASS；EPnP、畸变、tile近似、四维插值、NeRF/SLAM核心答案未改变，上轮官方依据继续适用",
+    "hand_eye": "本卷无手眼实现或方程，不将本结论用于卷四",
+    "new_spec": "已完整读取本轮更新后的docs/format-spec.md"
+  },
+  "evidence_urls": [
+    "https://www.nowcoder.com/feed/main/detail/057f10b935f545dbad249a1a62e987e4",
+    "https://docs.opencv.org/4.x/d5/d1f/calib3d_solvePnP.html",
+    "https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/main/cuda_rasterizer/forward.cu",
+    "https://www.matthewtancik.com/nerf"
+  ]
+}

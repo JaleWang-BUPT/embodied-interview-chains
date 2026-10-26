@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>卷六 · 三维感知与 SLAM · 追问链</title>
+<script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},chtml:{displayAlign:'left'}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mut:#656d76;--line:#e4e4e0;--acc:#0969da}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif}
+main{max-width:840px;margin:0 auto;padding:28px 18px 80px}
+h1{font-size:26px;line-height:1.4;margin:.4em 0 .2em}
+h2{font-size:20px;margin:2em 0 .6em;border-bottom:1px solid var(--line);padding-bottom:.3em}
+p{margin:.7em 0}
+a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
+code{background:#f0f1f2;border-radius:4px;padding:.1em .35em;font-size:.92em}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+.note{background:#f3f6fb;border-left:4px solid var(--acc);border-radius:6px;padding:10px 16px;margin:14px 0;font-size:15px;color:#33415c}
+details.chain{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 18px;margin:14px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+details.chain[open]{border-color:#d5d8dd}
+summary{cursor:pointer;font-weight:600;font-size:16.5px;padding:8px 0;list-style:none;position:relative;padding-right:64px;overflow-wrap:anywhere}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'展开';position:absolute;right:0;top:8px;font-size:12.5px;font-weight:400;color:var(--mut);border:1px solid var(--line);border-radius:20px;padding:1px 10px}
+details.chain[open] summary::after{content:'收起'}
+details.chain[open]>summary{border-bottom:1px dashed var(--line);margin-bottom:6px}
+.lv{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:0 7px;margin-right:4px;vertical-align:2px;color:#fff}
+.lv-l1{background:#1a7f37}.lv-l2{background:#0969da}.lv-l3{background:#cf222e}
+.freq{color:#9a6700;font-size:14px;margin-right:6px}
+.top{border-bottom:1px solid var(--line);margin-bottom:8px}
+.top nav{max-width:840px;margin:0 auto;padding:14px 18px;display:flex;gap:18px;align-items:baseline;flex-wrap:wrap}
+.top .brand{font-weight:700;color:var(--fg)}
+footer{border-top:1px solid var(--line);margin-top:60px}
+footer div{max-width:840px;margin:0 auto;padding:18px;color:var(--mut);font-size:13.5px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:14px 0}
+.card h2{border:none;margin:0 0 6px}
+.meta{color:var(--mut);font-size:14px}
+.review{font-size:14px;border-left:4px solid #1a7f37;background:#eff8f1;padding:10px 14px;margin:16px 0;overflow-wrap:anywhere}
+.review.pending,.review.stale,.review.legacy{border-color:#9a6700;background:#fff8df}
+.volume-nav{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;font-size:14px}
+p,li,.note{overflow-wrap:anywhere}
+@media(max-width:640px){main{padding:18px 12px 60px}summary{font-size:15.5px;padding-right:64px}summary::after{top:4px}}
+</style>
+</head>
+<body>
+<div class="top"><nav><span class="brand">具身智能面试追问链</span><a href="./index.html">📚 卷目录</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains" target="_blank" rel="noopener">GitHub</a></nav></div>
+<main>
+<div class="review pass">独立审查 PASS · 第2轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol6_round2.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./vol5_project_defense.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="./vol7_coding_appendix.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol6_perception_slam.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>卷六 · 三维感知与 SLAM · 追问链</h1>
+<div class="note">具身智能面试追问链题库 · 第六卷<br>本卷 <b>3 条链 · 18 个问答节点</b><br>难度分布：L1 <b>0</b> · L2 <b>2</b> · L3 <b>1</b></div>
+<p><b>使用方式</b>：本卷是精选小卷，沿用已经审定的三条链。标定题讲清假设和变换方向，重建题区分渲染质量与几何质量，项目题坚持说明自己方法的真实输入、输出和适用范围。</p>
+<p><b>证据边界</b>：易错项为编者工程归纳。C03按题单节选原帖的主要下钻路径，原帖还含深度网络/蒸馏问题，此处未收录，未声称完整逐字转录。</p>
+<p><b>本卷追问模式</b>：</p>
+<ol><li><b>算法名→前提→噪声→验证</b>：会调用 PnP 不代表知道坐标、畸变和外点如何处理。</li><li><b>论文结论→代码里的近似→并行实现</b>：高斯 tile 覆盖和四维插值会追到具体边界条件。</li><li><b>项目名词→数据流→“到底能做什么”</b>：不同领域的面试官也会通过输入输出检查自洽性。</li></ol>
+<hr>
+<details class="chain" id="c01">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔推断·题单原源待核〕</span> <b>C01</b> · 张氏标定依赖什么假设，不满足会怎样？</summary>
+<p><b>答</b>〔推断〕：经典方法用不同姿态的平面标定板，从平面到图像的单应关系求内参初值，再联合优化畸变和外参。需要已知且稳定的板上几何、多样的倾斜姿态、合理成像模型和可靠角点；板弯曲、只做正对平移、模糊、滚动快门或焦距变化会使参数有偏或病态。不能只看整体重投影误差，还应留出新视角并检查实际空间精度。</p>
+<p><b>追问 1</b>〔推断〕：PnP 中的 E 是什么意思？<br><b>答</b>：先澄清术语：普通 PnP 是 Perspective-n-Point，本身没有 E；若问 EPnP，E 是 Efficient。PnP 用 3D–2D 对应和内参估计位姿，本质矩阵 E 则来自两视图对极几何，不是 PnP 方法名里的缩写。</p>
+<p><b>追问 2</b>〔推断〕：对应点带噪声怎么办？<br><b>答</b>：先校核内参、畸变和点匹配；用 RANSAC 剔除外点，再对内点最小化重投影误差，可配鲁棒核/测量权重。点近共线、空间/图像覆盖窄等几何病态会造成不稳定，单纯增加同样分布的点不一定解决退化。</p>
+<p><b>追问 3</b>〔推断〕：RANSAC 阈值怎么选？<br><b>答</b>：按像素定位噪声和当前坐标单位选重投影阈值；去畸变后的归一化坐标不能直接套像素阈值。检查内点比例/空间分布，再在独立数据上验证；阈值过宽留下错匹配，过窄会丢掉有效点。</p>
+<p><b>追问 4</b>〔推断〕：畸变参数为什么有时是 5 个，有时更多？<br><b>答</b>：常见模型含径向 $k_1,k_2,k_3$ 与切向 $p_1,p_2$；扩展模型还可含有理径向、薄棱镜或传感器倾斜项，鱼眼又是不同模型。按镜头与数据可辨识性选；参数越多越可能过拟合，不是越多越准。</p>
+<p><b>易错</b>：把 EPnP 的 E 说成 Essential；不注明单位就把 RANSAC 阈值固定为某个数字。</p>
+<p><b>实录</b>：题单将此链归于跨维，但原 URL/作者未落盘，现全链作为推断练习，不认领公司实录；技术校核见 <a href="https://docs.opencv.org/4.x/d5/d1f/calib3d_solvePnP.html" target="_blank" rel="noopener">OpenCV PnP</a> 与 <a href="https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html" target="_blank" rel="noopener">标定 API</a>。</p>
+</details>
+<details class="chain" id="c02">
+<summary><span class="lv lv-l3">L3</span> <span class="freq">🔥×1</span> <b>C02</b> · 高斯重建的主要误差来自哪里？</summary>
+<p><b>答</b>：先区分新视角渲染误差和几何误差。常见来源包括相机位姿/内参不准、初始点云不完整、遮挡和低纹理、反光/透明等非理想成像、曝光变化，以及高斯密度/尺度和优化造成的漂浮伪影、过拟合。用重投影、留出视角、深度/外部几何和消融定位；PSNR 高不能独立证明表面几何准确。</p>
+<p><b>追问 1</b>：MVS 点云和 NeRF 采出的点云，哪个更好？<br><b>答</b>：没有脱离任务的统一赢家。MVS 在纹理和视角充分时几何约束直接，但反光、无纹理和遮挡易缺点；NeRF 可通过多视图优化提供稠密信号，但密度阈值/表面提取和位姿误差会引入伪几何。固定相机、区域与预算，比覆盖、几何误差及后续重建收益。</p>
+<p><b>追问 2</b>：高斯球占据哪些 tile，如何近似计算？<br><b>答</b>：投影均值和协方差到屏幕，求二维协方差最大特征值，用约三倍标准差得到保守圆半径；对包围矩形取整并裁到 tile 网格，枚举相交 tile。这个矩形通常多覆盖，真正像素贡献仍在 rasterizer 中计算；需处理近裁面、异常协方差和视口边界。</p>
+<p><b>追问 3</b>：四线性插值的 PyTorch/CUDA 实现思路？<br><b>答</b>：先确认是四维 multilinear：每轴取上下邻点和小数权重，共 $2^4=16$ 个角点，累加四轴权重乘积。GPU 每线程处理一个查询，按布局合并读取；训练还需对 grid/坐标求梯度并处理写冲突。先约定越界与最后一格语义，再和小尺寸参考实现对照。</p>
+<p><b>易错</b>：把渲染分数当几何精度；把四线性误听成二维双线性；只算 tile 范围不裁边界。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/feed/main/detail/057f10b935f545dbad249a1a62e987e4" target="_blank" rel="noopener">HenryZhou_ · 阿里系面经</a>（高德场次：主要误差→MVS/NeRF→tile→四线性插值，顺序一致）。实现校核：<a href="https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/main/cuda_rasterizer/forward.cu" target="_blank" rel="noopener">3DGS 官方 rasterizer</a>。</p>
+</details>
+<details class="chain" id="c03">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C03</b> · 软体机器人项目的体素编码是怎样实现的？</summary>
+<p><b>答</b>〔答题框架〕：先说明体素编码表达的是形状、材料还是场景特征：给出网格分辨率、坐标到索引映射、每格存储的量、空格处理与解码方式，再讲它怎样进入优化/仿真。原帖没有披露项目实现，所以这里不替候选人编造具体网络或参数；准备自己的代码、一个输入输出例子及内存/精度权衡。</p>
+<p><b>追问 1</b>：进化算法具体是什么？<br><b>答</b>：解释自己用的算法，不把所有进化方法都说成遗传算法。给出个体编码、适应度、种群更新/选择与终止条件，说明随机种子、评估成本和约束。若只调用现成库，就讲配置与为什么适合该搜索空间。</p>
+<p><b>追问 2</b>：整个项目输入和输出是什么？<br><b>答</b>：用一次完整运行作例子：哪些观测/目标是已知输入，哪些参数参与优化，输出是控制、形状、位姿、渲染图还是几何。把单位、坐标和离线/在线阶段说清；不要用“网络预测结果”作为没有内容的输出描述。</p>
+<p><b>追问 3</b>：NeRF 是预训练网络吗？<br><b>答</b>：经典 NeRF 通常对单场景优化坐标网络，并非默认拿通用预训练模型直接重建；也存在可泛化/预训练的扩展。先说明项目是哪种、哪些权重从哪来、在哪些数据上优化；NeRF 只是方法族名称。</p>
+<p><b>追问 4</b>：系统需要输入位姿吗？<br><b>答</b>：经典多视图 NeRF 通常使用相机位姿和内参；有联合位姿优化或无位姿扩展，但不能据此省略自己系统的输入。明确位姿来自标定、SfM、SLAM 还是传感器，并说明误差如何影响结果。</p>
+<p><b>追问 5</b>：SLAM 还能估计位姿？<br><b>答</b>：能，定位就是核心部分：利用连续观测估计相机/机器人轨迹并维护地图。单目系统通常还有尺度不确定性；动态物体、退化和回环失败会影响轨迹。若系统使用 SLAM 输出，应说明如何对齐尺度、坐标与时间。</p>
+<p><b>追问 6</b>：最终输出 RGB 还是 mesh？<br><b>答</b>：辐射场可沿射线渲染新视角 RGB/深度，但 mesh 需要额外的表面定义与提取流程。若项目只做新视角合成就明确说只渲染；若提 mesh，就给出密度/SDF 阈值、提取方法和几何验证，不能声称两者天然相同。</p>
+<p><b>追问 7</b>：单物体还是大场景？<br><b>答</b>：说明实际边界：拍摄范围、相机覆盖、背景、尺度、动态程度及训练/存储预算。单物体包围拍摄的成功不能直接证明大场景部署；扩展时需要处理空间划分、定位一致性、可见性和资源预算。</p>
+<p><b>追问 8</b>：只是理论，还是实际上可用？<br><b>答</b>：用已跑过的硬件、数据、耗时、成功/失败条件和验收结果回答。区分离线研究原型、可重复实验和持续运行产品；未完成真机验证就明确缺哪一项，不把论文图示当成部署交付。</p>
+<p><b>易错</b>：相邻回答互相矛盾：先说无需位姿，随后又说使用已知相机轨迹；把能渲染图片说成可直接输出可测量的 mesh。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/feed/main/detail/057f10b935f545dbad249a1a62e987e4" target="_blank" rel="noopener">同一 HenryZhou_ 原帖</a>（阿里智能信息场次：体素/进化→输入输出→NeRF 预训练→位姿→SLAM→RGB/mesh→范围→实际可用；答案仅给技术与叙述框架，未声称还原候选人原答）。</p>
+</details>
+<hr>
+<h2>题源说明</h2>
+<p>C02/C03 来自同一作者不同场次，各链内部计独立来源×1，不相加成同一主题的×2。C01 只剩题单，无原文外证，全链标推断。完整存证与技术来源见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol6.md" target="_blank" rel="noopener">卷六题源</a>。</p><nav class="volume-nav"><a href="./vol5_project_defense.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="./vol7_coding_appendix.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol6_perception_slam.md" target="_blank" rel="noopener">Markdown 源文</a></nav>
+</main>
+<footer><div>公开面经、整理与推断练习分档标注 · 题源限制与审查范围见各链和记录 · 公式排版使用 MathJax，折叠无需 JavaScript · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a> · 渲染于 2026-10-26</div></footer>
+</body>
+</html>

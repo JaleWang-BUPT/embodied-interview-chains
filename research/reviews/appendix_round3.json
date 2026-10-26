@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-26",
+  "model": "gpt-6-astra",
+  "model_provenance": "主代理提供的spawn_agent配置标签；底层模型身份不能由审查代理独立验证。",
+  "independent_context": true,
+  "independent_context_detail": "原独立审查代理续做修订复检，未参与正文/代码起草或修改，未调用子代理。",
+  "scope_limits": [
+    "只写审查JSON，未修改正文、代码或renderer，未commit/push。",
+    "结论仅覆盖记录的内容哈希；旧轮次保留，不自动覆盖后续变更。"
+  ],
+  "target": "volumes/vol7_coding_appendix.md; examples/*.py; tests/*.py",
+  "round": 3,
+  "verdict": "PASS",
+  "snapshot_sha256": {
+    "WORKFLOW.md": "719305de6f099ee188528b85195250ddd882022e1d6a3ea2a3736411394fb927",
+    "docs/format-spec.md": "73b7c94c3677cd103301a8090753f84e018b29016005d5299da45e613820e87c",
+    "volumes/vol7_coding_appendix.md": "999fecf77626c91db8128ddc004a2035eadb3e95992322d9d13be0bb9070a49b",
+    "research/sources-appendix.md": "034bf94b907f8326428e62d361abf9a331021354fca61ae3629977fa7808d774",
+    "research/sources-vol2.md": "cc25efe6685ad601a7c0047ec245454fc39ebf84b3f2d553a300fd2db476120e",
+    "examples/handwritten.py": "2bcd136c0f9af56541dab7f83394486a09d768cab2a0354810b08a2eac02123e",
+    "examples/learning.py": "83e04c5f78098e885716dd503185c90eee6424aaa0691b4e074db9317c424a17",
+    "tests/test_handwritten.py": "078fad24affd4b2557979175781842282fb8831f66c0f2e2bbc20e6bb6e2c869",
+    "tests/test_learning.py": "7a05237703c897a298819ce3d4564f50d9dc9476b0474ebb0a197c6c27be59df"
+  },
+  "blocking": [],
+  "warnings": [],
+  "review_type": "限定范围续审：source2台账证据降级及附录C06/C07同步；延续round2未变代码/测试结论",
+  "base_review": "research/reviews/appendix_round2.json",
+  "checks": {
+    "source2_change": {
+      "status": "PASS",
+      "note": "完整读取当前sources-vol2及相对旧版本变更。历史自记与第三方外证分离，删除/可读状态不再被无条件认定；§2/§6旧题摘录未修改。此续审只确认对附录的影响，不代替卷二整体审查。"
+    },
+    "c06": {
+      "status": "PASS",
+      "note": "因§6没有独立外证，附录徽章、主问及所有追问现全标推断；来源明确删除只为旧记录称述且本轮未独立确认。sources-appendix同步降级，无实录频次。"
+    },
+    "c07": {
+      "status": "PASS",
+      "note": "概念层最终改引本代理round2实际读到的云鲸sourceSSR正文；手写主问、clipping符号和detach检查仍明确推断。历史§2仅保留检索线索，不充当独立证据。"
+    },
+    "technical_content": {
+      "status": "UNCHANGED",
+      "note": "KF/PPO公式、解释及全部示例代码未变，证据身份修订未改变技术答案。"
+    },
+    "code_and_test_hashes": {
+      "status": "PASS",
+      "note": "examples两文件与tests两文件SHA-256完全等于round2；无须重复执行相同测试。"
+    },
+    "tests": {
+      "status": "PASS_CARRIED_FORWARD",
+      "source_round": 2,
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0,
+      "rerun_this_round": false,
+      "note": "明确继承round2独立运行结果；本轮只做来源依赖和哈希复核，未声称新跑25项。"
+    },
+    "structure_and_length": {
+      "status": "UNCHANGED",
+      "chains": 8,
+      "qa_nodes": 31,
+      "L1": 2,
+      "L2": 6,
+      "L3": 0,
+      "max_main": 239,
+      "max_followup": 135,
+      "note": "仅改证据标签和来源行，问答节点及答案正文未变。"
+    },
+    "snapshot": {
+      "status": "PASS",
+      "note": "绑定3个变化文件的新哈希，其他6个依赖哈希保持round2值。"
+    }
+  },
+  "source_access_checks": [
+    {
+      "url": "https://www.nowcoder.com/feed/main/detail/b18ddc5475694fc0bcedc07f9764d10d?sourceSSR=dynamic",
+      "status": "沿用同一独立审查上下文round2的直接正文核验，本轮未重复联网",
+      "coverage": "PPO原理、on/off-policy及重要性采样概念问题；未声称现场手写代码。"
+    }
+  ]
+}

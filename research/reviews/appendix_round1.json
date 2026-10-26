@@ -1,0 +1,239 @@
+{
+  "date": "2026-10-26",
+  "model": "gpt-6-astra",
+  "model_provenance": "主代理提供的spawn_agent配置标签；底层模型身份不能由审查代理独立验证。",
+  "independent_context": true,
+  "independent_context_detail": "原独立审查代理续做修订复检，未参与正文/代码起草或修改，未调用子代理。",
+  "scope_limits": [
+    "只写审查JSON，未修改正文、代码或renderer，未commit/push。",
+    "结论仅覆盖记录的内容哈希；旧轮次保留，不自动覆盖后续变更。"
+  ],
+  "target": "volumes/vol7_coding_appendix.md; examples/*.py; tests/*.py",
+  "round": 1,
+  "verdict": "FAIL",
+  "snapshot_sha256": {
+    "WORKFLOW.md": "719305de6f099ee188528b85195250ddd882022e1d6a3ea2a3736411394fb927",
+    "docs/format-spec.md": "73b7c94c3677cd103301a8090753f84e018b29016005d5299da45e613820e87c",
+    "volumes/vol7_coding_appendix.md": "52c235534981f6b6dd01010bbc6757f921ddeb13e341b2bdc4ad9bdc03ecaf30",
+    "research/sources-appendix.md": "7c05e84ab0a5e3623ddec5951e751118e5a123523d2158ccf92b2bb91bd958fb",
+    "examples/handwritten.py": "180256b7f43b834299931084fd367525c37cd042211d76ee0a6b29233272a3fa",
+    "examples/learning.py": "f3a85d7b67991d6b8b7360f3918c10a126e701477846ec9753b3ba5d2c12b999",
+    "tests/test_handwritten.py": "ab7a9b29a6bf5ce74d3e16700dd010eb9af6d7773e7537ce32349f26a107649a",
+    "tests/test_learning.py": "94218b4bb97d9484478a28b441e07b262c95966e6c736916cb4846d678af8ebc"
+  },
+  "blocking": [
+    {
+      "id": "B01",
+      "category": "数值稳定性",
+      "location": "examples/handwritten.py:18",
+      "finding": "stable_softmax接受所有有限非空输入和正有限temperature，但先做x-maximum可能负溢出，即使最终缩放后的差值可表示，也会产生错误概率。",
+      "reproduction": "stable_softmax([-1e308, 1e308], temperature=1e308)",
+      "observed": [
+        0,
+        1
+      ],
+      "expected": [
+        0.11920292202211755,
+        0.8807970779778823
+      ],
+      "fix": "避免差值先溢出：例如温度>=1时可先安全缩放再平移，温度<1时先平移。增加该反例，并保留小温度测试；不能仅因输出有限就视为正确。"
+    },
+    {
+      "id": "B02",
+      "category": "padding隔离",
+      "locations": [
+        "examples/learning.py:31",
+        "examples/learning.py:43",
+        "examples/learning.py:54"
+      ],
+      "finding": "mask施加得太晚。attention的无效token仍参与QKV投影，有限fp16 padding可溢出为inf，随后0*inf污染有效query。masked MSE先平方再置零，在padding含NaN时前向有限但梯度NaN。正文声称修改padding不影响有效损失/梯度，当前实现未完整保障。",
+      "reproductions": [
+        {
+          "case": "attention",
+          "input": "x=torch.tensor([[[1.,1.],[60000.,60000.]]],dtype=torch.float16); w_qkv=torch.ones(2,6,dtype=x.dtype); w_out=torch.eye(2,dtype=x.dtype); valid=torch.tensor([[True,False]]); heads=1",
+          "observed": "有效query为[nan,nan]；将padding设0则有效query为[2,2]。"
+        },
+        {
+          "case": "masked_velocity_mse",
+          "input": "prediction=[[[2.],[0.]]] requires_grad=True; target=[[[0.],[NaN]]]; valid=[[True,False]]",
+          "observed": "loss=4，但prediction.grad=[[[4.],[NaN]]]。"
+        }
+      ],
+      "fix": "QKV前将无效输入置零；MSE在减法/平方前屏蔽无效prediction与target（或明确拒绝非有限padding且文档收窄契约）。补fp16有限大padding和NaN-padding的前向/反向回归；有效位置的非有限值应报错或明确约定。"
+    },
+    {
+      "id": "B03",
+      "category": "逐层推断标记",
+      "locations": [
+        "volumes/vol7_coding_appendix.md:114",
+        "volumes/vol7_coding_appendix.md:133"
+      ],
+      "finding": "C06、C07来源行及sources明确手写任务是编者练习，但主答均没有行内〔推断〕。调研记录中的Q/R和PPO概念题并不能证明现场要求手写这段实现。",
+      "fix": "在C06/C07主答补〔推断·手写练习〕，保留有原题依据的概念追问身份。无需把整链技术内容全部降格。"
+    },
+    {
+      "id": "B04",
+      "category": "来源存证",
+      "location": "research/sources-appendix.md",
+      "finding": "C04仅存编者概括，没有存搜索索引实际原题短摘录；C07继续援引本轮仅返回导航外壳的云鲸详情，来源记录只有既往核验说明。WORKFLOW要求落盘可回溯原题，不能把索引摘要或旧可访问状态当当前全文。",
+      "evidence_urls": [
+        "https://www.nowcoder.com/discuss/919881358401372160?sourceSSR=dynamic",
+        "https://www.nowcoder.com/feed/main/detail/b18ddc5475694fc0bcedc07f9764d10d"
+      ],
+      "fix": "C04补本轮标题搜索所得索引短摘录、检索日期/查询/URL及作者日期未知声明；C07标明当前详情不可读，引用可定位的既有题目存证，或补可核实原文/降为推断。辉羲作者和完整日期本轮已能核实，可同时更新。"
+    }
+  ],
+  "warnings": [
+    {
+      "id": "W01",
+      "location": "examples/handwritten.py:98",
+      "finding": "newton_root没有检查tolerance有限性，tolerance=inf使任意有限残差立即被接受；非整数max_steps由range抛TypeError。正常参数下残差停止、小导数和不收敛分支正确。",
+      "fix": "校验有限正tolerance和正整数max_steps，最终一步也显式检查残差有限。"
+    },
+    {
+      "id": "W02",
+      "location": "examples/handwritten.py:154",
+      "finding": "kth_largest没有拒绝非整数k，k=1.5会静默按大小2的堆处理并返回2（输入[3,2,1]）。",
+      "fix": "明确正整数契约并校验，增加非整数/布尔值是否接受的测试。"
+    },
+    {
+      "id": "W03",
+      "locations": [
+        "volumes/vol7_coding_appendix.md:99",
+        "tests/test_handwritten.py",
+        "tests/test_learning.py"
+      ],
+      "finding": "正文声称旋转测试含已知90度例子，但现测试只有范数与逆操作；测试名含single也没有独立单节点例子。现测试能验证多项算法行为，但尚不能证明所有宣称的边界都覆盖。",
+      "fix": "补90度方向测试和单节点反转，或收窄覆盖描述；建议增加带padding的SDPA对照与全mask反向。"
+    },
+    {
+      "id": "W04",
+      "location": "research/sources-appendix.md:6",
+      "finding": "辉羲原帖本轮可直接读取，署名匿名牛油，发布日期2025-03-27 14:57；当前记录作者与年份未知已过时。",
+      "fix": "更新元数据和本轮正文可读状态；不把匿名牛油视为可区分所有匿名作者的稳定身份。"
+    },
+    {
+      "id": "W05",
+      "location": "examples/learning.py:124",
+      "finding": "PPO公式及四个符号/ratio分支正确；极大log-ratio仍可能exp溢出，这里没有输入有限性/数值范围检查。",
+      "fix": "示例说明log概率须有限且差值可安全指数化，训练侧监测异常ratio；不要用任意裁log-ratio来悄悄改变算法。"
+    }
+  ],
+  "checks": {
+    "structure": {
+      "status": "PASS",
+      "chains": 8,
+      "qa_nodes": 31,
+      "nodes_per_chain": [
+        4,
+        4,
+        3,
+        3,
+        5,
+        4,
+        4,
+        4
+      ],
+      "ids": "C01-C08连续"
+    },
+    "difficulty": {
+      "status": "PASS",
+      "L1": 2,
+      "L2": 6,
+      "L3": 0
+    },
+    "length": {
+      "status": "PASS",
+      "method": "Unicode码点，含空格/标点/英文和公式源代码",
+      "max_main": 239,
+      "max_followup": 135
+    },
+    "existing_tests": {
+      "status": "PASS",
+      "command": "/tmp/embodied-interview-tests.9UAVwC/bin/python -m unittest discover -s tests -v",
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "note": "独立复跑，0.327秒；缺NumPy警告不影响本次纯Torch/标准库测试。"
+    },
+    "attention": {
+      "status": "FAIL",
+      "issue": "B02",
+      "note": "正常有限输入时形状、key轴softmax、causal/key/query mask与零空行逻辑正确，已有无padding SDPA对照通过。"
+    },
+    "flow_matching": {
+      "status": "PASS_WITH_LIMIT",
+      "note": "直线噪声→数据路径、目标data-noise、有效标量平均及Euler方向正确；独立同seed更改有限padding后loss/参数梯度一致；非有限padding问题见B02。"
+    },
+    "ppo": {
+      "status": "PASS",
+      "note": "独立测A=+1/-1与ratio=0.5/1.5四组合，loss和梯度符合clipped surrogate；old logp及advantage detach正确。仅actor项身份明确。",
+      "evidence_url": "https://spinningup.openai.com/en/latest/algorithms/ppo.html"
+    },
+    "pid": {
+      "status": "PASS",
+      "note": "条件积分拒绝加重饱和、允许反向解饱和、ki=0不增长积分，正dt及输出限幅正确；不是稳定性证明。"
+    },
+    "newton": {
+      "status": "PASS_WITH_WARNING",
+      "note": "正常有限容差下用残差而非步长停止，小导数/非有限迭代/步数耗尽正确；非法容差见W01。"
+    },
+    "kalman": {
+      "status": "PASS",
+      "note": "F=H=1随机游走、Q/R方差、Joseph标量形式、增益方向及P/Q非负R正约束正确。"
+    },
+    "bfs": {
+      "status": "PASS",
+      "note": "入队标记parent可防环，缺邻接表节点视为无出边，start=goal可回单节点路径，无权有向图语义正确。"
+    },
+    "other_stdlib": {
+      "status": "PASS_WITH_LIMIT",
+      "note": "valid互相关核不翻转、旋转方向、链表反转及整数k的堆算法正确；softmax见B01，非整数k见W02。"
+    },
+    "provenance": {
+      "status": "FAIL",
+      "issues": [
+        "B03",
+        "B04"
+      ],
+      "note": "C01和C02基于已核验offerseed，C03原帖核验成功，C05/C08全链推断正确；C04只认可索引层证据。"
+    }
+  },
+  "source_access_checks": [
+    {
+      "url": "https://github.com/offerseed/interview-experience/issues/6",
+      "status": "沿用本审查上下文已直接读取的原文",
+      "coverage": "第一轮15 MHA，第二轮15 FM/Euler/mask/最小测试"
+    },
+    {
+      "url": "https://www.nowcoder.com/feed/main/detail/57033fe8898b4e85b97c48d8b2dcfb28",
+      "status": "本轮web直接可读正文",
+      "coverage": "三面softmax题，匿名牛油，2025-03-27"
+    },
+    {
+      "url": "https://www.nowcoder.com/discuss/919881358401372160",
+      "status": "canonical只返回导航；标题搜索返回sourceSSR=dynamic索引正文",
+      "coverage": "朴素二维卷积→优化→循环/cache。索引可核对问题但不等于当前全文归档。"
+    },
+    {
+      "url": "https://www.nowcoder.com/feed/main/detail/b18ddc5475694fc0bcedc07f9764d10d",
+      "status": "本轮只返回导航，标题及ID搜索未取得可靠原题全文",
+      "coverage": "不能声称本轮重验原文；历史存证须明确定位。"
+    },
+    {
+      "url": "https://docs.pytorch.org/docs/2.14/generated/torch.nn.functional.scaled_dot_product_attention.html",
+      "status": "官方文档可读",
+      "coverage": "True表示参与attention、缩放与mask语义"
+    },
+    {
+      "url": "https://spinningup.openai.com/en/latest/algorithms/ppo.html",
+      "status": "原始实现方官方说明可读",
+      "coverage": "正负advantage clipped surrogate"
+    },
+    {
+      "url": "https://arxiv.org/abs/2210.02747",
+      "status": "作者论文页可读",
+      "coverage": "FM固定条件路径回归向量场"
+    }
+  ]
+}

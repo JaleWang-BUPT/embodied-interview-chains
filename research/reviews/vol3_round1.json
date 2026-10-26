@@ -1,0 +1,188 @@
+{
+  "target": "volumes/vol3_data_teleop_debug.md",
+  "round": 1,
+  "date": "2026-10-26",
+  "reviewer_model": "GPT-6 / Codex（本会话身份；精确部署版本未向审查代理暴露）",
+  "independent_context": true,
+  "reviewer_role": "独立审查子代理；未参与正文起草或修订，仅写入本审查文件；未调用其他子代理",
+  "author_context": "委派方说明前轮作者为不同旧模型，commit 73eaac4；本轮审查对象是工作区当前文件而非仅该提交。作者精确模型身份未由审查代理另行验证。",
+  "verdict": "FAIL",
+  "snapshot_sha256": {
+    "WORKFLOW.md": "719305de6f099ee188528b85195250ddd882022e1d6a3ea2a3736411394fb927",
+    "docs/format-spec.md": "e9b0d63ce3f4a800fad45c52f33ee68566bf79d715dfaccdc56713f5b4354fb2",
+    "volumes/vol3_data_teleop_debug.md": "5b3da559d50d26c4648ff723afee2f2dc2f29e47e447c85ebef79a4722378e19",
+    "research/sources-vol3.md": "d32e850473fa46d5980414722c1230c4be82297351ccdfc6821437ebc51503b7"
+  },
+  "blocking_issues": [
+    {
+      "id": "B01",
+      "category": "来源分档",
+      "locations": ["volumes/vol3_data_teleop_debug.md:116", "volumes/vol3_data_teleop_debug.md:128", "volumes/vol3_data_teleop_debug.md:132", "volumes/vol3_data_teleop_debug.md:151", "volumes/vol3_data_teleop_debug.md:167", "volumes/vol3_data_teleop_debug.md:252", "research/sources-vol3.md:45"],
+      "finding": "C06–C09 没有早期原帖 URL、作者/日期或网页快照，却仍以“实录·调研存证”署名；题单自身的实录标签不能独立证明实录。取消火焰数字并不能修复来源身份。sources 第3行已承认这一证据限制，却在第45行继续给出实录分档。",
+      "evidence": "WORKFLOW.md 原创边界要求题源只认一手面经；format-spec 规则6/7要求真实来源和逐层推断标记。当前证据只是 research/题单初稿.md 的自存题目。",
+      "fix": "找回可核验一手原帖/调研当时的完整存档；否则整链标为题单待核/推断，逐层明确没有实录证据，不能用实录标签，也不能认领未经验证的公司归属；同步修改频次说明及 sources。"
+    },
+    {
+      "id": "B02",
+      "category": "逐层覆盖",
+      "locations": ["volumes/vol3_data_teleop_debug.md:78", "volumes/vol3_data_teleop_debug.md:82", "volumes/vol3_data_teleop_debug.md:85", "volumes/vol3_data_teleop_debug.md:88", "volumes/vol3_data_teleop_debug.md:93"],
+      "finding": "C04 的来源只提供遥操作/示教/VR 等数采方式优缺点，并未出现 UMI 专题或当前三层追问。主问改写为真机与UMI比较、选型、最小链路、训练数据验收，均未标记其扩展性质。论文可以支持答案技术事实，不能证明这些问题在面试里出现过。",
+      "evidence": "CSDN 原文1.1第11题讨论数采方式优缺点；全文检索未出现 UMI。三层当前追问没有逐层出处。https://blog.csdn.net/2303_77547168/article/details/161990436",
+      "fix": "保留原始整理主问或给UMI扩展主问标推断；追问1–3逐项标〔推断〕，实录行明确只覆盖原数采方式优缺点。"
+    },
+    {
+      "id": "B03",
+      "category": "技术事实",
+      "locations": ["volumes/vol3_data_teleop_debug.md:222"],
+      "finding": "C11 追问2将 RTC 描述为从“当前实测状态”续接，混淆了普通状态重规划与 RTC 的核心约束。RTC 在旧chunk仍执行时异步生成新chunk，固定推理延迟内必定执行的旧动作前缀，并对余下动作做 inpainting；仅按当前测量状态重规划并不能保证前缀相容。",
+      "evidence": "Physical Intelligence 官方论文及研究页明确说明冻结将被执行的前缀，再补全余下动作。https://www.pi.website/download/real_time_chunking.pdf ; https://www.pi.website/research/real_time_chunking",
+      "fix": "改为根据延迟固定/约束旧chunk中已承诺动作前缀，在新观测条件下补全后续动作；普通当前状态重规划另列，勿把二者定义合并。"
+    },
+    {
+      "id": "B04",
+      "category": "原题约束保真",
+      "locations": ["volumes/vol3_data_teleop_debug.md:69", "volumes/vol3_data_teleop_debug.md:70", "volumes/vol3_data_teleop_debug.md:74", "research/sources-vol3.md:29"],
+      "finding": "C03 追问3改成泛泛的低成本召回，删除本仓库来源记录中的“只评估1万张”预算约束，却仍称原题四连。当前答案可以对百万张逐一跑便宜模型，没有说明1万张限制究竟约束人工标注还是全部评分。",
+      "evidence": "sources 第29行保存了1万张评估预算，正文没有。此项为本地存证与正文的可直接验证矛盾；外部完整原帖本次未成功读到，不能把该存证升级为独立原文核验。",
+      "fix": "恢复预算约束，并先区分可全量做廉价预筛与仅允许评估1万张这两种假设；给出预算内抽样/主动学习和召回率估计，承认无法无条件保证找出所有正样本。"
+    },
+    {
+      "id": "B05",
+      "category": "链接内容可访问性",
+      "locations": ["research/sources-vol3.md:28", "research/sources-vol3.md:34", "research/sources-vol3.md:41", "volumes/vol3_data_teleop_debug.md:147"],
+      "finding": "C03、C10、C07补充来源的“匿名可读/均可访问/当前可访问”声明超过本次实际能验证的内容。C03与C07网页正文抽取只有4行站点导航，C10只有导航/热门内容框架；不能据此确认所有追问和原题顺序。",
+      "evidence": "2026-10-26 web open：2848ed4b...返回4行，e67c0fba...返回146行但无面经正文，927105...返回4行。额外 curl 对 C03 和 C07 得 HTTP 200，但只读到SEO摘要及应用外壳；C03摘要只覆盖有效数据开头，未覆盖balance/2000/百万图层；C07摘要不覆盖PC/LR/retention宣称。",
+      "fix": "取得可见正文或带作者/日期/截取时间的完整存档再声明逐层可读；暂时记为正文未验证、仅摘要可读或外壳，不擅自断言已删除。频次/实录层据可证明范围收缩。"
+    },
+    {
+      "id": "B06",
+      "category": "来源真实性与分类",
+      "locations": ["volumes/vol3_data_teleop_debug.md:194", "research/sources-vol3.md:37", "research/sources-vol3.md:41"],
+      "finding": "C09所称嵌入式追问复盘/补充实录实际是 Hello_Embed 的《嵌入式秋招被挂麻了，那是基础八股文没有掌握好》，内容为备考建议和专栏宣传，用典型追问、自测等方式举例，并未记录某次具体面试。可支持存在printf/丢包等泛化题目，不能当一手实录，也未证实缓存计算完整末层。",
+      "evidence": "可读正文第59行提及printf；第63–65行推广专栏；第72行起是“典型节奏”示例；第93–94行列UART、丢包、DMA、波特率问题。https://www.nowcoder.com/discuss/924292551824113664",
+      "fix": "将此文降为备考整理/技术背景且不认领实录；精确注明仅覆盖通用printf/丢包话题，缓存计算等无证据层标推断，或移除来源。"
+    },
+    {
+      "id": "B07",
+      "category": "逐层覆盖",
+      "locations": ["volumes/vol3_data_teleop_debug.md:25", "volumes/vol3_data_teleop_debug.md:36", "volumes/vol3_data_teleop_debug.md:218", "volumes/vol3_data_teleop_debug.md:229"],
+      "finding": "C01 追问1新增“坐标系具体怎么定”的题目侧面，来源行未映射到该层；C11 追问1将一般部署排障细化成确认推理延迟高后的优化，并未在所引题目中找到这一独立后续追问。两处应区分对已有问题的答题展开与新构造的追问节点。",
+      "evidence": "智元原文公开部分有本体自由度、采集方式和动作空间，但没有该坐标系问题；offerseed 第二轮11/12覆盖推理控制频率、chunk开始位置、chunk衔接归因；CSDN1.4覆盖卡顿和瓶颈，未给出当前逐层顺序。",
+      "fix": "若无法补充具体题源，为坐标系扩展及C11追问1加〔推断〕；来源行按主问/追问编号准确映射，勿以主题相近代替逐层证据。"
+    }
+  ],
+  "warnings": [
+    {
+      "id": "W01",
+      "location": "volumes/vol3_data_teleop_debug.md:238",
+      "finding": "C12把零base命令但odom变化直接判为定位问题不充分：机器人也可能受外力、惯性或低层残余目标驱动而真实运动。当前场景和两层追问已正确标推断，但诊断仍应是待证假设。",
+      "fix": "先用外部固定参考/轮速/IMU确认实际是否运动，再区分定位漂移与真实运动；冻结机器人定位反馈的A/B必须限定在安全离线/仿真或明确受控条件。"
+    },
+    {
+      "id": "W02",
+      "location": "volumes/vol3_data_teleop_debug.md:29",
+      "finding": "硬件触发与PTP作用不同，前者约束采样时刻，后者校准时钟；“硬件触发/PTP最优”容易让读者误认为两者均可直接解决频率相位及传输延迟。",
+      "fix": "分别说清同步采样与时钟映射；继续保留采样、到达时间及漂移估计。"
+    },
+    {
+      "id": "W03",
+      "location": "volumes/vol3_data_teleop_debug.md:61",
+      "finding": "C03把含目标作为有效数据必要条件，后文也先剔除无目标帧，和检测中有用的背景负样本/硬负样本存在冲突。",
+      "fix": "限定为本题正样本召回目标，或显式保留必要背景负样本与误检难例，避免通用性地把空帧判无效。"
+    },
+    {
+      "id": "W04",
+      "location": "volumes/vol3_data_teleop_debug.md:89",
+      "finding": "同一action安全回放是有用检查，但仅同action并不保证接触任务复现，需要重置初态、场景、控制模式等，且高质量数据也不必以开环逐动作复现作为绝对必要条件。",
+      "fix": "把回放定位为接口/时序验收，并约束初始状态与环境；用统计闭环成功率补充。"
+    },
+    {
+      "id": "W05",
+      "location": "volumes/vol3_data_teleop_debug.md:34",
+      "finding": "12条易错均存在且具体，但引用来源大多仅列问题，没有候选人答错记录；不能验证格式规范第5条所说面试官实测栽坑。",
+      "fix": "可核实的错误经历注明出处，其余明确标为工程易错/推断；若全仓库允许原创工程易错，应先统一规范口径而非暗示都有实录证据。"
+    },
+    {
+      "id": "W06",
+      "location": "research/sources-vol3.md:10",
+      "finding": "C01智元帖当前只公开前15题，其余60%付费；已引用的采集层确实在公开部分，但页面没有足够背景独立确认作者本人参加面试。标题、商业专栏及整齐题单本身不能证实一手性。",
+      "fix": "声明公开部分可核验和一手身份未额外验证，补作者、发布时间与截图；不要断言其为伪造，也不要把可访问等同一手身份已证实。"
+    },
+    {
+      "id": "W07",
+      "location": "volumes/vol3_data_teleop_debug.md:128",
+      "finding": "本地存证引用使用blob/main可变链接，未满足WORKFLOW经验条目所要求的永久链接语义；且本轮工作区变更尚未发布。",
+      "fix": "最终发布后使用包含真实提交SHA的链接，并确认远端文件内容与审查快照一致。不得预先编造提交SHA。"
+    }
+  ],
+  "checks": {
+    "required_reading": "已完整读取WORKFLOW.md、docs/format-spec.md、卷三正文、sources-vol3.md；因长输出截断对正文后半段另行完整补读。",
+    "structure": {
+      "status": "PASS",
+      "chains": 12,
+      "nodes": 48,
+      "node_counts_by_chain": {"C01":4,"C02":4,"C03":4,"C04":4,"C05":4,"C06":3,"C07":4,"C08":3,"C09":8,"C10":3,"C11":4,"C12":3},
+      "difficulty_counts": {"L1":1,"L2":9,"L3":2},
+      "details_summary_pairs": 12,
+      "pitfall_lines": 12,
+      "notes": "编号C01–C12连续；48节点包括C12带推断标注的主答。卷首统计正确。"
+    },
+    "length": {
+      "status": "PASS",
+      "method": "逐条计全部48个答案；去答标签、Markdown强调/代码/数学美元符号及空白，按Unicode字符计，英文逐字符计；数学式内部LaTeX命令保留，口径相对保守。",
+      "maximum_main_answer_chars": 207,
+      "maximum_followup_answer_chars": 140,
+      "main_limit": 350,
+      "followup_limit": 150
+    },
+    "technical": [
+      "C01/C02当前以决策时刻已到达观测构造在线输入，禁止未来可得信息泄漏；明确命令标签与执行结果，因果方向可接受，未发现旧版对齐错配问题继续存在。",
+      "UMI论文III-B明确区分观测对齐与执行时延匹配，并展示以相机曝光时刻插值已经可用的本体状态、跳过过期动作；因此不应泛化为所有插值均违规，当前正文只禁止未来才到达信息，边界基本正确。",
+      "C07关于SRAM物理保持与启动初始化不同、不能跨芯片泛化的解释正确；Nuvoton官方M031看门狗复位FAQ确认启动阶段会初始化RW/ZI区。",
+      "C09数值复算：115200/10=11520B/s；100字节线时8.6806ms；20ms积230.4B，再加64B得294.4B，512B是合理带裕量示例。",
+      "FreeRTOS官方文档确认仅FromISR API可从允许优先级的ISR调用，超过configMAX_SYSCALL_INTERRUPT_PRIORITY的高逻辑优先级不能调用；C09对此的边界提醒正确。",
+      "C11 RTC定义存在B03所述实质性错误。"
+    ],
+    "layer_coverage": {
+      "C01": "主问及自由度/数采主题、时间同步和30/100Hz层可在公开来源找到；坐标系新增部分须标推断。",
+      "C02": "PASS：offerseed第二轮2/3依次出现时间对齐+验证、目标指令与实测状态、能否互换，当前4节点顺序吻合。",
+      "C03": "主问可由SEO摘要部分支持；其余完整正文未验证，当前追问3与仓库存证预算约束不一致。",
+      "C04": "FAIL：UMI及3层扩展没有面经逐层证据。",
+      "C05": "PASS：CSDN1.1第16/17题覆盖主问与追问1；追问2/3已标推断。",
+      "C06": "FAIL：仅题单自存证。",
+      "C07": "FAIL：仅题单自存证；补充链接正文未验证。",
+      "C08": "FAIL：主问题源仅题单；扩展追问1/2已标推断。",
+      "C09": "FAIL：仅题单自存证；补充文为通用备考整理，不能证明实录。",
+      "C10": "部分未验证：追问2标推断正确；原帖完整正文未获取。",
+      "C11": "混合：offerseed第二轮11/12支持新chunk起点及衔接归因；CSDN支持主问卡顿主题；追问1应标推断，RTC答案需修。",
+      "C12": "PASS：GitHub原始文件湃特纳二面第1题只有人走动问题，未限定基座漂移；当前主问已恢复，答案场景与两层追问已标推断。"
+    },
+    "frequency": "C01×2、C02/C03/C10/C12×1与当前文字清单在算术上相符；但C03/C10完整原文未证实、C01一手身份未独立证实，因此只能确认内部数字一致，不能整体确认频次证据成立。C04/C05整理未冒增多个来源；C06–C09不显示火焰数字但实录分档仍不合格。",
+    "rendering": "本任务仅审查正文与来源，未修改/重渲染site文件，未以旧site版本代表当前正文。"
+  },
+  "sources_checked": [
+    {"url":"https://www.nowcoder.com/discuss/940358189898280960","status":"公开前15题可读；其后60%付费","coverage":"C01本体/自由度/数采/频率等主题"},
+    {"url":"https://blog.csdn.net/2303_77547168/article/details/161990436","status":"全文可读；作者明确按个人面经及系统八股来源汇总","coverage":"C01时间对齐，C04通用数采方式，C05两问，C11卡顿主题"},
+    {"url":"https://github.com/offerseed/interview-experience/issues/6","status":"GitHub连接器读取到完整issue正文；N0TPO3T于2026-09-29创建；现closed/not_planned","coverage":"C02四层；C11频率不一致、chunk起点、衔接归因。关闭状态不是伪造证据。"},
+    {"url":"https://www.nowcoder.com/feed/main/detail/2848ed4b83034fbaad17f0166c956d2b","status":"web正文抽取4行空壳；curl HTTP200仅SEO摘要及应用框架","coverage":"摘要部分覆盖主问有效数据，不足以核对后3层"},
+    {"url":"https://www.nowcoder.com/feed/main/detail/e67c0fbaa90f4a179b45cf4ac4625d68","status":"web返回站点框架和热门内容，无目标面经正文","coverage":"未确认"},
+    {"url":"https://www.nowcoder.com/discuss/927105116836986880","status":"web正文抽取4行空壳；curl HTTP200仅SEO摘要及应用框架","coverage":"未确认PC/LR/retention等题目"},
+    {"url":"https://www.nowcoder.com/discuss/924292551824113664","status":"正文可读，通用备考/专栏推广","coverage":"只有泛化printf、UART、丢包等主题，不是具体面试实录"},
+    {"url":"https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md","status":"GitHub连接器成功读取完整文件及75–100行；blob sha 412311b03b9a29c41370a02be757c0e31c1b4735","coverage":"湃特纳二面第1题：遥操作过程人走动这个问题怎么解决？"},
+    {"url":"https://arxiv.org/html/2402.10329v3","status":"UMI原始论文全文可读","coverage":"III-B观测/执行延迟匹配、相对动作及丢弃过期动作；附录A延迟校准"},
+    {"url":"https://arxiv.org/abs/2301.04317","status":"标题、作者、摘要可读","coverage":"确为Teleoperation of Humanoid Robots: A Survey；未把摘要当作C12具体诊断细节的充分证据"},
+    {"url":"https://www.pi.website/research/real_time_chunking","status":"官方研究页可检索读取","coverage":"冻结必定执行的动作前缀并inpaint余下序列"},
+    {"url":"https://www.pi.website/download/real_time_chunking.pdf","status":"官方论文可检索读取","coverage":"RTC算法定义"},
+    {"url":"https://www.freertos.org/Documentation/02-Kernel/03-Supported-devices/02-Customization","status":"FreeRTOS官方文档内容可检索读取","coverage":"ISR安全API及configMAX_SYSCALL_INTERRUPT_PRIORITY边界"},
+    {"url":"https://www.nuvoton.com/support/technical-support/faq/945f56cc-7d6b-11ea-8ba0-000d3a082cb4/","status":"Nuvoton官方FAQ可检索读取","coverage":"M031看门狗复位与C运行时RAM初始化；仅作为特定芯片例证"}
+  ],
+  "source_limitations": [
+    "本轮未使用用户登录态，不绕过付费墙；空壳不等于已删除，也不等于页面从未存在。",
+    "HTTP200只证明服务器返回成功，不能证明面经正文可访问。C03/C07已直接获得HTTP200但缺少目标完整内容的对照证据。",
+    "没有找到C06–C09早期原帖或独立网页快照；本仓库题单不能充当自证实录的外部证据。",
+    "GitHub作者自述原始记录、面经投稿可以核对公开文本及顺序，但本审查不能独立证明每场线下面试实际发生。",
+    "没有因为营销语气或题目风格直接认定内容伪造；明确能判定的只有来源文体、正文可读范围及逐层覆盖缺失。",
+    "审查快照会随主代理并行修订而过期；复审必须按新的文件哈希和行号重验，不得把本轮FAIL自动转换成PASS。"
+  ],
+  "outcome": "FAIL：结构、节点、字数与C02/C05/C12关键来源映射通过；来源分档、C04扩展追问、C03预算约束、C11 RTC事实、不可读来源声明等阻塞项修复后需独立复审。"
+}

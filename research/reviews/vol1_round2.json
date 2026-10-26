@@ -1,0 +1,54 @@
+{
+  "target": "volumes/vol1_vla_il.md",
+  "round": 2,
+  "date": "2026-10-26",
+  "reviewer_model": "Codex（当前独立审查会话；精确部署标识未向代理暴露）",
+  "independent_context": true,
+  "reviewer_role": "非作者；完整阅读当前卷一与规范、旧审查，未修改正文；本记录是修复前基线，不覆盖后续修订",
+  "verdict": "FAIL",
+  "scope": "技术硬伤、过强结论、题源分档/频次、历史WARN、结构与新口径长度；技术核验使用官方论文/代码，未完成所有旧面经URL的逐层外部重验",
+  "snapshot_sha256": {
+    "volumes/vol1_vla_il.md": "f13206941d2896333971a1b4970b649cd4a9bd91c395fb0735cf986b4a6623b3",
+    "WORKFLOW.md": "719305de6f099ee188528b85195250ddd882022e1d6a3ea2a3736411394fb927",
+    "docs/format-spec.md": "73b7c94c3677cd103301a8090753f84e018b29016005d5299da45e613820e87c"
+  },
+  "blocking_issues": [
+    {"id":"V1-B01","chains":["C01","C08","C12"],"lines":[22,142,212],"finding":"把模型推理频率、chunk内动作采样频率、底层伺服频率混为一谈；π0的50Hz不是每秒完整推理50次，3Hz推理也不意味着输出3Hz waypoint。","evidence":"π0论文附录D/Table I明确4090上完整推理73ms，50Hz场景每0.5s重新推理并执行25个动作。","sources":["https://www.pi.website/download/pi0.pdf"],"fix":"明确三种时钟，输出通常为带采样间隔的离散action chunk；插值是接口设计选择，不把VLA定义成天然连续轨迹。"},
+    {"id":"V1-B02","chains":["C02","C15"],"lines":[43,260],"finding":"混淆π0.6基座与π*0.6/RECAP；自适应ensemble推理不是已核实的该版本定义。","evidence":"官方2025-11-17文章说明π0.6为5B VLM加动作专家及更异构条件；RECAP用经验和纠正训练得到π*0.6。","sources":["https://www.pi.website/blog/pistar06","https://www.pi.website/download/pistar06.pdf"],"fix":"分别说明基座和RL后训练模型，删除无出处的ensemble代码差异；技术版本事实与面经原题分开标注。"},
+    {"id":"V1-B03","chains":["C03"],"lines":[56,59],"finding":"原π0的专家分流、训练数据与基准描述不准：state也走动作专家；把VLM的web预训练与π0机器人训练混为共训；LIBERO96%+无明确checkpoint/协议证据。","evidence":"π0附录B明确图像/语言走VLM，state/noisy actions走动作专家；原论文预训练机器人数据并继承VLM互联网知识，实验不能直接支撑所写LIBERO数值。","sources":["https://www.pi.website/download/pi0.pdf"],"fix":"按原论文修专家分流与训练阶段；若保留LIBERO数字需引用官方具体版本/任务套件/评测设置，否则删除。"},
+    {"id":"V1-B04","chains":["C05","C06"],"lines":[89,107,113],"finding":"C05标题把RDT归为flow；ACT错误附加图像重建损失；把BC定义为单步单模态，忽略ACT本身也是BC。","evidence":"RDT原论文标题与方法均为diffusion；ACT官方policy.py训练loss是动作L1与KL加权，无所称图像重建辅助项。","sources":["https://arxiv.org/abs/2410.07864","https://github.com/tonyzhaozh/act/blob/main/policy.py","https://arxiv.org/abs/2304.13705"],"fix":"改RDT归类，删图像辅助损失，将对照限定为单步确定性回归BC；先验均值推理下不要推荐无效的z温度旋钮。"},
+    {"id":"V1-B05","chains":["C02","C07"],"lines":[46,48,126,129,132],"finding":"条件插值直线不等于学习到的边缘速度场固定/生成轨迹直；FM不是无条件的diffusion直线路径特例；DDIM并非始终确定、DDPM并非必须走满原训练时间步。","evidence":"当前x_t=(1-t)x0+tε定义要求由t=1逆向积分到0；同一带噪位置的条件速度需聚合。DDIMη=0才确定，其初始噪声仍支持多模态。","fix":"说明插值与积分方向、具体模型参数化/采样器；删除普遍的随机游走、直线对弯曲、必然更稳等二分结论。"},
+    {"id":"V1-B06","chains":["C08"],"lines":[142,148],"finding":"RTC被讲成一般新旧动作后处理融合，未准确突出延迟期间已承诺动作前缀约束生成；ensemble算力倍数也被说成通用常数。","sources":["https://www.pi.website/research/real_time_chunking","https://www.pi.website/download/real_time_chunking.pdf"],"fix":"按已承诺前缀冻结/软掩码约束生成与绝对执行时间说明RTC，不能把全体未执行旧动作都当硬冻结目标；区分ACT原版高频重查与算力受限异步推理。"},
+    {"id":"V1-B07","chains":["C12"],"lines":[212],"finding":"插值保连续语义、拟合孤立waypoint必丢时间结构的本质区别是编造的二分。","evidence":"插值要求过给定数据点，拟合允许残差；两者都可显式时间参数化并构造连续轨迹。面试官的比较提问不能当作答案命题成立的证据。","fix":"按过点约束、噪声抑制、连续阶次、时间参数和边界条件比较；保留原题但用工程答案澄清前提。"},
+    {"id":"V1-B08","chains":["C13"],"lines":[231],"finding":"所述task-centric UniVLA潜在动作学习被错写为对已标注连续动作段量化。","sources":["https://arxiv.org/abs/2505.06111","https://www.roboticsproceedings.org/rss21/p014.pdf"],"fix":"指明具体同名论文；该模型从视觉帧对推断潜在动作并量化，不把无动作标签视频学习改成动作标签编码；late改latent。"},
+    {"id":"V1-B09","chains":["C14"],"lines":[244],"finding":"普通深度/点云被当作透明或无纹理对象的可靠几何兜底。","sources":["https://www.realsenseai.com/news-insights/extending-stereo-depth-to-2-cm-with-min-z/","https://arxiv.org/abs/2409.08926"],"fix":"说明传感器原理、透明/反射/弱纹理失效边界；删除不可替代与全部点云架构不兼容预训练生态等普遍判断。"},
+    {"id":"V1-B10","chains":["C16"],"lines":[270,273],"finding":"Qwen2.5-VL的window attention误归Qwen2-VL；卷积公式缺floor且未说明dilation=1，两例输出应11和10而不是11.5/10.5。","sources":["https://qwenlm.github.io/blog/qwen2.5-vl/","https://docs.pytorch.org/docs/stable/generated/torch.nn.modules.conv.Conv2d.html"],"fix":"指定模型版本；用含floor和dilation的公式，或明确dilation=1简式，保留可行9×9/stride1例。"},
+    {"id":"V1-B11","chains":["C03","C04","C05","C07","C09","C10","C12","C15","C17"],"lines":[54,73,89,124,162,178,210,255,290,309],"finding":"频次无法按当前证据复核且多处内部矛盾：多个整理篇违反整理最多计1；C09仅1整理却×2，C12仅1作者仓库却×2，C15语境源不计却×2，C17prep明确不计频却×1。","fix":"未经当前外部逐层核实的旧题单降整理/推断待核并撤去未证频次；不要以历史审查或本仓题单自证。仅保留明确已取得原文支撑的层与频次，来源与徽章同步。"},
+    {"id":"V1-B12","chains":["ALL"],"finding":"大量链未逐层说明拼接/扩展，易错把一般归纳写成面试官现场意图；历史TL逐层覆盖待核项仍未关闭。C14借用卷五模式、C12窗口后果等是推断而非原题。","fix":"来源映射逐层说明实录/整理/推断、重排/节选；全部无外证扩展行内标推断；易错统一为编者工程归纳，删几乎每场必出/满分/面试官一定在等等强现场断言。"},
+    {"id":"V1-B13","chains":["C02","C04","C11"],"finding":"新统一口径下4条追答超150：C02追1=237、追2=159；C04追1=158；C11追2=159。","fix":"压缩并重跑保留LaTeX命令的计数；不删除整段数学式逃避计数。"}
+  ],
+  "warnings": [
+    {"chains":["C01","C04","C09","C17"],"finding":"VLA不必输入本体状态/输出chunk；原始OpenVLA不接proprio；新机器人不必重建固定动作头，padding/统一表示可适配；相机标定、冻结主干与zero-shot不可能均非普遍前提。","fix":"限定具体模型/接口与工程条件。"},
+    {"chains":["C02","C03","C05","C06","C09","C11","C16"],"finding":"头类别延迟/精度/多模态全排序、chunk步数、显存卡型、SFT学习率等缺配置限定；Adam状态dtype依实现，原生AMP下fp32只是常见情况。","fix":"数值标配置示例；显存区分权重下界、梯度、优化器、激活与峰值；量化/PEFT与batch依赖显式说明。"},
+    {"chains":["C10","C15"],"finding":"PPL不能替代闭环成功率不等于与动作质量完全不相关；VLA可含world model，世界模型预演不提供安全保证。","fix":"删无条件否定，保留模型误差/分布偏移边界。"},
+    {"chains":["C01","ALL"],"finding":"卷内有53条答案与1个无答深挖，按所有题节点计54；文末21个唯一URL而非20，CSDN9 URL而非8。","fix":"给深挖短答并按节点重算，或显式区分问答节点与裸提示；独立来源数与唯一URL数分开。"}
+  ],
+  "checks": {
+    "read_files_completely": ["WORKFLOW.md","docs/format-spec.md","volumes/vol1_vla_il.md","research/reviews/vol1_round1.json"],
+    "chains":17,
+    "difficulty":{"L1":1,"L2":13,"L3":3},
+    "answer_lines":53,
+    "question_nodes_including_unanswered_deep_dive":54,
+    "length_method":"剥去答标签及其前置分档、Markdown强调/代码/数学美元符号、所有空白，保留LaTeX命令，英文按Unicode码点逐字计；主答350，追答150。",
+    "max_main_answer":296,
+    "max_followup_answer":237,
+    "old_review":"round1 WARN没有内容哈希，且原来声称硬事实无误的ACT/Qwen/卷积/频率仍有错误；不能作为本快照PASS或外部题源证据。"
+  },
+  "source_limitations": [
+    "没有逐一恢复7个牛客与全部CSDN旧页；不得将本记录理解为全量URL可访问/题目真实性认证。",
+    "本会话卷三复核阶段已读取Cgxiaoxin原始复盘及offerseed #6；旧卷续审即时重请求Cgxiaoxin根contents/文件/原始URL返回404，是时点变化或访问差异，不反向否定已取得文本，也不能再声称当前匿名全文可读。",
+    "本轮web读取云鲸详情仅返回4行导航，不能继承旧审查HTTP200+关键词即全文可读的判断；知乎强化学习整理页返回403。",
+    "官方技术文档证明答案技术事实，不证明某公司现场问过；本仓题单/自存证与历史审查也不是独立外部证据。",
+    "作者将在本基线之后修订；本FAIL仅绑定上述SHA256，不是对修后版本的裁决。"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "target": "volumes/vol2_rl_motion.md",
+  "round":4,
+  "date":"2026-10-26",
+  "reviewer_model":"Codex（当前独立审查会话；精确部署标识未向代理暴露）",
+  "independent_context":true,
+  "reviewer_role":"非作者；完整阅读正文、sources及历史审查，未修改正文或sources；本记录是修复前基线",
+  "verdict":"FAIL",
+  "scope":"技术硬伤、来源等级与公司归属、追问覆盖、历史WARN、字数与结构；不是全部原始面试经历的真实性认证",
+  "snapshot_sha256":{
+    "volumes/vol2_rl_motion.md":"d01c45b7d02e886dabc37bf54836ff433fdcd9cb1778e3935b2e74ead0172569",
+    "research/sources-vol2.md":"8c7fd4e63ee95f268cedf3bd26004c3bf430eaf1b51388b975605c6bd34d07c3",
+    "WORKFLOW.md":"719305de6f099ee188528b85195250ddd882022e1d6a3ea2a3736411394fb927",
+    "docs/format-spec.md":"73b7c94c3677cd103301a8090753f84e018b29016005d5299da45e613820e87c"
+  },
+  "blocking_issues":[
+    {"id":"V2-B01","chains":["C01","C02","C05","C06","C07","C08","C09","C10","C15","C16"],"lines":[36,158,180,227,325,331,348,354],"finding":"8帖及额外历史删帖仅有本仓自记题单，仍称全链实录、认领公司、以存证证明原文；部分层只因存证内有题就被升级实录。","fix":"全链或相应层降推断/历史题单待核，逐层标注；删除未经外部复验的公司考法结论；sources记录当前真实读取状态与限制，可变main链接不称永久证据。"},
+    {"id":"V2-B02","chains":["C02","C03","C04","C05","C06","C16"],"lines":[350,352],"finding":"当前可访问7源/当前可验证频次声明无法复现。云鲸本轮详情只有4行导航；知乎2082240221471576304返回403。历史curl200/关键词数量与自记不等于独立正文证据。","fix":"未取得正文或可复核索引的来源不得保留当前匿名可读及未经证实频次；若有此前真实读取证据如实说明时点/范围，不把旧review本身当证据。"},
+    {"id":"V2-B03","chains":["C01","C02"],"lines":[22,28,44,47,50],"finding":"baseline无偏不保证方差显著下降，只有动作依赖才可能偏的说法过强；PG的折扣G_t定义缺失；PPO总目标三个正号混淆最大化/最小化；clip不能保证硬更新边界或完全修正状态分布偏移。","sources":["https://arxiv.org/abs/1707.06347"],"fix":"定义回报/折扣与baseline独立性条件；写清最大化clip−value+entropy或最小化反号；ratio是surrogate内动作概率比，不是完整状态分布校正。"},
+    {"id":"V2-B04","chains":["C03","C04"],"lines":[66,69,79],"finding":"仅凭最后1秒精控推出λ=.95偏大没有依据；value loss下降不能证明critic健康。","sources":["https://arxiv.org/abs/1506.02438"],"fix":"GAE按时间步长度/估计误差/偏差方差与消融选λ；critic先检目标尺度/归一化/解释方差和回报校准，震荡原因列假设与证据，不先定责。"},
+    {"id":"V2-B05","chains":["C05"],"lines":[95,101],"finding":"AMP判别对象被说成策略动作与动捕动作，原方法是运动状态转移特征；potential shaping无条件保持最优策略的承诺缺失条件。","sources":["https://arxiv.org/abs/2104.02180"],"fix":"明确判别(s,s')运动特征；塑形项用γΦ(s')−Φ(s)并处理终止/截断边界，其他正则改变目标须承认。"},
+    {"id":"V2-B06","chains":["C07"],"lines":[128,131,146,155],"finding":"串联腿不等于动力学解耦；平面二连杆不自动是并联；训练滤波的错误前提及真机再滤一次措辞误导sim/real一致性；直接关节目标不一定需要在线IK。","fix":"限定机械拓扑，依据惯性布置讨论优缺点；训练与部署匹配同一滤波器/状态/时序，避免重复串联滤波，不能断言训练平滑必然失稳。"},
+    {"id":"V2-B07","chains":["C08"],"lines":[164,167,176],"finding":"底层伺服永远传统、RL不能进入底层是错误通用结论；PID真机加P到临界振荡未限定安全环境。","evidence":"GAE原论文已有直接关节力矩控制实验，足以反驳绝对结论。","sources":["https://arxiv.org/abs/1506.02438"],"fix":"改常见分层工程方案而非能力边界；整定限仿真/安全台架，说明限幅、保护、降增益/模型整定替代。"},
+    {"id":"V2-B08","chains":["C09"],"lines":[186,192],"finding":"把LQR限定为无限时域；软化部分约束不能保证MPC可行，沿用旧控制不保证安全。","sources":["https://underactuated.mit.edu/lqr.html"],"fix":"区分有限/无限时域LQR；软约束不覆盖硬约束冲突和数值失败，fallback须是经验证的安全控制/停机策略。"},
+    {"id":"V2-B09","chains":["C10"],"lines":[213,214],"finding":"自身sources #6记的是执行器延迟5ms，正文改成执行器更新5ms并断定200Hz瓶颈；纯延迟与更新周期不同。","evidence":"research/sources-vol2.md第6项的题单措辞为延迟；即使该来源待核，也不能把题设偷换成采样率。","fix":"恢复延迟题设，定位计算/通信/执行延迟并评估补偿；不能凭5ms延迟建议把1kHz控制降到200Hz；采样率与带宽分开。"},
+    {"id":"V2-B10","chains":["C11"],"lines":[239,242],"finding":"机器人全惯性参数回归矩阵不一定满列秩，无条件(YᵀY)^−1不成立；质量正/惯量正定不充分保证物理一致；残差不能唯一归因参数错。","sources":["https://arxiv.org/abs/1701.04395"],"fix":"使用可辨识base parameters或SVD/QR/伪逆/正则，并检查持续激励；物理一致需惯量三角不等式等约束；排除同步/噪声/未建模效应。"},
+    {"id":"V2-B11","chains":["C12"],"lines":[258,261],"finding":"Pieper准则是常用6R解析充分条件而非必要条件；任意7DOF固定臂角不必化成解析问题；肩3腕3流程漏肘关节。","fix":"限定SRS等适用几何与非奇异条件，补余弦定理求肘角，再解肩/腕与多支选择；一般冗余臂采用数值约束优化。"},
+    {"id":"V2-B12","chains":["C13"],"lines":[277,285],"finding":"F=Mx¨+Dx˙+K(x−xd)若作为机器人主动输出再Jᵀ映射，恢复力符号错误且未定义外力/误差；阻抗怕软、导纳怕硬不是普适稳定性定理。","sources":["https://arxiv.org/abs/1406.4047"],"fix":"明确定义e=x−xd，用目标阻抗Me¨+De˙+Ke=Fext与恢复控制−Ke−De˙区分；稳定性受内环、采样、延迟、滤波及被动性影响。"},
+    {"id":"V2-B13","chains":["C14"],"lines":[298,309],"finding":"TPLink实读原文问PPO算法怎么改进，后转学校课题的遥操作时延和项目指标；并未将这些全限定为VMC。原文不能证明PPO在VMC上改进或VMC六问全记录。","sources":["https://www.nowcoder.com/feed/main/detail/f79996d0300d4b60957770816bb0ace5"],"fix":"逐层说明原文覆盖与编者重排；将PPO与VMC绑定改推断场景；遥操作/量化指标保留项目语境，不编造VMC连续六连问。"},
+    {"id":"V2-B14","chains":["ALL"],"finding":"大量易错/导语把工程建议写成候选人失误或面试官必然意图；已删自记搜索快照仍按整理实录且缺逐层推断。","fix":"无现场错误证据的易错明确工程归纳；收缩每场必问/固定手法/判没做过等断言，补全每层来源等级和拼接说明。"},
+    {"id":"V2-B15","chains":["C11"],"lines":[242],"finding":"新口径追问3=155，超过150；旧审查删除整段数学式后通过不能覆盖当前新口径。","fix":"压缩并全量重算。"}
+  ],
+  "warnings":[
+    {"chains":["C06"],"finding":"DR统一±30–50%无配置证据；延迟通常侵蚀相位裕度，加滤波也会增加延迟，不能默认救稳。","fix":"以辨识不确定区间定随机化，补偿/降带宽/滤波经闭环验证。"},
+    {"chains":["C10"],"finding":"三环更新率与5–10倍带宽分离容易混读；Q/R不是简单快慢旋钮的一般保证。","fix":"分别标更新频率与闭环带宽，以模型/新息白化和一致性评估调参。"},
+    {"chains":["C14","C15"],"finding":"VMC微秒级、吸收模型误差、安全兜底，以及ESO抵消全部扰动/多变量强解耦均过强。","fix":"限定硬件/动力学/观测器带宽、输入增益、噪声、饱和等条件；不能声称传统层自动保证任意RL输出安全。"},
+    {"chains":["C16"],"finding":"model-based可用已知模型，不必学习；model-free不必更稳/样本效率更低；仿真作为训练环境不会把PPO变成model-based算法。","fix":"按是否在决策/更新中显式利用环境模型区分，比较限于具体算法任务。"}
+  ],
+  "checks":{
+    "read_files_completely":["WORKFLOW.md","docs/format-spec.md","volumes/vol2_rl_motion.md","research/sources-vol2.md","research/reviews/vol2_round2.json","research/reviews/vol2_round3.json"],
+    "chains":16,
+    "nodes":71,
+    "difficulty":{"L1":2,"L2":10,"L3":4},
+    "nodes_per_chain":[5,4,3,2,4,4,9,5,4,7,6,4,3,5,3,3],
+    "length_method":"去答标签、Markdown强调/代码/数学美元符号和空白，保留LaTeX命令，按Unicode码点计；主答350/追答150。",
+    "max_main_answer":302,
+    "max_followup_answer":155,
+    "verified_primary_interview_pages":[
+      {"url":"https://www.nowcoder.com/feed/main/detail/679003b65a1a404c9e1d755e7e1c4fd7","status":"本轮web正文可读","coverage":"LQR/PID/MPC区别，另STL；不支持MPC后续实时/失败/solver三层"},
+      {"url":"https://www.nowcoder.com/feed/main/detail/f79996d0300d4b60957770816bb0ace5","status":"本轮web正文可读","coverage":"VMC原理/选用、sim2real、PPO改进；随后学校课题遥操作延迟/项目指标，不是全链VMC专问"}
+    ],
+    "historical_reviews":"round3明确是仅按round2修复项的窄复检，未全量重审且无内容哈希；其自记源存在性局限仍阻塞按当前规则9宣称实录。原字数口径删除数学式，与新口径不同；其技术无硬伤结论不能覆盖本轮发现。"
+  },
+  "source_limitations":[
+    "没有取得8个历史删帖及额外两帖的第三方网页快照；本仓sources与旧review不能互相循环证明面试真实存在。",
+    "云鲸本轮web只有导航空壳；知乎整理页403。不能凭HTTP状态或旧审查词频确认正文；也不能据访问失败断定帖子被删除。",
+    "Cgxiaoxin此前本会话卷三阶段曾读得正文；本轮续审根API/文件/raw返回404，记录时点差异，不把旧全文发现升级为当前可访问保证。",
+    "官方技术文献核验与审查者数学/工程推理不能证明公司现场题目归属；未声称所有控制结论逐句有外部新检索。",
+    "WORKFLOW旧经验允许删帖存证，与format-spec新规则9要求外部证据有张力，本次采用更严格的题单不能自证标准，不修改两份规范。",
+    "本FAIL绑定修前SHA256；作者已获修复清单，后续内容需另轮独立复检。"
+  ]
+}

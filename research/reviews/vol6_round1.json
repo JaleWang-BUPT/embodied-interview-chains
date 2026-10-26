@@ -1,0 +1,69 @@
+{
+  "target": "volumes/vol6_perception_slam.md",
+  "round": 1,
+  "date": "2026-10-26",
+  "model": "gpt-6-astra",
+  "model_provenance": "主代理告知spawn_agent配置标签为gpt-6-astra；审查代理无法独立验证底层部署身份。模型隔离依赖调度记录。",
+  "independent_context": true,
+  "independent_context_detail": "仅接收独立审查任务与仓库环境，未参与起草；完整读取指定六文件，并独立打开原始面经及官方技术来源；未调用子代理。",
+  "verdict": "PASS",
+  "snapshot_sha256": {
+    "WORKFLOW.md": "719305de6f099ee188528b85195250ddd882022e1d6a3ea2a3736411394fb927",
+    "docs/format-spec.md": "e9b0d63ce3f4a800fad45c52f33ee68566bf79d715dfaccdc56713f5b4354fb2",
+    "volumes/vol6_perception_slam.md": "f5acd8e5f4ac5f7052b81293049e4fb1648a36ea20f43fa86e85b323566de4e0",
+    "research/sources-vol6.md": "18801eb45f4fab91574d67d3783e521e58ef55e092b1f16fcd668b7f06c06ce6"
+  },
+  "blocking": [],
+  "warnings": [
+    {
+      "id": "W01",
+      "location": "volumes/vol6_perception_slam.md:26",
+      "finding": "PnP只需单视图3D–2D对应。小视差直接列作PnP退化因素容易混淆多视图三角化与已知3D点的单视图位姿求解；若3D点来自小基线三角化，确实可能间接恶化结果，但此条件未写。",
+      "fix": "改为点投影集中、近共线或3D结构条件差；若保留小视差，限定为上游三角化导致3D点不准。",
+      "evidence_url": "https://docs.opencv.org/4.x/d5/d1f/calib3d_solvePnP.html"
+    },
+    {
+      "id": "W02",
+      "location": "volumes/vol6_perception_slam.md",
+      "finding": "易错项是具体工程提醒，但原帖没有证明候选人实际犯过这些错。尤其原作者是在叙述面试官提问，不能把提问内容当候选人的错误回答。",
+      "fix": "无实测错误记录时标〔推断·工程提醒〕，使其与format-spec规则5的证据边界一致。"
+    },
+    {
+      "id": "W03",
+      "location": "volumes/vol6_perception_slam.md:88",
+      "finding": "C03保留的问题顺序正确，但原帖在NeRF预训练与位姿之间还问了深度估计预训练和深度蒸馏。正文目前是节选，并非完整连续九问。",
+      "fix": "来源行增加按原顺序节选、略去深度网络/蒸馏两问的说明。"
+    },
+    {
+      "id": "W04",
+      "location": "volumes/vol6_perception_slam.md:42",
+      "finding": "高斯优化造成的浮点容易被理解为浮点数精度，语境似指漂浮伪影。",
+      "fix": "改为漂浮伪影（floaters），避免术语歧义。"
+    }
+  ],
+  "checks": {
+    "structure": {"status": "PASS", "chains": 3, "qa_nodes": 18, "nodes_per_chain": [5, 4, 9], "ids": "C01-C03连续且唯一"},
+    "difficulty": {"status": "PASS", "L1": 0, "L2": 2, "L3": 1, "note": "与导语一致；C02深入CUDA插值反向与tile实现，L3合理。"},
+    "length": {"status": "PASS", "method": "按答案Unicode码点计数，包含英文、空格、标点及公式源码", "max_main": 139, "max_followup": 126, "limits": {"main": 350, "followup": 150}},
+    "required_fields": {"status": "PASS", "note": "导语、使用建议、3个易错行及带真实URL的来源行齐全。"},
+    "per_layer_provenance": {"status": "PASS", "note": "C01失去原帖后全链行内标推断；C02/C03每层问题可在原作者正文找到，答案明确为独立技术框架。"},
+    "frequency": {"status": "PASS", "note": "C02/C03分别来自同一作者各自场次，单链各×1；没有把同作者算成同主题两个独立来源；C01不计频次。"},
+    "order": {"status": "PASS_WITH_WARNING", "note": "C02对应高德第3–6题，顺序一致；C03对应智能信息第2/3题，保留层顺序一致，节选说明见W03。"},
+    "epnp": {"status": "PASS", "note": "EPnP中E为Efficient；普通PnP不含E，本质矩阵属于两视图几何。", "evidence_url": "https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html"},
+    "calibration_distortion": {"status": "PASS_WITH_WARNING", "note": "张氏平面标定、多姿态、畸变五项及有理/薄棱镜/倾斜扩展、像素与归一化阈值单位均正确；PnP小视差措辞见W01。", "evidence_url": "https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html"},
+    "hand_eye": {"status": "NOT_APPLICABLE", "note": "卷五/六未写手眼方程或安装方式；题单手眼链位于卷四。本审查不能宣称验证了卷四手眼内容。"},
+    "gaussian_tiles": {"status": "PASS", "note": "作者实现用屏幕协方差特征值、约3σ半径和裁剪后的矩形tile覆盖，并非精确椭圆逐tile检测；正文近似表述符合源码。", "evidence_urls": ["https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/main/cuda_rasterizer/forward.cu", "https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/main/cuda_rasterizer/auxiliary.h"]},
+    "quadrilinear": {"status": "PASS", "note": "四维多线性插值为16角点、四轴权重乘积；正文先要求确认维度，未把原帖含糊术语认定成某特定instant-ngp实现。反向梯度与写冲突提醒合理。"},
+    "nerf": {"status": "PASS", "note": "经典NeRF按场景优化、使用相机参数、渲染与mesh提取不同均正确；没有捏造原候选人的网络或参数。", "evidence_url": "https://www.matthewtancik.com/nerf"},
+    "slam": {"status": "PASS", "note": "SLAM估计轨迹并建图、纯单目常有尺度不确定性，表述合理。", "evidence_url": "https://github.com/raulmur/ORB_SLAM2"}
+  },
+  "source_access_checks": [
+    {"url": "https://www.nowcoder.com/feed/main/detail/057f10b935f545dbad249a1a62e987e4", "status": "web可读正文", "note": "HenryZhou_，2024-04-09 20:51；高德及阿里智能信息两场，未给参考答案。"},
+    {"url": "https://docs.opencv.org/4.x/d5/d1f/calib3d_solvePnP.html", "status": "可读，重定向4.13.0"},
+    {"url": "https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html", "status": "可读，重定向4.13.0"},
+    {"url": "https://github.com/graphdeco-inria/diff-gaussian-rasterization/blob/main/cuda_rasterizer/forward.cu", "status": "可读源码；另核对auxiliary.h的getRect"},
+    {"url": "https://www.matthewtancik.com/nerf", "status": "可读作者项目页"},
+    {"url": "https://github.com/raulmur/ORB_SLAM2", "status": "可读作者README"}
+  ],
+  "scope_limits": ["未修改正文、来源文件或renderer，未commit/push。", "PASS仅针对上述内容快照；独立模型配置证明仍应由主代理保留。", "技术与来源审查不证明面试事件真实发生；只核对公开原文及证据边界。"]
+}

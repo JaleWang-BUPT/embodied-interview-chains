@@ -1,0 +1,57 @@
+{
+  "target": "volumes/vol4_deployment_systems.md",
+  "round": 2,
+  "date": "2026-10-26",
+  "reviewer_model": "gpt-6-astra",
+  "reviewer_model_provenance": "延用委派任务指定的模型标签；审查代理未获底层部署标识，不能独立验证该标签。",
+  "independent_context": true,
+  "reviewer_role": "原独立审查子代理复检，未参与正文或来源修订；未调用子代理，只写本轮审查文件。",
+  "previous_review": "research/reviews/vol4_round1.json",
+  "verdict": "PASS",
+  "blocking_issues": [],
+  "snapshot_sha256": {
+    "WORKFLOW.md": "719305de6f099ee188528b85195250ddd882022e1d6a3ea2a3736411394fb927",
+    "docs/format-spec.md": "e9b0d63ce3f4a800fad45c52f33ee68566bf79d715dfaccdc56713f5b4354fb2",
+    "volumes/vol4_deployment_systems.md": "d97f80f3a15b1c5af259275efbed106126f9407c217c5ee3bb6b9b73f5f081d5",
+    "research/sources-vol4.md": "b748d4d0403514ad7d04e7d133dc0b5f71be7cb82e6a734e0d882692ddb2081c"
+  },
+  "resolved_issues": [
+    {"id": "B01", "status": "RESOLVED", "evidence": "C14明确区分末端相机配固定板和固定相机配末端板，与第一轮已核对的OpenCV calibrateHandEye定义一致。"},
+    {"id": "B02", "status": "RESOLVED", "evidence": "C06追问1已行内标〔推断〕，sources映射亦明确其工程展开身份；读者不会将绑核独立追问误认原题。"},
+    {"id": "B03", "status": "RESOLVED", "evidence": "sources新增每个采用来源的作者、日期或未知说明、抓取方式、原题短摘录与逐链/逐层映射。宇树新增短摘录可在本轮搜索索引再次核对；明确主题转述不是逐字全文，也未将直接详情不可读提升为可读。"},
+    {"id": "W01", "status": "RESOLVED", "evidence": "C13追1明确线程型workqueue与不可睡眠的WQ_BH；按整链阅读已消除任意workqueue都可睡眠的歧义。"},
+    {"id": "W02", "status": "RESOLVED", "evidence": "C13追4补ARM32 zImage自解压与ARM64 Image.gz通常由bootloader解压的差异；本轮追加核对ARM官方内核启动文档。"},
+    {"id": "W04", "status": "RESOLVED_AS_DISCLOSURE", "evidence": "导语明确易错为编者工程归纳，未认领现场失误。此为透明披露，不能被解读为已经获得format-spec规则5所说的实测数据。"}
+  ],
+  "warnings": [
+    {
+      "id": "W01",
+      "location": "volumes/vol4_deployment_systems.md C06徽章",
+      "finding": "C06徽章仍为〔实录·索引存证〕；行内推断标记与来源说明已经清楚，故不阻塞。可统一为〔索引存证+推断〕，与C04/C07的混合徽章保持一致。"
+    },
+    {
+      "id": "W02",
+      "location": "research/sources-vol4.md 宇树索引",
+      "finding": "营销相似帖和索引变动仍是长期来源质量限制。本次PASS只认可公开索引有这些问题、来源身份与证据等级已披露，不证明线下面试真实发生，也不等于完成完整网页归档。保持不重复计频次。"
+    }
+  ],
+  "checks": {
+    "full_text_reread": "PASS：重读修订后的完整正文与sources；流程及格式文件哈希与第一轮相同。",
+    "chain_and_node_counts": {"status": "PASS", "chains": 14, "qa_nodes": 61, "ids": "C01-C14连续唯一"},
+    "difficulty": {"status": "PASS", "L1": 1, "L2": 11, "L3": 2},
+    "answer_lengths": {"status": "PASS", "method": "Unicode码点计数，包含英文、空格、标点与公式源代码", "max_main": 202, "max_followup": 143, "main_limit": 350, "followup_limit": 150, "violations": []},
+    "technical_facts": "PASS：第一轮量化、CUDA、ROS主体结论维持；手眼安装关系已修正，中断/workqueue和启动架构边界已补齐，未发现新增阻塞技术错误。",
+    "source_mapping": "PASS：逐层映射与推断说明可追溯；来源不等于原帖连续追问顺序的地方已有主题重排/分层拼接说明。",
+    "source_access_claims": "PASS：宇树保持索引证据，作者动态与详情分开；CUDA及昆仑芯补记第一轮正文读取成功。没有以HTTP200或导航外壳宣称完整正文可读。",
+    "frequency": "PASS：只有C09报告一个独立来源，跨场同作者未重复计数，拼接链未虚报整链频次。",
+    "scope": "仅内容复检；未测试renderer或发布状态，未改正文、未commit/push。"
+  },
+  "evidence": [
+    {"url": "https://api-cdn.nowcoder.com/discuss/938361742734655488?sourceSSR=dynamic", "method": "本轮搜索索引返回", "scope": "量化四问、剪枝蒸馏、ONNX/框架、资源竞争等；包含新增scale/zero-point短摘录；不称详情全文可读"},
+    {"url": "https://docs.kernel.org/arch/arm/booting.html", "method": "本轮web open正文", "scope": "ARM zImage加载、解压、启动参数与内存约束"},
+    {"url": "https://docs.kernel.org/arch/arm64/booting.html", "method": "沿用同日第一轮已读官方正文", "scope": "ARM64压缩Image需外部解压"},
+    {"url": "https://docs.kernel.org/core-api/workqueue.html", "method": "沿用同日第一轮已读官方正文", "scope": "线程型workqueue与WQ_BH上下文"},
+    {"url": "https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html", "method": "沿用同日第一轮已读官方正文", "scope": "eye-in-hand/eye-to-hand安装关系及变换求解"}
+  ],
+  "outcome": "PASS：三个第一轮阻塞项已修复，统计与长度复验通过。两个非阻塞提醒保留；本结论绑定上述文件SHA256。"
+}

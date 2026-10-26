@@ -20,7 +20,7 @@ hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
 .note{background:#f3f6fb;border-left:4px solid var(--acc);border-radius:6px;padding:10px 16px;margin:14px 0;font-size:15px;color:#33415c}
 details.chain{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 18px;margin:14px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
 details.chain[open]{border-color:#d5d8dd}
-summary{cursor:pointer;font-weight:600;font-size:16.5px;padding:8px 0;list-style:none;position:relative;padding-right:28px}
+summary{cursor:pointer;font-weight:600;font-size:16.5px;padding:8px 0;list-style:none;position:relative;padding-right:64px;overflow-wrap:anywhere}
 summary::-webkit-details-marker{display:none}
 summary::after{content:'展开';position:absolute;right:0;top:8px;font-size:12.5px;font-weight:400;color:var(--mut);border:1px solid var(--line);border-radius:20px;padding:1px 10px}
 details.chain[open] summary::after{content:'收起'}
@@ -36,6 +36,10 @@ footer div{max-width:840px;margin:0 auto;padding:18px;color:var(--mut);font-size
 .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:14px 0}
 .card h2{border:none;margin:0 0 6px}
 .meta{color:var(--mut);font-size:14px}
+.review{font-size:14px;border-left:4px solid #1a7f37;background:#eff8f1;padding:10px 14px;margin:16px 0;overflow-wrap:anywhere}
+.review.pending,.review.stale,.review.legacy{border-color:#9a6700;background:#fff8df}
+.volume-nav{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;font-size:14px}
+p,li,.note{overflow-wrap:anywhere}
 @media(max-width:640px){main{padding:18px 12px 60px}summary{font-size:15.5px;padding-right:64px}summary::after{top:4px}}
 </style>
 </head>
@@ -44,11 +48,16 @@ footer div{max-width:840px;margin:0 auto;padding:18px;color:var(--mut);font-size
 <main>
 
 <h1>具身智能面试追问链</h1>
-<div class="note">按面试官真实下钻路径组织：主问 → 追问 → 深挖。先自己答，再展开对照，再合上把整条链讲一遍。<br>题目全部来自公开一手面经（牛客 / CSDN / GitHub 实录），频次独立统计；答案经独立 AI 交叉审查。</div>
-<div class="card"><h2><a href="./vol1_vla_il.html">卷一 · VLA 与模仿学习 · 追问链</a></h2><div class="meta">17 条追问链 · 53 个问答节点</div></div>
-<div class="card"><h2><a href="./vol2_rl_motion.html">卷二 · 强化学习与运动控制 · 追问链</a></h2><div class="meta">16 条追问链 · 71 个问答节点</div></div>
-<div class="card"><h2><a href="./vol3_data_teleop_debug.html">卷三 · 数据 · 遥操作 · 真机排障 · 追问链</a></h2><div class="meta">12 条追问链 · 48 个问答节点</div></div>
+<p class="meta">7 卷 · 81 条追问链 · 322 个问答节点</p>
+<div class="note">主问 → 追问 → 深挖。先自己答，再展开对照，合上后复述整条链。<br>区分公开实录、整理、索引/历史存证和推断练习；公司归属与频次不超出证据。链内细化或重排另行注明。<br>审查状态按最新记录及文件 SHA-256 计算，修改内容后不会沿用旧 PASS；PASS 不代表面试经历真实性认证。</div>
+<div class="card"><h2><a href="./vol1_vla_il.html">卷一 · VLA 与模仿学习 · 追问链</a></h2><div class="meta">17 条追问链 · 53 个问答节点</div><div class="review pass">独立审查 PASS · 第3轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol1_round3.json" target="_blank" rel="noopener">审查记录与范围</a></div></div>
+<div class="card"><h2><a href="./vol2_rl_motion.html">卷二 · 强化学习与运动控制 · 追问链</a></h2><div class="meta">16 条追问链 · 71 个问答节点</div><div class="review pass">独立审查 PASS · 第5轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol2_round5.json" target="_blank" rel="noopener">审查记录与范围</a></div></div>
+<div class="card"><h2><a href="./vol3_data_teleop_debug.html">卷三 · 数据 · 遥操作 · 真机排障 · 追问链</a></h2><div class="meta">12 条追问链 · 48 个问答节点</div><div class="review pass">独立审查 PASS · 第2轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol3_round2.json" target="_blank" rel="noopener">审查记录与范围</a></div></div>
+<div class="card"><h2><a href="./vol4_deployment_systems.html">卷四 · 部署与系统 · 追问链</a></h2><div class="meta">14 条追问链 · 61 个问答节点</div><div class="review pass">独立审查 PASS · 第3轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol4_round3.json" target="_blank" rel="noopener">审查记录与范围</a></div></div>
+<div class="card"><h2><a href="./vol5_project_defense.html">卷五 · 项目深挖防御指南 · 追问链</a></h2><div class="meta">11 条追问链 · 40 个问答节点</div><div class="review pass">独立审查 PASS · 第2轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol5_round2.json" target="_blank" rel="noopener">审查记录与范围</a></div></div>
+<div class="card"><h2><a href="./vol6_perception_slam.html">卷六 · 三维感知与 SLAM · 追问链</a></h2><div class="meta">3 条追问链 · 18 个问答节点</div><div class="review pass">独立审查 PASS · 第2轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol6_round2.json" target="_blank" rel="noopener">审查记录与范围</a></div></div>
+<div class="card"><h2><a href="./vol7_coding_appendix.html">附录 · 手撕追问链</a></h2><div class="meta">8 条追问链 · 31 个问答节点</div><div class="review pass">独立审查 PASS · 第5轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/appendix_round5.json" target="_blank" rel="noopener">审查记录与范围</a></div></div>
 </main>
-<footer><div>题目来自公开一手面经，来源见各链「实录」行 · 执行 AI ≠ 审查 AI，审查记录见 research/reviews/ · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains" target="_blank" rel="noopener">MIT License</a> · 渲染于 2026-10-26</div></footer>
+<footer><div>公开面经、整理与推断练习分档标注 · 题源限制与审查范围见各链和记录 · 公式排版使用 MathJax，折叠无需 JavaScript · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a> · 渲染于 2026-10-26</div></footer>
 </body>
 </html>

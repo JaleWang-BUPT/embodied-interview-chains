@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>卷四 · 部署与系统 · 追问链</title>
+<script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},chtml:{displayAlign:'left'}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mut:#656d76;--line:#e4e4e0;--acc:#0969da}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif}
+main{max-width:840px;margin:0 auto;padding:28px 18px 80px}
+h1{font-size:26px;line-height:1.4;margin:.4em 0 .2em}
+h2{font-size:20px;margin:2em 0 .6em;border-bottom:1px solid var(--line);padding-bottom:.3em}
+p{margin:.7em 0}
+a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
+code{background:#f0f1f2;border-radius:4px;padding:.1em .35em;font-size:.92em}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+.note{background:#f3f6fb;border-left:4px solid var(--acc);border-radius:6px;padding:10px 16px;margin:14px 0;font-size:15px;color:#33415c}
+details.chain{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 18px;margin:14px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+details.chain[open]{border-color:#d5d8dd}
+summary{cursor:pointer;font-weight:600;font-size:16.5px;padding:8px 0;list-style:none;position:relative;padding-right:64px;overflow-wrap:anywhere}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'展开';position:absolute;right:0;top:8px;font-size:12.5px;font-weight:400;color:var(--mut);border:1px solid var(--line);border-radius:20px;padding:1px 10px}
+details.chain[open] summary::after{content:'收起'}
+details.chain[open]>summary{border-bottom:1px dashed var(--line);margin-bottom:6px}
+.lv{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:0 7px;margin-right:4px;vertical-align:2px;color:#fff}
+.lv-l1{background:#1a7f37}.lv-l2{background:#0969da}.lv-l3{background:#cf222e}
+.freq{color:#9a6700;font-size:14px;margin-right:6px}
+.top{border-bottom:1px solid var(--line);margin-bottom:8px}
+.top nav{max-width:840px;margin:0 auto;padding:14px 18px;display:flex;gap:18px;align-items:baseline;flex-wrap:wrap}
+.top .brand{font-weight:700;color:var(--fg)}
+footer{border-top:1px solid var(--line);margin-top:60px}
+footer div{max-width:840px;margin:0 auto;padding:18px;color:var(--mut);font-size:13.5px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:14px 0}
+.card h2{border:none;margin:0 0 6px}
+.meta{color:var(--mut);font-size:14px}
+.review{font-size:14px;border-left:4px solid #1a7f37;background:#eff8f1;padding:10px 14px;margin:16px 0;overflow-wrap:anywhere}
+.review.pending,.review.stale,.review.legacy{border-color:#9a6700;background:#fff8df}
+.volume-nav{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;font-size:14px}
+p,li,.note{overflow-wrap:anywhere}
+@media(max-width:640px){main{padding:18px 12px 60px}summary{font-size:15.5px;padding-right:64px}summary::after{top:4px}}
+</style>
+</head>
+<body>
+<div class="top"><nav><span class="brand">具身智能面试追问链</span><a href="./index.html">📚 卷目录</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains" target="_blank" rel="noopener">GitHub</a></nav></div>
+<main>
+<div class="review pass">独立审查 PASS · 第3轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol4_round3.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./vol3_data_teleop_debug.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="./vol5_project_defense.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol4_deployment_systems.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>卷四 · 部署与系统 · 追问链</h1>
+<div class="note">具身智能面试追问链题库 · 第四卷<br>本卷 <b>14 条链 · 61 个问答节点</b><br>难度分布：L1 <b>1</b> · L2 <b>11</b> · L3 <b>2</b></div>
+<p><b>使用方式</b>：沿着“模型文件→输入缓冲→执行引擎→通信→控制器”讲清每个边界的所有权、单位、耗时与失败行为。量化、零拷贝、加线程都只是手段；回答要落到目标硬件上的精度、内存和最坏响应时间。</p>
+<p><b>易错口径</b>：本卷易错项为编者工程归纳，未标具体原答的，不认领为候选人现场失误。</p>
+<p><b>本卷追问模式</b>：</p>
+<ol><li><b>定义→计算→精度损失→验证</b>：量化参数和结构体大小都需要能现场算。</li><li><b>能跑→为什么慢→哪一段慢→改完是否真变好</b>：分别报告预热、稳态、尾延迟与闭环结果。</li><li><b>资源优化→控制是否按时运行</b>：推理吞吐提升必须同时检查控制 deadline。</li><li><b>抽象概念→生命周期</b>：智能指针、DMA、Socket 和 ROS 消息都要说清谁分配、谁释放、谁等待。</li></ol>
+<hr>
+<details class="chain" id="c01">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录+索引存证〕</span> <b>C01</b> · INT8 量化如何把浮点数映射成整数？</summary>
+<p><b>答</b>：仿射量化为 $q=\mathrm{clip}(\mathrm{round}(x/s)+z,q_{\min},q_{\max})$，反量化 $\hat x=s(q-z)$。$s>0$ 是 scale，$z$ 是 zero-point；用校准分布/训练确定动态范围，再权衡舍入误差与截断误差。权重、激活可采用不同粒度和精度；最终是否提速取决于目标后端是否有相应整数 kernel，以及转换/回退成本。</p>
+<p><b>追问 1</b>：对称和非对称量化怎么选？<br><b>答</b>：对称通常取 $z=0$，内积实现简单，适合近似零中心权重；非对称可利用偏置分布的整数范围，但需处理 zero-point 修正。还要区分 per-tensor/per-channel：权重按通道常能减小通道间量级差造成的误差。以实际后端支持为边界。</p>
+<p><b>追问 2</b>：精度掉了从哪查？<br><b>答</b>：先查输入/归一化、校准分布、scale/zero-point 和导出图是否一致；逐层比较浮点与量化输出，定位离群值、截断和误差累积。敏感层保留浮点、改按通道量化或做 QAT；动作模型还需检查反归一化后的单位误差和闭环成功率。</p>
+<p><b>追问 3</b>：PTQ 和 QAT 有什么区别？<br><b>答</b>：PTQ 在训练后校准/转换，成本低；QAT 在训练中模拟量化误差，让权重适应数值限制，成本更高且需要训练数据。先以 PTQ 建精度/延迟基线，若误差集中在可训练的敏感层，再考虑 QAT。QAT 并不保证所有硬件都能加速。</p>
+<p><b>追问 4</b>：FP32→FP8 和 INT8 一样吗？<br><b>答</b>：不同。FP8 用指数与尾数表示，仍有有限动态范围和舍入误差；INT8 是整数配 scale/zero-point。FP8 还需确定格式、缩放粒度和溢出策略，不能简单强制类型转换。硬件、算子与框架支持决定可用路径。</p>
+<p><b>追问 5</b>：如何评估和控制量化损失？<br><b>答</b>：固定相同输入，分层看数值误差，端到端看任务指标；用留出的真实分布数据测长尾和异常输入。机器人再做低速闭环，比较成功率、接触峰值和动作连续性。分阶段启用量化，记录精度收益与延迟收益的权衡。</p>
+<p><b>易错</b>：把“模型文件变小”当成延迟一定变低；用训练集代替校准/验证设计，或只看分类精度而忽略动作单位和闭环误差。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/discuss/938361742734655488" target="_blank" rel="noopener">宇树嵌入式 AI 面经</a>（量化四问，搜索索引存证）+ <a href="https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md" target="_blank" rel="noopener">Cgxiaoxin 原始复盘</a>（安努：损失评估；地瓜：FP32→FP8）。来源状态见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol4.md" target="_blank" rel="noopener">卷四题源</a>。</p>
+</details>
+<details class="chain" id="c02">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·索引存证〕</span> <b>C02</b> · 结构化与非结构化剪枝，部署差别在哪里？</summary>
+<p><b>答</b>：结构化剪枝删通道、头或层，能形成更小的稠密张量，较容易让普通后端减少计算；非结构化剪枝把单个权重置零，若仍用稠密 kernel，存储/乘加可能完全不降。稀疏格式需要索引开销，实际收益依赖稀疏率、模式与硬件支持。剪完还要微调，并实测目标板的精度、延迟和峰值内存。</p>
+<p><b>追问 1</b>：蒸馏怎么做？<br><b>答</b>：用教师的软分布、特征或动作分布监督小学生，同时保留真实标签。分类可用温度 softmax + KL，动作策略可匹配序列/分布而非仅均值。教师冻结，训练只更新学生；权重与温度由验证集选择。</p>
+<p><b>追问 2</b>〔推断〕：压缩后为何没有提速？<br><b>答</b>：检查是否仍运行稠密 kernel、维度是否落在低效 tile、图中是否有反复量化/反量化或 CPU 回退。再看瓶颈是否已转到预处理/传输。应报告整条链路时间，不只报 FLOPs 或参数量下降。</p>
+<p><b>易错</b>：将权重乘一个 mask 就宣布“稀疏加速”；忽略稀疏索引、内核支持与小张量利用率。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/discuss/938361742734655488" target="_blank" rel="noopener">宇树面经</a>（剪枝→蒸馏，索引存证）。</p>
+</details>
+<details class="chain" id="c03">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·索引存证〕</span> <b>C03</b> · 训练好的模型怎样部署到板子上？</summary>
+<p><b>答</b>：冻结可复现的 checkpoint、预处理、动作单位和归一化统计；用固定样本导出并对照框架输出；确定形状、opset、算子和精度支持；为目标硬件构建引擎并验证数值；预分配缓冲、预热，测端到端与尾延迟；最后接控制接口，在低速/限位条件下验收任务与超时行为。模型、引擎、硬件/软件版本和标定要能一并回滚。</p>
+<p><b>追问 1</b>：为什么需要 ONNX 中间表示？<br><b>答</b>：它描述算子图、参数和张量类型/形状，解耦训练框架与执行后端。导出成功只证明生成了文件；后端仍须支持对应算子、opset、动态形状和数值语义。自定义算子可能需要插件或图改写。</p>
+<p><b>追问 2</b>：TensorRT/TFLite 的流程是什么？<br><b>答</b>：共同过程是读模型→检查/转换图→按硬件优化和精度配置准备执行计划→分配张量→执行。TensorRT 构建 engine、选 tactic；TFLite/LiteRT 由 interpreter 和可选 delegate 执行。缓存和可移植性要按版本/设备支持核对。</p>
+<p><b>追问 3</b>：算子融合为何提速，通常融什么？<br><b>答</b>：减少 kernel launch 和中间张量读写，例如卷积/线性层后的偏置、激活；推理态 BN 也常折叠进卷积。可融合范围依赖图结构、布局、精度和后端。融合后仍应逐层/端到端对照，避免把精度回退误当成算力问题。</p>
+<p><b>易错</b>：说“转成 ONNX 就能在任何板子运行”；没带预处理和动作反归一化，就只部署了半个系统。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/discuss/938361742734655488" target="_blank" rel="noopener">宇树面经</a>（完整部署、ONNX、框架、融合；按主题整理顺序）。</p>
+</details>
+<details class="chain" id="c04">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录+推断〕</span> <b>C04</b> · NPU 为什么常比 CPU/GPU 更省能地做矩阵计算？</summary>
+<p><b>答</b>：数学运算本身没有变；差异在数据通路。CPU 为复杂控制与低延迟通用任务设计，GPU 用大量并行线程和高吞吐算术单元，NPU 则常把矩阵乘加、低精度、片上缓存和数据复用做成专用结构，减少取指及外部访存开销。优势依赖支持的算子、形状、利用率和搬运成本，不能仅以芯片峰值 TOPS 判断。</p>
+<p><b>追问 1</b>〔推断〕：搬到 NPU 为什么反而慢？<br><b>答</b>：小 batch/小张量没填满阵列，图被不支持算子切碎，CPU/NPU 间反复同步和拷贝，布局转换或编译/首次加载也可能占主导。先看后端划图和 profiler，再改图/布局或选择更合适的设备。</p>
+<p><b>追问 2</b>〔推断〕：选平台看什么？<br><b>答</b>：以实际模型测精度、稳态/尾延迟、功耗、峰值内存、温控降频和算子覆盖；再看工具链、调试能力及生命周期支持。把摄像头和控制器接上再测，孤立算子 benchmark 只能解释局部。</p>
+<p><b>易错</b>：把 TOPS 除以模型 FLOPs 当成真实延迟，或说 NPU 所有算子都比 GPU 快。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/discuss/938361742734655488" target="_blank" rel="noopener">宇树面经</a>（CPU/GPU/NPU 差异及加速收益不及预期；后两层为工程展开）。</p>
+</details>
+<details class="chain" id="c05">
+<summary><span class="lv lv-l3">L3</span> <span class="freq">〔实录·索引存证〕</span> <b>C05</b> · 板子上模型慢，怎么区分算力和内存带宽瓶颈？</summary>
+<p><b>答</b>：先把采集、预处理、拷贝、推理、后处理分段计时，并用设备事件处理异步执行。对慢 kernel 测吞吐、实际带宽、占用率、缓存命中及 stall；算术强度 $I=\mathrm{FLOPs}/\mathrm{Bytes}$ 对照目标硬件 roofline：理论上限约 $\min(P_{\max},BW\times I)$。随后用减少搬运/改变形状/降低计算量的单变量实验验证，不凭 GPU 利用率一项定性。</p>
+<p><b>追问 1</b>：怎样减少数据搬运？<br><b>答</b>：让相邻算子共享设备缓冲，融合预处理，避免每层返回 CPU；减少不必要的布局/类型转换，复用已分配 workspace。异步双缓冲可重叠拷贝与计算，但要通过事件控制读写生命周期。</p>
+<p><b>追问 2</b>：零拷贝怎样实现？<br><b>答</b>：先界定哪两个模块之间：摄像头 DMA buffer、CPU 地址与加速器可访问地址不一定相同。平台支持时用共享缓冲/导入接口，验证格式、stride、cache coherency、同步 fence 和所有权；“不调用 memcpy”不代表驱动或后端没有隐式拷贝。</p>
+<p><b>追问 3</b>：摄像头到模型输入怎么优化？<br><b>答</b>：先避免帧队列积压，再选择可直接导入的像素格式和尺寸；把 resize、颜色变换、归一化合并到 GPU/硬件预处理，减少中间图像。保留采样时间戳，输出看帧龄和 p99，不能只看 FPS。</p>
+<p><b>易错</b>：混用 CPU wall time 和异步 GPU 提交时间；吞吐变高但处理的都是旧帧。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/discuss/938361742734655488" target="_blank" rel="noopener">宇树面经</a>（计算/访存/搬运瓶颈→减少搬运→摄像头零拷贝）。</p>
+</details>
+<details class="chain" id="c06">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·索引存证〕</span> <b>C06</b> · 推理与实时控制抢 CPU，怎样保证控制按时运行？</summary>
+<p><b>答</b>：先定义控制周期与允许抖动，测最坏执行/阻塞时间；控制线程不做推理、落盘、动态分配或无界锁等待。分配独立核/优先级，限制推理线程池，分离日志和 I/O，以有界队列交接最新结果；控制器自行处理推理超时。CPU 隔离不能消除共享缓存、内存带宽、IRQ 和设备竞争，仍需满负载压力验证。</p>
+<p><b>追问 1</b>〔推断〕：优先级、绑核怎么选？<br><b>答</b>：从任务 deadline、周期和 WCET 定优先级，控制/保护优先；核隔离时连同 IRQ、后台服务与线程池检查。实时调度需限制运行预算，避免高优先级死循环饿死系统；共享锁采用有界持锁及必要的优先级继承。</p>
+<p><b>追问 2</b>：多个模型共板怎么调度？<br><b>答</b>：按任务关键性和 deadline 分配频率、批量与设备时间预算，低优先级任务可降采样/丢旧；监控显存、队龄和尾延迟。GPU stream priority 通常不能保证立即抢占正在运行的长 kernel，必要时拆短 kernel 或独立设备。</p>
+<p><b>易错</b>：把控制线程设最高优先级就宣布硬实时；或让它同步等待一个可能无限阻塞的推理 future。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/discuss/938361742734655488" target="_blank" rel="noopener">宇树面经</a>（共享资源保证控制→多模型资源分配；绑核为题单中的工程展开）。</p>
+</details>
+<details class="chain" id="c07">
+<summary><span class="lv lv-l3">L3</span> <span class="freq">〔实录+推断〕</span> <b>C07</b> · 图像预处理怎样用 CUDA 加速？</summary>
+<p><b>答</b>〔推断〕：先固定输入布局和输出语义，对照 CPU 基线；把 resize、颜色转换、归一化、布局转换融合成一次遍历，邻近线程访问邻近像素，减少中间张量和主机往返。用 profiler 验证是访存、计算、launch 还是同步瓶颈，再决定 vector load、shared memory 或流水。边界、stride、对齐与数值误差要先正确。</p>
+<p><b>追问 1</b>〔推断〕：优化算子的分析过程是什么？<br><b>答</b>：先做 correctness 和预热基线，分开测 kernel 与全链路；查看带宽、寄存器、occupancy、指令和 stall，再提出一个假设只改一项。对不同尺寸/非连续输入复测；保留负结果，避免只在一个形状上过拟合。</p>
+<p><b>追问 2</b>〔实录+推断〕：float4 向量化读取为何可能不加速？<br><b>答</b>：它可能减少指令数，但原先 warp 访存已合并，实际传输量不变；还可能因 16 B 对齐、行 stride、尾部处理、寄存器增加而变慢。检查生成代码和带宽，而非仅把指针转成 float4。未对齐地址强转可能违反访问要求。</p>
+<p><b>追问 3</b>：GPU 内存结构怎样分工？<br><b>答</b>：寄存器是线程私有；shared memory 在 block 内共享；global memory 由设备内存承载，访问经过缓存。local memory 虽逻辑线程私有，通常也落设备内存，不等于片上快存。constant/texture 路径适合特定读取模式，具体层次随架构变化。</p>
+<p><b>追问 4</b>：bank conflict 是什么，怎么处理？<br><b>答</b>：同一 warp 的 shared-memory 请求访问同 bank 的不同地址，可能串行；读取同地址的广播是例外。先确认元素宽度、bank 映射和访问模式，再用 padding、swizzle 或换布局解决。它与 global memory 的合并访存是两类问题。</p>
+<p><b>易错</b>：把 local memory 当寄存器，或把所有访存慢都归因于 bank conflict；未验证对齐就强转 float4。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/feed/main/detail/d8c2f7acc55745ea8caa24257d8da1c9" target="_blank" rel="noopener">CUDA 面经</a>（float4、bank conflict，索引存证）+ <a href="https://www.nowcoder.com/discuss/738696660653551616" target="_blank" rel="noopener">昆仑芯实习原帖</a>（GPU 内存、bank conflict）；题单中的预处理/分析两层未找回原帖，标推断。</p>
+</details>
+<details class="chain" id="c08">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·索引存证〕</span> <b>C08</b> · 部署代码中的 volatile 和 static 分别解决什么问题？</summary>
+<p><b>答</b>：volatile 使对该对象的访问具有语言规定的可观察性，常用于平台定义的 MMIO，但不保证原子性、线程同步或设备内存屏障。static 局部变量有静态存储期，函数/命名空间层的 static 还影响链接属性；类的 static 成员属于类而非每个对象。并发状态优先用原子或锁，并按硬件手册处理寄存器。</p>
+<p><b>追问 1</b>：结构体大小怎么算、怎样重排？<br><b>答</b>：按每个成员的 alignment 对齐偏移，末尾补齐到结构体整体 alignment；一般整体至少满足最严格成员。可按对齐需求重排减少空洞，但 ABI、序列化和硬件接口不能随意变。用 sizeof/alignof/offsetof 在目标编译器验证。</p>
+<p><b>追问 2</b>：模型权重和激活放堆还是栈？<br><b>答</b>：通常由框架的主机/设备 allocator 管理，权重可静态、映射文件或堆分配，激活常在预分配的 arena/workspace 复用；不应把大张量放线程栈。变量句柄在栈上不等于底层张量也在栈上。</p>
+<p><b>追问 3</b>：malloc 有哪些风险？<br><b>答</b>：分配失败、碎片、执行时间不确定和生命周期错误；实时循环尽量预分配，固定大小池/arena 管理并记录峰值。内存池也需规定容量、耗尽行为与跨线程归还规则，不能只把 malloc 换个名字。</p>
+<p><b>追问 4</b>：定点与浮点怎么选？<br><b>答</b>：定点用整数与隐含缩放，须显式处理范围、溢出与舍入；浮点靠指数覆盖动态范围。低位宽可节省带宽/计算，但收益取决于硬件支持；数值稳定、累加位宽与转换开销都要验证。</p>
+<p><b>追问 5</b>：模型文件跨平台需要注意大小端吗？<br><b>答</b>：必须按文件格式解析字节序、类型、布局与对齐，不能把磁盘字节直接强转成任意结构体。标准格式由库处理，原始二进制协议要显式定义；跨平台还需核对版本与浮点表示。</p>
+<p><b>追问 6</b>：推理任务用线程还是进程？<br><b>答</b>：线程共享地址空间，交接数据便宜但要同步并防越界相互破坏；进程隔离较好、可单独重启，却增加 IPC 和内存成本。根据容错、安全边界和模型资源选，不以“线程一定快”代替测量。</p>
+<p><b>易错</b>：认为 volatile 等于原子；认为结构体大小一定是成员大小之和；把张量句柄与设备分配混为一谈。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/discuss/938361742734655488" target="_blank" rel="noopener">宇树面经</a>（一面基础原题，按题单顺序串联，索引存证）。</p>
+</details>
+<details class="chain" id="c09">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C09</b> · C++ 有哪些智能指针？ROS 2 为什么常用 shared_ptr？</summary>
+<p><b>答</b>：unique_ptr 表达唯一所有权，可移动不可拷贝；shared_ptr 用控制块共享对象生命周期；weak_ptr 观察共享对象而不增加强引用，可打断环。ROS 2 中消息可能交给多个回调/异步消费者，共享所有权有助于延长生命周期，但并非处处都该使用 shared_ptr；能够转移独占所有权时，unique_ptr 往往更清晰。</p>
+<p><b>追问 1</b>：为什么这样设计，代价是什么？<br><b>答</b>：异步回调不再依赖栈对象寿命，多个消费者可以共享同一消息；代价包括控制块、引用计数和间接访问。线程安全的引用计数不等于被指向对象可并发修改，仍须保证消息不可变或加同步。</p>
+<p><b>追问 2</b>：new 的内存和 open 的 fd，抛异常后怎么释放？<br><b>答</b>：用 RAII：内存交 unique_ptr，fd 用不可拷贝、可移动的资源包装器，析构中 close；获取成功后立即纳入对象管理。栈展开自动析构；析构不得传播异常。shared_ptr 不是所有系统资源的通用替代品。</p>
+<p><b>追问 3</b>：线程和进程的边界在哪里？<br><b>答</b>：线程共享内存，进程通常地址空间独立；跨线程共享数据要同步，跨进程用 IPC/共享内存并明确所有权。独立进程便于隔离推理崩溃，但 GPU context、共享缓冲与重启恢复也要设计。</p>
+<p><b>追问 4</b>〔推断〕：回调中怎样避免悬空引用或循环引用？<br><b>答</b>：不要把短命栈变量按引用捕获后异步使用；按需持有值或受控的所有权。对象注册捕获自身的长期回调可能成环，改用 weak_ptr 并在回调中 lock，失败就退出；shutdown 时显式解除注册。</p>
+<p><b>易错</b>：说 shared_ptr“让对象线程安全”，或用裸指针/引用把 RAII 的生命周期保证绕过去。</p>
+<p><b>实录</b>：<a href="https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md" target="_blank" rel="noopener">Cgxiaoxin 原始复盘</a>（湃特纳：ROS 2→智能指针→共享设计→异常安全→线程进程；末层为推断）。</p>
+</details>
+<details class="chain" id="c10">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·分层拼接〕</span> <b>C10</b> · ROS 1 和 ROS 2 的核心区别是什么？</summary>
+<p><b>答</b>：ROS 1 常用 master 做名称注册/发现，节点数据通信不都经 master；ROS 2 通过 RMW 接入 DDS 等中间件，发现、QoS、实时性与安全能力由实现和配置共同提供。ROS 2 没有 ROS 1 式统一 master，但去中心化不等于无需发现配置，也不保证开箱即硬实时。</p>
+<p><b>追问 1</b>：DDS 是什么？<br><b>答</b>：面向数据的发布订阅中间件标准，提供发现、序列化/传输、QoS 等能力。ROS 2 在其上建立节点、接口和命名约定；实际实现通过 RMW 抽象接入。部署时要核对发现范围、网络、类型与 QoS。</p>
+<p><b>追问 2</b>：RELIABLE 和 BEST_EFFORT 怎么选？<br><b>答</b>：BEST_EFFORT 容忍丢样本，常用于高频传感流；RELIABLE 尝试可靠交付，可能增加重传/阻塞与旧数据积压。还需配 history、depth、deadline、lifespan，并检查发布/订阅兼容性。可靠传输不等于满足实时期限。</p>
+<p><b>追问 3</b>：Fast DDS 与 Cyclone DDS 怎么选？<br><b>答</b>：按目标网络和负载实测发现时延、带宽、丢包恢复、CPU/内存、尾延迟及配置支持；同步记录版本、RMW、传输与 QoS。不能给出脱离环境的“某实现永远更快”结论。</p>
+<p><b>追问 4</b>：Topic / Service / Action 用在哪里，图像选哪个？<br><b>答</b>：Topic 适合连续流，图像通常走 Topic；Service 是短请求/响应；Action 适合可反馈进度和取消的长任务。偶尔请求一张快照可用 Service，但连续图像不宜塞进阻塞 RPC。三种接口的超时/取消都要由应用正确处理。</p>
+<p><b>易错</b>：说 ROS 1 所有消息都经 master；或认为 RELIABLE 等于“绝不丢、绝不迟到”。</p>
+<p><b>实录</b>：<a href="https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md" target="_blank" rel="noopener">Cgxiaoxin 复盘</a>（地瓜/湃特纳各层，同作者计 1）+ <a href="https://www.nowcoder.com/users/159227329" target="_blank" rel="noopener">莱修贤原作者动态</a>（银河二面：图像用 Topic/Service）。</p>
+</details>
+<details class="chain" id="c11">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·作者动态存证〕</span> <b>C11</b> · Socket 消息怎么组装，TCP 粘包怎么处理？</summary>
+<p><b>答</b>：TCP 提供可靠有序的<b>字节流</b>，不保留应用发送边界。定义固定头（版本、类型、payload 长度、序号等），接收端先攒齐头、校验长度上限，再攒齐 body，循环消费完整帧并保留剩余字节。发送端处理短写；网络字节序与本地结构体布局分离。不能假设一次 send 对应一次 recv。</p>
+<p><b>追问 1</b>：大并发下阻塞和抢占怎么处理？<br><b>答</b>：用非阻塞 I/O 与 epoll 等就绪通知，线程池处理有界业务；每连接限制队列/帧长/空闲时间，防慢客户端占满资源。事件循环避免长计算和同步推理，按公平配额消费，避免单连接饿死其他连接。</p>
+<p><b>追问 2</b>：怎么保持长期通信？<br><b>答</b>：业务心跳和超时检测、TCP keepalive、断线重连与退避结合；连接恢复后重新握手、同步版本与会话序号。心跳只能说明链路/进程一定程度活着，不能证明控制任务健康；过期指令不可在重连后盲目补发。</p>
+<p><b>追问 3</b>〔推断〕：为什么可靠 TCP 仍可能不适合实时控制？<br><b>答</b>：丢包会阻塞后续字节交付，可靠送达的数据也可能过期。按 deadline 处理，减小无界排队，必要时用带序号/超时的 UDP 或专用实时总线；可靠配置与实时状态可以使用不同通道。</p>
+<p><b>易错</b>：把粘包归因于“TCP 不可靠”；重连后把旧控制命令全部重放。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/users/159227329" target="_blank" rel="noopener">莱修贤原作者动态</a>（银河二面：消息组装→粘包→大并发→长期通信；原详情页复核为空壳，作者动态有正文摘要）。</p>
+</details>
+<details class="chain" id="c12">
+<summary><span class="lv lv-l1">L1</span> <span class="freq">〔实录·作者动态存证〕</span> <b>C12</b> · 联合体和结构体的内存有什么区别？</summary>
+<p><b>答</b>：结构体各成员拥有不同存储位置，成员可以同时有效，并可能有对齐填充；联合体成员共享同一段存储，通常只有一个活跃成员。联合体不自动记录当前类型；涉及非平凡 C++ 对象时还要管理构造、析构与成员生命周期，类型安全的可辨联合体常用 std::variant。</p>
+<p><b>追问 1</b>：union 里有 int、bool 和其他类型，大小由谁决定？<br><b>答</b>：至少容纳最大成员，并满足整体对齐要求，故 sizeof(union) 不一定恰好等于最大成员原始大小。以目标 ABI 的 sizeof/alignof 验证；不能把不同大小端平台的联合体直接当序列化格式。</p>
+<p><b>易错</b>：说 union 所有成员都可同时读；用读非活跃成员的方式随意做 C++ 类型转换。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/users/159227329" target="_blank" rel="noopener">莱修贤原作者动态</a>（银河一面：union/struct→混合类型大小）。</p>
+</details>
+<details class="chain" id="c13">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔推断·题单原源待核〕</span> <b>C13</b> · 中断里能休眠吗？复杂逻辑放哪里？</summary>
+<p><b>答</b>〔推断〕：先区分 Linux hard IRQ、threaded IRQ 与 MCU/RTOS ISR。Linux hard IRQ 中不能执行可睡眠操作，先确认/屏蔽中断源、保存最小现场，再把工作交给允许阻塞的线程或 workqueue；线程化处理也需遵守锁和实时约束。MCU ISR 同样避免无界阻塞，使用专用 FromISR API 通知任务。不能把所有中断上下文规则混在一起。</p>
+<p><b>追问 1</b>〔推断〕：softirq、tasklet、workqueue 有什么区别？<br><b>答</b>：softirq/tasklet 不能睡眠，tasklet 基于 softirq。线程型 workqueue 在进程上下文执行，可在锁约束允许时睡眠；WQ_BH 则在 softirq 上下文，仍不能睡眠。新代码按内核版本选择 threaded IRQ/线程型 workqueue 等机制。</p>
+<p><b>追问 2</b>〔推断〕：上电到 Linux 内核运行，经历什么？<br><b>答</b>：SoC Boot ROM 按启动介质加载早期固件，初始化必要时钟/存储与 DRAM，再由 bootloader 装入内核、设备树等并准备启动参数，跳到架构入口。内核完成早期初始化、驱动/文件系统准备，启动用户空间。具体阶段取决于平台。</p>
+<p><b>追问 3</b>〔推断〕：bootloader 具体做什么？<br><b>答</b>：在有限环境里建立运行条件，选择并校验启动镜像、初始化必要设备和内存、提供加载地址与启动参数，再交接内核；也可能承担恢复/升级。它不等于完整操作系统，DRAM 初始化常由更早的 SPL/平台固件完成。</p>
+<p><b>追问 4</b>〔推断〕：U-Boot 为什么要搬内核？<br><b>答</b>：镜像需按启动协议从存储装入正确内存地址；解压由格式/架构决定。ARM32 zImage 等可自解压，ARM64 Image.gz 通常需 bootloader 先解压。是否搬移、加载地址及交接条件均查目标启动协议，不把某块板的流程泛化。</p>
+<p><b>追问 5</b>〔推断〕：设备树什么时候解析？<br><b>答</b>：bootloader 可先读取/修改 DTB，再把地址交给内核；内核在早期使用 flat tree 获取内存等信息，随后建立设备树结构并由驱动匹配设备。不是只在用户空间启动后才解析，也不是 U-Boot 解析完内核就不用。</p>
+<p><b>追问 6</b>〔推断〕：怎么证明中断处理没拖慢控制？<br><b>答</b>：测 hard IRQ/线程化处理的最坏耗时、关闭中断时间和控制唤醒延迟；在 I/O 洪峰和多核负载下 trace，并对照 deadline。平均中断占用低也可能有偶发长尾，不能单凭平均 CPU 使用率判断。</p>
+<p><b>易错</b>：把 MCU ISR、Linux hard IRQ 和线程化处理等同；默认所有固件都由 U-Boot 一步完成。</p>
+<p><b>实录</b>：题单称智元场次，但原 URL 未落盘，尚不能核实；本链全部按〔推断〕练习保留，不计面经频次，记录见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol4.md" target="_blank" rel="noopener">卷四题源</a>。</p>
+</details>
+<details class="chain" id="c14">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·分层拼接〕</span> <b>C14</b> · 手眼标定的完整步骤是什么？</summary>
+<p><b>答</b>：先明确安装关系：eye-in-hand 是末端相机随机器人运动、板固定；eye-to-hand 是相机固定、板随末端运动。标定内参与畸变，采集多组充分激励的机器人/标定板位姿，核对时间与变换方向，建立 $AX=XB$ 或对应变体求解。留出新构型测重投影和空间误差，再验证抓取；低残差的退化采集不能保证可靠外参。</p>
+<p><b>追问 1</b>：以头部为基准，多相机动态标定难在哪？<br><b>答</b>：头/手/髋部不刚性连接，不能用一组固定相机外参描述全部运动。固定传感器到其刚体的外参，利用关节/动捕/视觉追踪估计随时间变化的刚体间变换，再组合到头部参考系；还需同步与跟踪丢失检测。</p>
+<p><b>追问 2</b>〔推断〕：怎么区分时延与空间标定误差？<br><b>答</b>：先在静止多姿态检查几何残差，再改变运动速度/方向；时延误差通常随速度变化并可能在反向时变号，固定外参误差更呈构型相关规律。联合绘制时间偏差与空间残差，用独立序列验证，不能用一个常数位移补偿所有运动。</p>
+<p><b>易错</b>：把会运动的头手之间外参当成固定矩阵；仅用训练姿态的重投影误差验收。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/users/159227329" target="_blank" rel="noopener">莱修贤原作者动态</a>（银河：手眼步骤）+ <a href="https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md" target="_blank" rel="noopener">Cgxiaoxin 复盘</a>（安努：多相机动态参考系）。两来源覆盖不同层，不报整链复现频次。</p>
+</details>
+<hr>
+<h2>题源与技术参考</h2>
+<p>本卷原帖、作者动态、搜索索引分别注明，未取回正文的页面不称“当前可读”。C13 无独立原帖证据，全链标推断；C07 前两层也按推断。完整状态见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol4.md" target="_blank" rel="noopener">卷四题源</a>。</p>
+<p>技术校核参考：<a href="https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-with-quantized-types.html" target="_blank" rel="noopener">TensorRT 量化文档</a>、<a href="https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html" target="_blank" rel="noopener">CUDA Best Practices</a>、<a href="https://design.ros2.org/articles/qos.html" target="_blank" rel="noopener">ROS 2 QoS 设计</a>、<a href="https://docs.kernel.org/core-api/workqueue.html" target="_blank" rel="noopener">Linux workqueue</a>。技术文档不计面经频次。</p><nav class="volume-nav"><a href="./vol3_data_teleop_debug.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="./vol5_project_defense.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol4_deployment_systems.md" target="_blank" rel="noopener">Markdown 源文</a></nav>
+</main>
+<footer><div>公开面经、整理与推断练习分档标注 · 题源限制与审查范围见各链和记录 · 公式排版使用 MathJax，折叠无需 JavaScript · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a> · 渲染于 2026-10-26</div></footer>
+</body>
+</html>

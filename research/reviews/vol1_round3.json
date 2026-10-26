@@ -1,0 +1,68 @@
+{
+  "target": "volumes/vol1_vla_il.md",
+  "round": 3,
+  "date": "2026-10-26",
+  "reviewer_model": "Codex（当前独立审查会话；精确部署标识未向代理暴露）",
+  "independent_context": true,
+  "reviewer_role": "沿用非作者独立审查上下文；整卷复读正文、sources与规范，未起草或修改被审文件，仅写审查记录",
+  "verdict": "PASS",
+  "scope": "修后全文技术/推断标记/题源说明/结构字数审查。PASS仅适用于下列快照，不等于认证全部历史面经、真机安全或发布渲染结果。",
+  "snapshot_sha256": {
+    "volumes/vol1_vla_il.md": "b8c928042913607e71e4b42b546d55b24b3217f5b6e391f6ad59358f950a5139",
+    "research/sources-vol1.md": "a6de93c2051ce3f1ff205b217113f5a0816e8a4b507e39cd3d82c48d296c5123",
+    "WORKFLOW.md": "719305de6f099ee188528b85195250ddd882022e1d6a3ea2a3736411394fb927",
+    "docs/format-spec.md": "73b7c94c3677cd103301a8090753f84e018b29016005d5299da45e613820e87c"
+  },
+  "blocking_issues": [],
+  "round2_resolution": [
+    {"id":"V1-B01","status":"RESOLVED","evidence":"C01/C08/C12区分模型调用、动作采样与伺服频率；不再把π0的50Hz当完整推理频率或3Hz调用当稀疏waypoint频率。"},
+    {"id":"V1-B02","status":"RESOLVED","evidence":"C02区分π0.6与π*0.6/RECAP，不再称ensemble为版本定义；C15删不准确版本路线。"},
+    {"id":"V1-B03","status":"RESOLVED","evidence":"C03正确说明state/noisy action走动作专家、图像/语言走VLM；区分VLM初始化与机器人训练，撤无明确版本的规模/基准数字。"},
+    {"id":"V1-B04","status":"RESOLVED","evidence":"C05标题改RDT扩散；C06将ACT归BC，损失L1+加权KL，无图像重建；说明均值latent推理与温度边界。"},
+    {"id":"V1-B05","status":"RESOLVED","evidence":"C02明确负步长1→0积分；C07区分条件路径与边缘场、固定噪声确定性与跨噪声多样性；DDIM η=0限定及DDPM少步边界正确。复检发现C02旧易错残句后，作者已修掉直/弯、确定/随机的普遍二分并重新读取确认。"},
+    {"id":"V1-B06","status":"RESOLVED","evidence":"C08说明生成时约束推理延迟内承诺前缀和未来过渡；非普通事后均值，ensemble成本不再写固定倍数。"},
+    {"id":"V1-B07","status":"RESOLVED","evidence":"C12以过点/允许残差区分插值和拟合，二者均可时间参数化/连续；区分时间滤波窗口和重叠预测融合。"},
+    {"id":"V1-B08","status":"RESOLVED","evidence":"C13限定从视觉变化学习latent，不冒称直接量化动作标签；late拼写修正为latent。"},
+    {"id":"V1-B09","status":"RESOLVED","evidence":"C14明确透明/反射/弱纹理失效和缺测、标定等限制，不称深度普遍兜底。"},
+    {"id":"V1-B10","status":"RESOLVED","evidence":"C16正确区分Qwen2-VL与Qwen2.5-VL window attention；dilation=1公式含floor，三组数值16/11/10正确。"},
+    {"id":"V1-B11","status":"RESOLVED","evidence":"撤全部旧频次，无法逐层外核的14链标历史题单推断；C08/C11/C12仅保留主题锚点，不报整链频次。旧URL在sources明确只是检索线索。"},
+    {"id":"V1-B12","status":"RESOLVED","evidence":"53个答案均标推断工程作答、36追问均标推断；各链说明扩展/重排；易错统一披露工程归纳。C15文末现场归属残句已改历史题单开放练习。"},
+    {"id":"V1-B13","status":"RESOLVED","evidence":"统一保留LaTeX命令口径下全量答案达标，主答最大190、追答最大146。"}
+  ],
+  "warnings": [
+    {"severity":"non-blocking","chains":["C04","C05","C08","C12","C16","C17"],"finding":"若干易错复用同一句版本/证据通用提醒，学习针对性弱于其他链；当前不构成技术错误或伪造现场失误。","recommendation":"后续内容更新可换为该链具体接口/公式误区，并重新审查哈希。"},
+    {"severity":"non-blocking","chains":["C09"],"finding":"易错仍将norm统计和相机标定称第一刀，比新主答的逐接口核对略强；主答已明确依checkpoint/接口，未声称所有端到端模型强制使用外参。","recommendation":"后续可改为先核对动作/观测接口与所需标定，避免孤立背诵一句话。"}
+  ],
+  "checks": {
+    "read_files_completely": ["volumes/vol1_vla_il.md","research/sources-vol1.md","WORKFLOW.md","docs/format-spec.md","research/reviews/vol1_round2.json"],
+    "chain_count":17,
+    "answer_node_count":53,
+    "followup_count":36,
+    "difficulty":{"L1":1,"L2":13,"L3":3},
+    "unanswered_deep_dive":"C01原裸深挖改延伸阅读索引，不计问答；结构计数与卷头一致。",
+    "length_method":"去答标签及前置分档、Markdown强调/代码/数学美元符号与空白，保留LaTeX命令；英文按Unicode码点计，主答≤350/追答≤150。",
+    "max_main_answer":190,
+    "max_followup_answer":146,
+    "over_limit":[],
+    "unmarked_answers_or_followups":[],
+    "repository_analyzer":"tools/content.mjs analyzeVolume报告17链/53节点、难度1/13/3、errors=[]；另以独立逐行脚本复算字数。",
+    "source_anchor_links":"正文17个C锚点分别对应sources-vol1的C01至C17标题；main链接仅是可变仓库记录入口，不是原始面经永久存档。",
+    "technical_references_checked_during_this_review_sequence":[
+      "https://www.pi.website/download/pi0.pdf",
+      "https://www.pi.website/blog/pistar06",
+      "https://github.com/tonyzhaozh/act/blob/main/policy.py",
+      "https://arxiv.org/abs/2410.07864",
+      "https://arxiv.org/abs/2505.06111",
+      "https://qwenlm.github.io/blog/qwen2.5-vl/",
+      "https://docs.pytorch.org/docs/stable/generated/torch.nn.modules.conv.Conv2d.html"
+    ],
+    "primary_interview_recheck":"offerseed #6本轮web再次读到作者N0TPO3T、2026-09-29及44题回顾；页面明确无现场回答，本文工程答案没有冒认现场答案。"
+  },
+  "source_limitations": [
+    "本PASS不是全部旧牛客/CSDN/prep URL恢复或真实性认证；未核实部分已撤频次并降推断，因此不再阻塞当前学习材料发布。",
+    "Cgxiaoxin复盘在本会话前段已读得，随后GitHub/API/raw请求404；当前来源文件诚实记录时点差异，不能保证读者此刻仍可访问。",
+    "官方论文/代码用于答案技术核验，不用来证明面试发生或公司归属；同名UniVLA以来源中的2505.06111为语境。",
+    "历史review没有本次快照效力；源码、sources或规范再变更后本PASS需重算/复检。",
+    "未执行真机实验、未对全部模型实现逐行审计，不构成安全控制证明；未在本记录中认证site渲染或远端发布。"
+  ]
+}

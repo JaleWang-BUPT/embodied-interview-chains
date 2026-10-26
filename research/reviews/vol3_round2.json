@@ -1,0 +1,121 @@
+{
+  "target": "volumes/vol3_data_teleop_debug.md",
+  "round": 2,
+  "date": "2026-10-26",
+  "reviewer_model": "GPT-6 / Codex（精确部署版本未向审查代理暴露）",
+  "independent_context": true,
+  "reviewer_role": "沿用独立审查上下文复检；未起草或修改正文及sources，仅写本审查记录",
+  "verdict": "PASS",
+  "scope": "当前正文、来源记录的事实/逐层分档/节点字数复检。不是全部面试经历真实性认证，也不包含site渲染、发布结果。",
+  "snapshot_sha256": {
+    "WORKFLOW.md": "719305de6f099ee188528b85195250ddd882022e1d6a3ea2a3736411394fb927",
+    "docs/format-spec.md": "73b7c94c3677cd103301a8090753f84e018b29016005d5299da45e613820e87c",
+    "volumes/vol3_data_teleop_debug.md": "463cc5339ed023d38dac82bd365d88ed0e06365626c096121bd4df90ff5f98c4",
+    "research/sources-vol3.md": "0fcec27590cf11e11fe5b63bbe2daac86f1659a17c502f96b58bc011b0cc69f1"
+  },
+  "blocking_issues": [],
+  "round1_resolution": [
+    {"id":"B01","status":"RESOLVED","evidence":"C06–C09徽章、主答、全部追问均标推断；实录行明确无外部实录证据，不再认领公司或频次。sources同步承认题单不能自证。"},
+    {"id":"B02","status":"RESOLVED","evidence":"C04标整理+推断，主答标推断扩展，追问1–3全部标推断；来源行明确CSDN不含UMI。"},
+    {"id":"B03","status":"RESOLVED","evidence":"C11追问2已说明约束延迟窗口内承诺执行的旧动作前缀，再在新观测条件下补全后续；不再把RTC等同普通状态重规划。"},
+    {"id":"B04","status":"RESOLVED","evidence":"C03追问3恢复1万张评估限制并先区分人工/全部评分语义；保留分布假设及无法保证找全的限制。来源行声明预算解释是独立工程作答。"},
+    {"id":"B05","status":"RESOLVED","evidence":"C03/C10降为索引记录且不报当前可读频次；C07补充链接明确正文未核实。sources不再把HTTP200视为完整正文可读。本轮审查代理独立复现C03/C10索引内容，证据见search_index_verification。"},
+    {"id":"B06","status":"RESOLVED","evidence":"C09补充来源已明确是通用备考/推广，不能证明具体实录或缓存计算层。"},
+    {"id":"B07","status":"RESOLVED","evidence":"C01坐标系细化标整理+推断并在来源行解释；C11追问1标推断；sources精确映射offerseed与CSDN覆盖层。"}
+  ],
+  "warnings": [
+    {
+      "id":"W02",
+      "severity":"non-blocking",
+      "finding":"C03原索引第12题的1万张既可理解为需要挑出的有效子集规模，也含只评估1万张的语义；当前正文选择预算解释，已在答案首先要求确认语义。",
+      "recommendation":"使用时保留先澄清约束的步骤，勿把预算解释当作现场唯一含义或要求找出全部正样本。"
+    },
+    {
+      "id":"W03",
+      "severity":"non-blocking",
+      "finding":"来源记录中的blob/main是可变记录入口，没有完整网页归档功能。",
+      "recommendation":"发布后的可追溯性以本审查SHA256及对应Git提交为准；若将来需要不可变引用，再采用真实提交SHA链接。"
+    }
+  ],
+  "checks": {
+    "required_reading":"已重新完整读取卷三正文、重写的sources、WORKFLOW、format-spec；对长输出截断部分分段补读。落盘前再次完整读到更新后的format-spec第5/9/10条；工程易错口径已同步。卷首改为中性审查状态，经将该行还原后计算SHA256，确认正文其余内容与已复检版本完全一致。",
+    "structure": {
+      "status":"PASS",
+      "chains":12,
+      "nodes":48,
+      "node_counts_by_chain":{"C01":4,"C02":4,"C03":4,"C04":4,"C05":4,"C06":3,"C07":4,"C08":3,"C09":8,"C10":3,"C11":4,"C12":3},
+      "difficulty_counts":{"L1":1,"L2":9,"L3":2},
+      "details_summary_pairs":12,
+      "pitfall_lines":12,
+      "notes":"编号连续；全链均有易错和来源边界说明；包含带推断标签的主答计48节点。"
+    },
+    "length": {
+      "status":"PASS",
+      "method":"逐条检查48个答案，去答标签、Markdown强调/代码/数学美元符号及空白，英文逐字符计，LaTeX内部命令保留。",
+      "maximum_main_answer_chars":207,
+      "maximum_followup_answer_chars":140,
+      "main_limit":350,
+      "followup_limit":150,
+      "counts_by_chain":{"C01":[173,140,105,111],"C02":[191,105,106,111],"C03":[152,126,121,121],"C04":[207,100,105,105],"C05":[172,124,98,120],"C06":[180,109,110],"C07":[171,106,134,138],"C08":[168,83,78],"C09":[196,102,103,92,109,104,115,124],"C10":[155,116,124],"C11":[182,122,109,117],"C12":[182,124,109]}
+    },
+    "technical_regression": [
+      "C01区分硬件触发与PTP；C01/C02仍以部署当时可用观测为输入，未重新引入未来到达观测泄漏。命令标签与延迟后的执行结果分开，因果方向成立。",
+      "C03不再把无目标帧一概判无效，保留背景负样本/误检难例；有限评分预算与全量廉价预筛分清，未承诺不可能的无条件找全。",
+      "C04安全replay只作接口/时序验收，明确控制初态/环境且不把开环复现当接触任务绝对必要条件。",
+      "C07复位源、启动初始化与RAM物理保持边界保持正确；仍提示按芯片能力核对。",
+      "C09串口计算仍正确：115200/10=11520B/s，100B约8.68ms，20ms约230.4B；512B为加帧长与裕量的合理示例。",
+      "C11 RTC定义与第一轮读取的Physical Intelligence官方算法一致；普通重规划、temporal ensembling不再被混为RTC。",
+      "C12零指令但odom变化改成定位漂移或真实运动的多种可能，并以外部参考验证；冻结映射/定位A/B限定离线/仿真，消除了原先直接破坏真机闭环的误读。"
+    ],
+    "layer_coverage": {
+      "C01":"整理来源与坐标系推断范围清楚；不报独立实录频次。",
+      "C02":"offerseed第二轮2/3对应4节点，沿用第一轮已读取原始issue的逐层核验。",
+      "C03":"本轮独立检索到原帖索引题1/9/11/12，四个主题及顺序吻合；不是相邻连续四题，正文已不称原题四连。",
+      "C04":"UMI主问扩展及追问1–3明确推断。",
+      "C05":"主问/追问1为整理，追问2/3为推断，无回归。",
+      "C06_C09":"全链推断，未把题单笔记升级为实录。",
+      "C10":"本轮独立索引返回一面2/4/6：步态定位、标定、关节软掉；正文主问/追问1有索引支持，追问2为推断。",
+      "C11":"CSDN支持主问主题；追问1推断；offerseed第二轮11/12支持追问2/3；sources有明确层号映射。",
+      "C12":"原题只有遥操作人走动；主答场景及追问1/2明确推断，原始GitHub证据沿用第一轮。"
+    },
+    "frequency":"PASS：只有C02/C12显示🔥×1；C01/C05整理、C04整理+推断、C03/C10索引不报频次、C06–C09推断、C11分层拼接不报整链频次，徽章/来源行/卷末说明一致。"
+  },
+  "search_index_verification": [
+    {
+      "chain":"C03",
+      "date":"2026-10-26",
+      "query":"\"京东探索研究院\" \"2000\" \"有效\"",
+      "url":"https://www.nowcoder.com/feed/main/detail/2848ed4b83034fbaad17f0166c956d2b?sourceSSR=dynamic&weFlow=true",
+      "title":"京东探索研究院-日常实习- 具身智能算法工程师 一面面经",
+      "observed":"搜索返回题目正文，含题1有效数据、题9密集检测balance、题11万图挑2000、题12百万图筛选与1万张评估语境；页内07-17 08:56，评论显示蹲面试楼主。",
+      "limitation":"这是搜索提供的缓存/索引可读内容；不据此推翻普通详情链接只能获取外壳的第一轮观察，年份仍未独立核实。"
+    },
+    {
+      "chain":"C10",
+      "date":"2026-10-26",
+      "query":"site.nowcoder.com \"步态异常\" \"面经\"",
+      "url":"https://www.nowcoder.com/feed/main/detail/e67c0fbaa90f4a179b45cf4ac4625d68",
+      "title":"秋天的社招是不是也算秋招？",
+      "observed":"搜索返回一面题2步态异常定位、题4视觉/运动学标定、题6关节软掉等正文，支持当前索引分档的题目范围。",
+      "limitation":"原作者/日期本轮未取回；未确认公司小鹏归属，当前正文也已去除该归属。索引不等于目标详情当前完整可读。"
+    }
+  ],
+  "technical_sources_reused_from_round1": [
+    "https://arxiv.org/html/2402.10329v3",
+    "https://www.pi.website/research/real_time_chunking",
+    "https://www.pi.website/download/real_time_chunking.pdf",
+    "https://www.freertos.org/Documentation/02-Kernel/03-Supported-devices/02-Customization",
+    "https://www.nuvoton.com/support/technical-support/faq/945f56cc-7d6b-11ea-8ba0-000d3a082cb4/"
+  ],
+  "source_limitations": [
+    "PASS针对透明分档后的当前内容；C06–C09没有外部原帖证据，仍然是推断练习。",
+    "C03/C10本轮独立复现索引内容，但尚无完整本地网页快照；不应重新标为全量匿名可读。",
+    "C07补充URL只有外壳/摘要，不证明PC/LR/retention各层；当前正文已明确披露。",
+    "C01公开前15题可见但一手参面身份未独立确认；CSDN是汇总，不把这两类来源冒充多个独立一手实录。",
+    "C02/C12文本证据可核对题目，不等于审查者能证明现实面试经历；精确原文和读取情况见round1。",
+    "不重复读取未发生变化的外部技术文献，沿用同一审查上下文第一轮已获取的官方证据；本轮新增外部核验是C03/C10索引。",
+    "本报告仅对snapshot_sha256指定内容有效；任何后续正文或sources编辑均需核对差异并更新审查快照。",
+    "尚未验证最终静态HTML和远端发布；不以本PASS代替渲染或部署验证。"
+  ],
+  "outcome":"PASS：第一轮7项阻塞均已解决，技术修正未见回归，48节点、难度及全部答案字数合规。索引证据与推断练习的限制需持续保留。"
+}

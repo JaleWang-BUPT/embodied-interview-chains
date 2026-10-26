@@ -1,14 +1,22 @@
 // 追问链题库渲染器：volumes/*.md → site/*.html + site/index.html
 // 零依赖，Node >= 18。渲染目标是我们自定义的受限 Markdown 子集。
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { analyzeVolume, loadReviews, reviewStatus, volumeFiles } from './content.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
 const volDir = join(root, 'volumes');
 const siteDir = join(root, 'site');
 mkdirSync(siteDir, { recursive: true });
+// This directory contains only generated output. Remove stale generated pages,
+// never recurse into the workspace or erase unrelated assets.
+for (const file of readdirSync(siteDir)) {
+  if (file === 'index.html' || file === 'manifest.json' || /^vol\d.*\.html$/.test(file)) {
+    unlinkSync(join(siteDir, file));
+  }
+}
 
 const REPO = 'https://github.com/JaleWang-BUPT/embodied-interview-chains';
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -50,9 +58,6 @@ function renderBody(md) {
   function inRaw(l) { return /^<\/?summary>/.test(l) || /^<summary>/.test(l); }
 }
 
-function countChains(md) { return (md.match(/<details class="chain">/g) || []).length; }
-function countNodes(md) { return (md.match(/<summary>/g) || []).length + (md.match(/^\*\*追问 \d+/gm) || []).length; }
-
 const CSS = `
 :root{--bg:#fbfbfa;--fg:#1f2328;--mut:#656d76;--line:#e4e4e0;--acc:#0969da}
 *{box-sizing:border-box}
@@ -67,7 +72,7 @@ hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
 .note{background:#f3f6fb;border-left:4px solid var(--acc);border-radius:6px;padding:10px 16px;margin:14px 0;font-size:15px;color:#33415c}
 details.chain{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 18px;margin:14px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
 details.chain[open]{border-color:#d5d8dd}
-summary{cursor:pointer;font-weight:600;font-size:16.5px;padding:8px 0;list-style:none;position:relative;padding-right:28px}
+summary{cursor:pointer;font-weight:600;font-size:16.5px;padding:8px 0;list-style:none;position:relative;padding-right:64px;overflow-wrap:anywhere}
 summary::-webkit-details-marker{display:none}
 summary::after{content:'展开';position:absolute;right:0;top:8px;font-size:12.5px;font-weight:400;color:var(--mut);border:1px solid var(--line);border-radius:20px;padding:1px 10px}
 details.chain[open] summary::after{content:'收起'}
@@ -83,6 +88,10 @@ footer div{max-width:840px;margin:0 auto;padding:18px;color:var(--mut);font-size
 .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:14px 0}
 .card h2{border:none;margin:0 0 6px}
 .meta{color:var(--mut);font-size:14px}
+.review{font-size:14px;border-left:4px solid #1a7f37;background:#eff8f1;padding:10px 14px;margin:16px 0;overflow-wrap:anywhere}
+.review.pending,.review.stale,.review.legacy{border-color:#9a6700;background:#fff8df}
+.volume-nav{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;font-size:14px}
+p,li,.note{overflow-wrap:anywhere}
 @media(max-width:640px){main{padding:18px 12px 60px}summary{font-size:15.5px;padding-right:64px}summary::after{top:4px}}
 `;
 
@@ -92,7 +101,7 @@ function page(title, body, rel) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${title}</title>
+<title>${esc(title)}</title>
 <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},chtml:{displayAlign:'left'}};</script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 <style>${CSS}</style>
@@ -102,28 +111,39 @@ function page(title, body, rel) {
 <main>
 ${body}
 </main>
-<footer><div>题目来自公开一手面经，来源见各链「实录」行 · 执行 AI ≠ 审查 AI，审查记录见 research/reviews/ · <a href="${REPO}" target="_blank" rel="noopener">MIT License</a> · 渲染于 ${new Date().toISOString().slice(0, 10)}</div></footer>
+<footer><div>公开面经、整理与推断练习分档标注 · 题源限制与审查范围见各链和记录 · 公式排版使用 MathJax，折叠无需 JavaScript · <a href="${REPO}/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a> · 渲染于 ${new Date().toISOString().slice(0, 10)}</div></footer>
 </body>
 </html>`;
 }
 
-const files = readdirSync(volDir).filter(f => f.endsWith('.md')).sort();
+const files = volumeFiles();
 const vols = [];
-for (const f of files) {
+const reviews = loadReviews();
+const reviewBadge = status => `<div class="review ${status.kind}">${esc(status.label)}${status.record ? ` · <a href="${REPO}/blob/main/${status.record}" target="_blank" rel="noopener">审查记录与范围</a>` : ''}</div>`;
+for (const [i, f] of files.entries()) {
   const md = readFileSync(join(volDir, f), 'utf8');
   const titleLine = (md.match(/^# (.+)$/m) || ['', basename(f, '.md')])[1];
-  const chains = countChains(md), nodes = countNodes(md);
-  const html = page(titleLine, renderBody(md), './index.html');
+  const { chains, nodes, errors } = analyzeVolume(md);
+  if (errors.length) throw new Error(`${f}: ${errors.join('; ')}`);
+  const status = reviewStatus(`volumes/${f}`, reviews);
+  const links = `<nav class="volume-nav">${i ? `<a href="./${files[i-1].replace(/\.md$/, '.html')}">← 上一卷</a>` : ''}<a href="./index.html">全部七卷</a>${i+1<files.length ? `<a href="./${files[i+1].replace(/\.md$/, '.html')}">下一卷 →</a>` : ''}<a href="${REPO}/blob/main/volumes/${f}" target="_blank" rel="noopener">Markdown 源文</a></nav>`;
+  let chainNumber = 0;
+  const body = renderBody(md.replace(/^> 审查状态：.*\n/m, '')).replace(/<details class="chain">/g,
+    () => `<details class="chain" id="c${String(++chainNumber).padStart(2, '0')}">`);
+  const html = page(titleLine, reviewBadge(status) + links + body + links, './index.html');
   const outName = f.replace(/\.md$/, '.html');
   writeFileSync(join(siteDir, outName), html);
-  vols.push({ file: outName, title: titleLine, chains, nodes });
+  vols.push({ file: outName, title: titleLine, chains, nodes, status });
   console.log(`rendered ${outName}: ${chains} 链 / ${nodes} 节点`);
 }
 
-const cards = vols.map(v => `<div class="card"><h2><a href="./${v.file}">${inline(v.title)}</a></h2><div class="meta">${v.chains} 条追问链 · ${v.nodes} 个问答节点</div></div>`).join('\n');
+const cards = vols.map(v => `<div class="card"><h2><a href="./${v.file}">${inline(v.title)}</a></h2><div class="meta">${v.chains} 条追问链 · ${v.nodes} 个问答节点</div>${reviewBadge(v.status)}</div>`).join('\n');
+const totals = vols.reduce((sum, v) => ({ chains: sum.chains + v.chains, nodes: sum.nodes + v.nodes }), { chains: 0, nodes: 0 });
 const idxBody = `
 <h1>具身智能面试追问链</h1>
-<div class="note">按面试官真实下钻路径组织：主问 → 追问 → 深挖。先自己答，再展开对照，再合上把整条链讲一遍。<br>题目全部来自公开一手面经（牛客 / CSDN / GitHub 实录），频次独立统计；答案经独立 AI 交叉审查。</div>
+<p class="meta">${vols.length} 卷 · ${totals.chains} 条追问链 · ${totals.nodes} 个问答节点</p>
+<div class="note">主问 → 追问 → 深挖。先自己答，再展开对照，合上后复述整条链。<br>区分公开实录、整理、索引/历史存证和推断练习；公司归属与频次不超出证据。链内细化或重排另行注明。<br>审查状态按最新记录及文件 SHA-256 计算，修改内容后不会沿用旧 PASS；PASS 不代表面试经历真实性认证。</div>
 ${cards}`;
 writeFileSync(join(siteDir, 'index.html'), page('具身智能面试追问链 · 卷目录', idxBody, './index.html'));
+writeFileSync(join(siteDir, 'manifest.json'), JSON.stringify({ volumes: vols, totals }, null, 2) + '\n');
 console.log('rendered index.html');

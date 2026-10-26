@@ -15,6 +15,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  examples:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install CPU-only test dependency
+        run: python -m pip install -r requirements-test.txt --index-url https://download.pytorch.org/whl/cpu
+      - name: Test all handwritten and PyTorch examples (no skipped dependency)
+        run: |
+          python -c "import torch; print(torch.__version__)"
+          python -m unittest discover -s tests -v
   build:
     runs-on: ubuntu-latest
     steps:
@@ -22,13 +35,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Test validation and review snapshot logic
+        run: node --test tests/content.test.mjs
+      - name: Require valid content and current independent review snapshots
+        run: node tools/validate.mjs --require-reviewed
       - name: Render site from volumes
         run: node tools/render.mjs
+      - name: Check generated pages
+        run: node tools/check-site.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
   deploy:
-    needs: build
+    needs: [build, examples]
     runs-on: ubuntu-latest
     environment:
       name: github-pages

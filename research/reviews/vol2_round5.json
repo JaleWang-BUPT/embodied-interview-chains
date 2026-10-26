@@ -1,0 +1,77 @@
+{
+  "target":"volumes/vol2_rl_motion.md",
+  "round":5,
+  "date":"2026-10-26",
+  "reviewer_model":"Codex（当前独立审查会话；精确部署标识未向代理暴露）",
+  "independent_context":true,
+  "reviewer_role":"沿用非作者独立审查上下文；全文复检正文/sources与规范，仅写审查记录，不修改被审内容",
+  "verdict":"PASS",
+  "scope":"修后整卷技术、逐层分档、来源限制、节点/字数；不是全部历史面经真实性或机器人控制安全性认证。",
+  "snapshot_sha256":{
+    "volumes/vol2_rl_motion.md":"779be731375b211bb405f2bab8773f66aa46e201050cf2a509c85861dfee0d2a",
+    "research/sources-vol2.md":"63b30e39e1573aae41924c58909a90a563b58855c51eef11f9ec43412c92f2f4",
+    "WORKFLOW.md":"719305de6f099ee188528b85195250ddd882022e1d6a3ea2a3736411394fb927",
+    "docs/format-spec.md":"73b7c94c3677cd103301a8090753f84e018b29016005d5299da45e613820e87c"
+  },
+  "blocking_issues":[],
+  "round4_resolution":[
+    {"id":"V2-B01","status":"RESOLVED","evidence":"历史自记删除题录明确非第三方快照；仅靠题单的层降推断并撤公司风格归属/频次；main链接不称永久证据。"},
+    {"id":"V2-B02","status":"RESOLVED","evidence":"撤全部旧频次和7源均可读断言；按工具与时点记录canonical/SSR、知乎403、Cg后续404。审查末轮独立解析云鲸正文content成功，见下方证据；C03/C04仍保守推断，不扩大频次。"},
+    {"id":"V2-B03","status":"RESOLVED","evidence":"C01明确有限折扣目标、相对G_t与外部γ^t、baseline条件；C02明确最小化−clip+cV−βH、detach和ratio/clip限制。"},
+    {"id":"V2-B04","status":"RESOLVED","evidence":"C03不再由末段1秒推λ偏大，补γ/编号/时间步/critic条件；C04不由value loss下降断言critic健康，也不把surrogate波动等同策略失效。"},
+    {"id":"V2-B05","status":"RESOLVED","evidence":"C05以运动状态/转移解释AMP，并给γΦ(s')−Φ(s)与有限时域终止条件，未承诺任意塑形保持最优策略。"},
+    {"id":"V2-B06","status":"RESOLVED","evidence":"C07限定串并联性能与几何，区分滤波/动作惩罚，要求sim/real同一执行链，明确不能额外再串滤波器；直接关节目标未必做IK。"},
+    {"id":"V2-B07","status":"RESOLVED","evidence":"C08承认RL可输出力矩，传统层不自动保稳定；PID整定要求受控低能量实验与保护，不无保护推临界振荡。"},
+    {"id":"V2-B08","status":"RESOLVED","evidence":"C09覆盖有限/无限LQR；MPC软约束、旧可行轨迹和fallback不再被当作无条件安全保证。"},
+    {"id":"V2-B09","status":"RESOLVED","evidence":"C10恢复执行延迟5ms，显式区别更新周期/200Hz上限与带宽，指出流水线可每1ms接令但仍须分析时延。"},
+    {"id":"V2-B10","status":"RESOLVED","evidence":"C11检查基参数/激励秩，使用QR/SVD/正则，补惯量三角不等式与独立轨迹；残差不唯一归因URDF。"},
+    {"id":"V2-B11","status":"RESOLVED","evidence":"C12将Pieper限为充分条件、臂角法限适用肩肘腕结构，补肘弯角和可达性，再解肩/腕分支，不称任意7轴通解。"},
+    {"id":"V2-B12","status":"RESOLVED","evidence":"C13定义e=x−xd与外力目标阻抗，区别控制恢复力符号；稳定性条件含内环/延迟/接触/饱和/被动性。"},
+    {"id":"V2-B13","status":"RESOLVED","evidence":"C14明确PPO-VMC绑定是推断，遥操作和指标来自后续学校项目；不称VMC六连问，不把原题主题绑定成特定实验。"},
+    {"id":"V2-B14","status":"RESOLVED","evidence":"全部71答案与55追问行内标推断，所有易错在卷末统一工程归纳；公司固定考法、连续最长链等断言已撤。"},
+    {"id":"V2-B15","status":"RESOLVED","evidence":"新口径全量答案达标，主答最大239、追答最大129。"}
+  ],
+  "warnings":[],
+  "checks":{
+    "read_files_completely":["volumes/vol2_rl_motion.md","research/sources-vol2.md","WORKFLOW.md","docs/format-spec.md","research/reviews/vol2_round4.json"],
+    "chains":16,
+    "nodes":71,
+    "followups":55,
+    "difficulty":{"L1":2,"L2":10,"L3":4},
+    "nodes_per_chain":[5,4,3,2,4,4,9,5,4,7,6,4,3,5,3,3],
+    "length_method":"去答标签及前置分档、Markdown强调/代码/数学美元符号与空白，保留LaTeX命令，Unicode码点计数；主答350/追答150。",
+    "max_main_answer":239,
+    "max_followup_answer":129,
+    "over_limit":[],
+    "unmarked_answers_or_followups":[],
+    "repository_analyzer":"tools/content.mjs analyzeVolume为16链/71节点，难度2/10/4，errors=[]；另独立逐行复算字数。",
+    "warning_resolution":"前轮DR统一百分比/延迟加滤波、采样率与带宽、Q/R过度标量化、VMC和ESO无条件保证、model-based必须学习等警告均在重写答案中加条件或撤销。",
+    "technical_references_used_in_this_review_sequence":[
+      "https://arxiv.org/abs/1506.02438",
+      "https://arxiv.org/abs/1707.06347",
+      "https://arxiv.org/abs/2104.02180",
+      "https://underactuated.mit.edu/lqr.html",
+      "https://arxiv.org/abs/1701.04395",
+      "https://arxiv.org/abs/1406.4047"
+    ],
+    "source_anchor_links":"正文C01至C16均映射sources中同编号；历史引用保留作检索线索，不作公司实录独立证据。"
+  },
+  "new_independent_source_evidence":{
+    "url":"https://www.nowcoder.com/feed/main/detail/b18ddc5475694fc0bcedc07f9764d10d?sourceSSR=dynamic",
+    "method":"2026-10-26匿名curl读取HTML；页面177355字节，仅作为载体大小记录，不以HTTP200或词频证明正文。解析JSON转义的content字段并定位帖子本体，输出短题单，不采纳后附AI解答/推荐区文字。",
+    "tool_difference":"同轮web文本抽取器对canonical及sourceSSR均只显示4行导航；curl HTML内存在帖子content，故区分工具抽取失败与实际内容不存在。",
+    "verified_topics":["PPO原理、同/异策略及分类","重要性采样及PPO用途","GAE的λ=.95、第10步TD残差权重、末段1秒精控及调整","四足PPO中policy loss震荡与value loss下降的诊断"],
+    "scope":"证明公开题目主题存在，不证明帖主回答正确、现场回答内容或公司身份真实性；正文C03/C04仍保守推断，不恢复频次。",
+    "other_primary_pages_verified_previous_round_in_same_sequence":[
+      {"url":"https://www.nowcoder.com/feed/main/detail/679003b65a1a404c9e1d755e7e1c4fd7","coverage":"LQR/PID/MPC比较；不证明MPC后续三问"},
+      {"url":"https://www.nowcoder.com/feed/main/detail/f79996d0300d4b60957770816bb0ace5","coverage":"VMC、sim2real、PPO改进及后续学校项目的遥操作/指标；不能全部绑定VMC"}
+    ]
+  },
+  "source_limitations":[
+    "历史8帖及额外删帖没有独立第三方归档；文件顶部与各链已明确自记性质，当前PASS不对它们的存在/删除/作者作认证。",
+    "Cg此前会话已读得主题，但后续API/raw404；本轮不伪称重新取回全部Cg正文。知乎403也未升级为可读。",
+    "sources保留历史台账及阶段性未复现说明，末轮追加解释新curl成功证据的先后关系；旧台账不代表当前可读状态。",
+    "多数公式与控制建议是限定假设的工程学习答案，已逐层推断；未进行真机验证或完整稳定性证明。",
+    "本PASS仅绑定四个快照文件，不覆盖未来修订、站点渲染、远端链接发布状态。"
+  ]
+}

@@ -1,0 +1,2 @@
+# Install with the official CPU wheel index (see README).
+torch==2.14.1

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>附录 · 手撕追问链</title>
+<script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},chtml:{displayAlign:'left'}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mut:#656d76;--line:#e4e4e0;--acc:#0969da}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif}
+main{max-width:840px;margin:0 auto;padding:28px 18px 80px}
+h1{font-size:26px;line-height:1.4;margin:.4em 0 .2em}
+h2{font-size:20px;margin:2em 0 .6em;border-bottom:1px solid var(--line);padding-bottom:.3em}
+p{margin:.7em 0}
+a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
+code{background:#f0f1f2;border-radius:4px;padding:.1em .35em;font-size:.92em}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+.note{background:#f3f6fb;border-left:4px solid var(--acc);border-radius:6px;padding:10px 16px;margin:14px 0;font-size:15px;color:#33415c}
+details.chain{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 18px;margin:14px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+details.chain[open]{border-color:#d5d8dd}
+summary{cursor:pointer;font-weight:600;font-size:16.5px;padding:8px 0;list-style:none;position:relative;padding-right:64px;overflow-wrap:anywhere}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'展开';position:absolute;right:0;top:8px;font-size:12.5px;font-weight:400;color:var(--mut);border:1px solid var(--line);border-radius:20px;padding:1px 10px}
+details.chain[open] summary::after{content:'收起'}
+details.chain[open]>summary{border-bottom:1px dashed var(--line);margin-bottom:6px}
+.lv{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:0 7px;margin-right:4px;vertical-align:2px;color:#fff}
+.lv-l1{background:#1a7f37}.lv-l2{background:#0969da}.lv-l3{background:#cf222e}
+.freq{color:#9a6700;font-size:14px;margin-right:6px}
+.top{border-bottom:1px solid var(--line);margin-bottom:8px}
+.top nav{max-width:840px;margin:0 auto;padding:14px 18px;display:flex;gap:18px;align-items:baseline;flex-wrap:wrap}
+.top .brand{font-weight:700;color:var(--fg)}
+footer{border-top:1px solid var(--line);margin-top:60px}
+footer div{max-width:840px;margin:0 auto;padding:18px;color:var(--mut);font-size:13.5px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:14px 0}
+.card h2{border:none;margin:0 0 6px}
+.meta{color:var(--mut);font-size:14px}
+.review{font-size:14px;border-left:4px solid #1a7f37;background:#eff8f1;padding:10px 14px;margin:16px 0;overflow-wrap:anywhere}
+.review.pending,.review.stale,.review.legacy{border-color:#9a6700;background:#fff8df}
+.volume-nav{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;font-size:14px}
+p,li,.note{overflow-wrap:anywhere}
+@media(max-width:640px){main{padding:18px 12px 60px}summary{font-size:15.5px;padding-right:64px}summary::after{top:4px}}
+</style>
+</head>
+<body>
+<div class="top"><nav><span class="brand">具身智能面试追问链</span><a href="./index.html">📚 卷目录</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains" target="_blank" rel="noopener">GitHub</a></nav></div>
+<main>
+<div class="review pass">独立审查 PASS · 第5轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/appendix_round5.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./vol6_perception_slam.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol7_coding_appendix.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>附录 · 手撕追问链</h1>
+<div class="note">具身智能面试追问链题库 · 手撕附录<br>本卷 <b>8 条链 · 31 个问答节点</b><br>难度分布：L1 <b>2</b> · L2 <b>6</b> · L3 <b>0</b></div>
+<p><b>使用方式</b>：先在白板写输入、输出、形状/单位、边界和一个最小测试，再写实现。随文提供 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/examples/learning.py" target="_blank" rel="noopener">PyTorch 示例</a>、<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/examples/handwritten.py" target="_blank" rel="noopener">标准库示例</a> 和 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/tree/main/tests" target="_blank" rel="noopener">测试目录</a>。它们用于理解与练习，不代表完整训练框架或生产控制器。</p>
+<p><b>本卷追问模式</b>：</p>
+<ol><li><b>先写对→再稳定→再优化</b>：浮点溢出、padding、越界、零导数都属于基本正确性。</li><li><b>数学量→代码语义</b>：布尔 mask 是“有效”还是“屏蔽”、log probability 是否按动作维求和，都先约定。</li><li><b>朴素实现→为什么慢→有证据的优化</b>：不能把更短的代码或更少参数直接叫更快。</li></ol>
+<p><b>易错口径</b>：除明确引用外，易错项是编者工程归纳；额外构造的检查问题逐项标推断。</p>
+<hr>
+<details class="chain" id="c01">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录+推断〕</span> <b>C01</b> · 用 PyTorch 手写多头自注意力，解释每个维度。</summary>
+<p><b>答</b>：输入 $X:[B,T,D]$，一次线性投影得 Q/K/V，再分成 $h$ 个头，每头 $d=D/h$；计算 $\mathrm{softmax}(QK^\top/\sqrt d+M)V$，拼头后做输出投影。先检查 D 能被 h 整除，沿 key 轴做 softmax。实现见 learning.py 的 multihead_attention：不调用现成 attention 模块，显式处理 causal/padding 与全屏蔽行。</p>
+<p><b>追问 1</b>〔推断〕：怎么退化成单头？<br><b>答</b>：设 h=1，每头深度就是 D；拼头退化为形状恢复，输出投影仍可保留。多头不是把多次完整注意力结果简单相加，而是在不同投影子空间中计算后拼接。</p>
+<p><b>追问 2</b>：causal mask 和 padding mask 怎么检查？<br><b>答</b>：修改未来 token 后，前缀输出应不变；修改 padding token 后，有效 query 输出应不变。所有 key 被屏蔽时应约定零输出，避免对全负无穷 logits 做 softmax 产生 NaN。测试同时检查梯度有限与 padding query 为零。</p>
+<p><b>追问 3</b>〔推断〕：KV cache 和 FlashAttention 分别解决什么？<br><b>答</b>：KV cache 复用自回归历史投影，新增观测或双向编码时不能盲目沿用；FlashAttention 用分块与在线 softmax 减少显存读写，不改变目标注意力公式。面试实现用朴素版讲清语义，优化版另做数值和性能对照。</p>
+<p><b>易错</b>：Q/K 转置轴错误，softmax 沿 query 轴；用了全 mask 后仍声称“结果总是有限”。</p>
+<p><b>实录</b>：<a href="https://github.com/offerseed/interview-experience/issues/6" target="_blank" rel="noopener">offerseed #6</a>（第一轮15：多头、causal/padding及检查）；单头/优化为推断延伸，千寻早期题源见卷一，不叠加未经本轮复核的频次。</p>
+</details>
+<details class="chain" id="c02">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C02</b> · 手写条件 Flow Matching 训练步骤。</summary>
+<p><b>答</b>：对动作数据 $x_1$ 采高斯 $x_0$ 与 $t\sim U[0,1]$，直线路径 $x_t=(1-t)x_0+tx_1$，速度目标 $u=x_1-x_0$；用条件网络 $v_\theta(x_t,t,c)$ 回归 u。MSE 只对有效 action 标量平均。实现见 flow_matching_loss，网络也接收有效 mask，避免 padding 通过时序注意力污染真实动作。</p>
+<p><b>追问 1</b>：推理 Euler 采样怎么写？<br><b>答</b>：从 $x_0\sim\mathcal N(0,I)$ 开始，在 $t_i=i/N$ 计算速度，更新 $x_{i+1}=x_i+v_\theta(x_i,t_i,c)/N$，走到 t=1。采样关闭梯度；与训练用同一时间方向/归一化。动作反归一化和安全检查在模型输出后进行。</p>
+<p><b>追问 2</b>：步长与数值稳定怎么验证？<br><b>答</b>：先用常速度场验证积分方向和终点，再在已知可解场上检查步长缩小误差是否收敛；真实模型扫步数并看任务成功与延迟。更少步通常更快，但不能据此承诺闭环更好。</p>
+<p><b>追问 3</b>：padding 与最小测试需要哪些？<br><b>答</b>：改 padding 内容不应改变有效损失/梯度；全无效 batch 返回零损失；检查维度、有限值、时间范围和条件是否传入。零损失 batch 不一定意味着可做一次 optimizer.step：weight decay/动量仍可能更新，训练器可直接跳过该批。</p>
+<p><b>易错</b>：训练用噪声→数据、采样却反着积分；loss 除以总长度，把短 episode 的有效动作稀释。</p>
+<p><b>实录</b>：<a href="https://github.com/offerseed/interview-experience/issues/6" target="_blank" rel="noopener">offerseed #6</a>（第二轮15：条件FM、有效mask、Euler及最小测试）。数值检查细节为工程作答。</p>
+</details>
+<details class="chain" id="c03">
+<summary><span class="lv lv-l1">L1</span> <span class="freq">〔实录+推断〕</span> <b>C03</b> · 手写数值稳定的 softmax。</summary>
+<p><b>答</b>：先减最大值：$p_i=\exp((z_i-m)/T)/\sum_j\exp((z_j-m)/T)$，$m=\max z$、$T>0$。减常数不改变概率，能抑制正指数溢出；至少最大项为1，分母非零。标准库 stable_softmax 明确只接受有限非空输入，极端值、平移不变性和非法温度均有测试。</p>
+<p><b>追问 1</b>〔推断〕：温度增大或减小怎样改变分布？<br><b>答</b>：温度增大通常更平坦，减小更尖锐；最大值并列时，小温度极限也不是唯一 one-hot。温度不能修复错误标签，概率变尖也不等于校准更好；训练与推理的温度用途要区分。</p>
+<p><b>追问 2</b>〔推断〕：attention 全屏蔽的行怎么处理？<br><b>答</b>：全负无穷行直接 softmax 是未定义情形，通常产生 NaN。先检测该行，给安全 logits，计算后显式将所有无效权重置零；若系统不允许空行，也可提前报错。不能仅在 softmax 后乘零，因为 NaN×0 仍是 NaN。</p>
+<p><b>易错</b>：先直接 exp 大 logits，最后才减最大值；把全 mask 情况当普通有限输入。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/feed/main/detail/57033fe8898b4e85b97c48d8b2dcfb28" target="_blank" rel="noopener">辉羲智能原帖</a>（三面手撕 softmax；温度/全mask为推断）。仅采用题目，不采用帖主未验证的优化建议。</p>
+</details>
+<details class="chain" id="c04">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·索引记录〕</span> <b>C04</b> · 手写二维卷积朴素实现，再说明如何优化。</summary>
+<p><b>答</b>：先约定单通道、stride=1、valid，深度学习常用的是互相关（不翻转核）。输出大小为 $(H-K_h+1,W-K_w+1)$，每个位置累加对应窗口与核的乘积。实现见 conv2d_valid；先测非方形、1×1与非法尺寸，再扩 padding/stride/多通道；数学卷积需显式翻核。</p>
+<p><b>追问 1</b>：怎么优化？<br><b>答</b>：先判断瓶颈，再考虑连续内存遍历、重用输入/核、分块、向量化或映射到GEMM；GPU 还要管合并访存与共享内存。不同形状适合不同算法，展开成im2col也会增加临时内存和搬运。</p>
+<p><b>追问 2</b>：换循环顺序为什么会快？<br><b>答</b>：行优先布局下，让内层循环沿连续地址走能提高缓存行利用率；分块可让工作集留在缓存。但 Python 解释器开销可能盖过这种收益，生产实现要用原生内核在目标硬件实测，不能用理论访问顺序替代 benchmark。</p>
+<p><b>易错</b>：把 H/W、核翻转和 padding 约定混用；只算乘加数，不考虑 im2col 的内存开销。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/discuss/919881358401372160" target="_blank" rel="noopener">宇树嵌入式面经</a>（搜索索引：朴素卷积→优化→循环顺序/cache；详情本轮为空壳，非当前全文存档）。</p>
+</details>
+<details class="chain" id="c05">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔推断·题单待核〕</span> <b>C05</b> · 写一个 PD 位置控制器，输入输出是什么？</summary>
+<p><b>答</b>〔推断〕：先确认输出是力矩、电流还是速度目标，再写 $u=K_pe+K_d\dot e$，明确误差符号、单位、周期和限幅。示例 PID 在 ki=0 时退化为 PD；离散差分会放大噪声并受采样抖动影响，实际需考虑测量微分/滤波、执行器动态与安全约束。这里的标量代码只演示计算，不代表可直接控制机器人。</p>
+<p><b>追问 1</b>〔推断〕：电机不动，积分越积越大怎么办？<br><b>答</b>：先检查使能、限位、驱动故障和是否堵转；持续饱和时用条件积分或 back-calculation 防windup。示例只在未饱和或积分使饱和减轻时更新；若ki=0不积累。安全保护不能靠无限加大控制量。</p>
+<p><b>追问 2</b>〔推断〕：写一个旋转矩阵，需要先说什么约定？<br><b>答</b>：主动/被动、左右手、行/列向量与角度单位。示例 rotate_z 是右手系主动Z轴旋转、弧度、列向量；测试长度不变、正交/逆变换和已知90度例子。坐标系之间的变换要注明方向。</p>
+<p><b>追问 3</b>〔推断〕：牛顿迭代怎么写，什么时候失败？<br><b>答</b>：$x_{k+1}=x_k-f(x_k)/f'(x_k)$。设置残差阈值、最大步数和小导数/非有限值保护；初值差、多根/无实根或导数接近零都可能失败。不能只凭步长很小宣布找到了根；必要时用括区间与阻尼方法。</p>
+<p><b>追问 4</b>〔推断〕：怎样最小验证这些实现？<br><b>答</b>：控制器测长时间饱和后解除是否快速恢复；旋转测范数与逆操作；牛顿法同时测已知根、小导数和不收敛分支。先做纯数值测试，再按硬件规范设计低风险台架，数值单测不证明闭环稳定。</p>
+<p><b>易错</b>：看到不转就加积分，或把牛顿迭代“停止了”当作残差达标。</p>
+<p><b>实录</b>：早期“PD多态→积分饱和→旋转→牛顿”没有原URL，全链按推断练习，未声称恢复原现场代码。</p>
+</details>
+<details class="chain" id="c06">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔推断·历史题单待核〕</span> <b>C06</b> · 写出卡尔曼滤波的预测和更新。</summary>
+<p><b>答</b>〔推断·手写练习〕：线性模型下：$\hat x^-=F\hat x+Bu$，$P^-=FPF^\top+Q$；创新 $y=z-H\hat x^-$、$S=HP^-H^\top+R$，$K=P^-H^\top S^{-1}$，$\hat x=\hat x^-+Ky$。数值实现解线性方程代替显式求逆，协方差用 Joseph 形式更稳。示例 kalman_scalar 是 F=H=1 的一维随机游走模型，Q/R 都是方差。</p>
+<p><b>追问 1</b>〔推断〕：Q/R 怎么调？<br><b>答</b>：Q反映模型/过程不确定性，R反映测量噪声；在可比模型下，增大Q通常更跟测量，增大R通常更信预测。先估传感器静态/动态噪声与模型残差，再看创新一致性，不只盯曲线是否平滑。相关噪声不能硬套独立对角阵。</p>
+<p><b>追问 2</b>〔推断〕：KF 与互补滤波怎么选？<br><b>答</b>：互补滤波适合清楚的频段互补、模型简单且算力有限的场景；KF适合显式建模状态/噪声并融合多源观测。两者都需标定和时间对齐；非线性姿态系统还要选择合适的误差状态/旋转表示。</p>
+<p><b>追问 3</b>〔推断〕：最小测试是什么？<br><b>答</b>：在已知线性系统模拟噪声，检查误差、协方差非负/对称、增益随Q/R变化及异常输入；标量例子可直接手算。重复运行只看轨迹平滑不够，过度相信错误测量也能产生平滑但偏离的结果。</p>
+<p><b>易错</b>：把标准差直接当Q/R方差；用“R越大越跟传感器”把权重方向说反。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md" target="_blank" rel="noopener">卷二智元三环题目记录</a> 保存Q/R等历史自记；记录称原帖已删，但本轮未独立确认。全链按推断练习，不新增实录频次。</p>
+</details>
+<details class="chain" id="c07">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录+推断〕</span> <b>C07</b> · 手写 PPO clipped actor loss，先说清策略梯度目标。</summary>
+<p><b>答</b>〔推断·手写练习〕：策略梯度用 $\mathbb E[\nabla\log\pi_\theta(a|s)\hat A]$；PPO用旧策略 rollout，定义 $r=\exp(\log\pi_\theta-\log\pi_{\rm old})$，最大化 $\min(r\hat A,\mathrm{clip}(r,1-\epsilon,1+\epsilon)\hat A)$，训练时取负号最小化。示例只实现actor项，不含rollout、GAE、value与entropy，也不宣称是完整PPO。</p>
+<p><b>追问 1</b>：为什么需要概率比？<br><b>答</b>：同一批旧策略样本被更新多次后，与新策略分布不再相同，概率比用于修正相应期望。它依赖旧策略有支持覆盖；clip控制局部更新，不使PPO变成可随意使用任意历史replay数据的算法。</p>
+<p><b>追问 2</b>〔推断〕：负 advantage 时 clipping 怎么处理？<br><b>答</b>：仍取两个目标的最小值，符号由advantage决定；不能先裁ratio然后只乘一次。正advantage在ratio过大侧截平，负advantage在ratio过小侧截平。用正负两种优势做梯度测试，避免只测正样本。</p>
+<p><b>追问 3</b>〔推断〕：哪些量要 detach？<br><b>答</b>：old log probability和已计算的advantage作为本次actor目标的常量，new log probability保留梯度。先按动作事件维求log概率和，再做每样本ratio，不能把动作维误当独立batch；value目标和共享骨干需另行设计。</p>
+<p><b>易错</b>：loss符号反了，或只测试ratio&gt;1的正advantage；更新actor时反向穿过旧策略与GAE。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/feed/main/detail/b18ddc5475694fc0bcedc07f9764d10d?sourceSSR=dynamic" target="_blank" rel="noopener">云鲸可读变体</a> 有PPO原理/重要性采样概念题；canonical部分请求仅返回导航，访问差异见附录题源。手写要求、clipping符号及detach检查为推断，不新增频次。</p>
+</details>
+<details class="chain" id="c08">
+<summary><span class="lv lv-l1">L1</span> <span class="freq">〔推断·算法练习〕</span> <b>C08</b> · 链表、第 k 大、a 到 b 路径，先澄清什么？</summary>
+<p><b>答</b>〔推断〕：先确认数据规模、能否修改输入、重复元素语义、图是否有权/有向、是否只求一条路径。题单中的题目标签不足以确定完整题面，因此示例固定为无环单链表反转、第k大按重复计数、无权有向图最短路径；不声称某类公司一定考或不考coding。</p>
+<p><b>追问 1</b>〔推断〕：链表反转怎样写？<br><b>答</b>：维护previous/current/next，先保存next再改指针，O(n)时间、O(1)额外空间；空链表和单节点自然处理。示例假定无环，若题目可能有环要先检测/约定处理，不能无限循环。</p>
+<p><b>追问 2</b>〔推断〕：第 k 大怎样处理？<br><b>答</b>：维护大小k的最小堆，遍历时替换堆顶，O(n log k)时间、O(k)空间；重复值算独立元素。若要原地平均O(n)，再考虑quickselect并说明最坏情况和随机化；k越界应报错。</p>
+<p><b>追问 3</b>〔推断〕：a 到 b 最短路径怎么找？<br><b>答</b>：无权图用BFS，入队即标visited，记录parent后回溯路径，O(V+E)。有非负权用Dijkstra，有负权需进一步确认；不把DFS找到第一条路径误称最短。测试环、不连通和start=goal。</p>
+<p><b>易错</b>：题面没问清就背模板；把第k个不同值当第k大，或对有权图直接用BFS。</p>
+<p><b>实录</b>：原题单仅有算法标签和不可核实的公司类别概括；本链作为推断练习，不计面经频次。</p>
+</details>
+<hr>
+<h2>代码与复现</h2>
+<p>标准库例子：运行 python3 -m unittest discover -s tests -p test_handwritten.py -v。</p>
+<p>PyTorch 例子：在独立环境安装 torch 后运行 python -m unittest discover -s tests -v；若未安装，学习部分测试明确显示 skipped，不能把跳过误报为通过。无需模型权重、相机或机器人。</p>
+<p>题源与代码边界见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-appendix.md" target="_blank" rel="noopener">附录题源</a>。所有示例由本仓库独立编写，未抄原面试者实现。</p><nav class="volume-nav"><a href="./vol6_perception_slam.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol7_coding_appendix.md" target="_blank" rel="noopener">Markdown 源文</a></nav>
+</main>
+<footer><div>公开面经、整理与推断练习分档标注 · 题源限制与审查范围见各链和记录 · 公式排版使用 MathJax，折叠无需 JavaScript · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a> · 渲染于 2026-10-26</div></footer>
+</body>
+</html>

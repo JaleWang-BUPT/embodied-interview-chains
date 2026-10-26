@@ -1,0 +1,32 @@
+{
+  "target": "publishing infrastructure",
+  "round": 1,
+  "date": "2026-10-26",
+  "reviewer_model": "gpt-6-astra",
+  "reviewer_model_provenance": "委派配置标签；底层部署标识未独立验证。",
+  "independent_context": true,
+  "verdict": "FAIL",
+  "snapshot_sha256": {
+    "tools/content.mjs": "2cba6e2b5083733d33e8d083f283cf25c0ff6ca884cdbf18a4501dd58eb7bbe6",
+    "tools/validate.mjs": "3345da118a96082ac9e48786e9e7756f0d8643ae2e573ea5274e519eeee3576e",
+    "tools/render.mjs": "4446d63b6e21e602cc0ab51f39a07300a494f3dfcb712633ef151a9619decd24",
+    "tools/check-site.mjs": "11f2ed1a5b2fd9332eacfd1a747bd4ef3e232c1856703d3347ac5051d5a085fd",
+    "tests/content.test.mjs": "949b2c15d24924f645e080984f49ae2a9b6be72b7b7398c5a743be69f7775604",
+    ".github/workflows/deploy-pages.yml": "258a060412759383d3b9e08136f6a24b7d997e778e40e2a58b8c1855fe74392a",
+    "requirements-test.txt": "fd1f37e33f38a469ab591dbaf24887b6289dd06140dec67b681f1865bd33d01b"
+  },
+  "blocking_issues": [
+    {"id": "B01", "location": "tools/content.mjs:57", "finding": "只按round排序，同轮号记录冲突时先列出的旧PASS遮盖日期较新的FAIL。", "reproduction": "内存构造同一volume的round1 PASS(2026-10-25)与round1 FAIL(2026-10-26)，旧PASS列前，reviewStatus返回pass。", "fix": "重复轮号或非法轮号阻断，不能隐式选择旧PASS。"},
+    {"id": "B02", "location": "tools/content.mjs:66", "finding": "不检查独立审查元数据，independent_context=false或缺模型标识的哈希匹配PASS也显示独立审查通过。", "reproduction": "内存构造independent_context=false且仅含目标哈希的PASS，reviewStatus返回pass。", "fix": "验证independent_context=true和非空模型标识，拒绝不完整或非法快照记录。"},
+    {"id": "B03", "locations": ["tools/render.mjs:112", "tools/content.mjs:10", "tools/check-site.mjs:12"], "finding": "renderer读取全部.md而validator只读vol数字命名文件，check-site也未要求每卷PASS。将一卷改名appendix.md后可保持七卷/总数却绕过该卷审查校验。", "fix": "共享并严格检查内容文件枚举，check-site比较源文件集合及当前审查状态，发布要求全部PASS。"}
+  ],
+  "warnings": [{"id": "W01", "finding": "renderer未清理过时生成页，旧HTML可能随整个site上传；建议仅清理已知生成文件或使用独立干净输出目录。"}],
+  "checks": {
+    "node_tests": "4/4 PASS，node --test tests/content.test.mjs",
+    "normal_monotonic_rounds": "PASS：较高轮次FAIL优先于旧PASS。",
+    "all_declared_snapshot_inputs": "PASS：Object.entries遍历全部已列输入，变化或读取失败均使快照失效。",
+    "ci_dependency": "PASS：官方CPU索引存在torch2.14.1+cpu、cp313、manylinux_2_28_x86_64 wheel。",
+    "known_content_failures": "旧卷修订中的内容/快照校验失败未视为基础设施缺陷。",
+    "mutation_scope": "审查阶段未改代码或提交；此记录在修复后按先前保存的原始哈希补录。"
+  }
+}

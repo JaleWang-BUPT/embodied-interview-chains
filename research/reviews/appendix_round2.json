@@ -1,0 +1,152 @@
+{
+  "date": "2026-10-26",
+  "model": "gpt-6-astra",
+  "model_provenance": "主代理提供的spawn_agent配置标签；底层模型身份不能由审查代理独立验证。",
+  "independent_context": true,
+  "independent_context_detail": "原独立审查代理续做修订复检，未参与正文/代码起草或修改，未调用子代理。",
+  "scope_limits": [
+    "只写审查JSON，未修改正文、代码或renderer，未commit/push。",
+    "结论仅覆盖记录的内容哈希；旧轮次保留，不自动覆盖后续变更。"
+  ],
+  "target": "volumes/vol7_coding_appendix.md; examples/*.py; tests/*.py",
+  "round": 2,
+  "verdict": "PASS",
+  "snapshot_sha256": {
+    "WORKFLOW.md": "719305de6f099ee188528b85195250ddd882022e1d6a3ea2a3736411394fb927",
+    "docs/format-spec.md": "73b7c94c3677cd103301a8090753f84e018b29016005d5299da45e613820e87c",
+    "volumes/vol7_coding_appendix.md": "641126bcb7e0e537f6defe589bc6c3513decccbc13b4c489bbaeb2307a3f9c10",
+    "research/sources-appendix.md": "997a4a26491b0cd76d217248068cb80a1130a750eb3543d282d813904aa4f98c",
+    "research/sources-vol2.md": "8c7fd4e63ee95f268cedf3bd26004c3bf430eaf1b51388b975605c6bd34d07c3",
+    "examples/handwritten.py": "2bcd136c0f9af56541dab7f83394486a09d768cab2a0354810b08a2eac02123e",
+    "examples/learning.py": "83e04c5f78098e885716dd503185c90eee6424aaa0691b4e074db9317c424a17",
+    "tests/test_handwritten.py": "078fad24affd4b2557979175781842282fb8831f66c0f2e2bbc20e6bb6e2c869",
+    "tests/test_learning.py": "7a05237703c897a298819ce3d4564f50d9dc9476b0474ebb0a197c6c27be59df"
+  },
+  "blocking": [],
+  "warnings": [],
+  "resolved": [
+    {
+      "id": "round1-B01",
+      "note": "softmax遇到差值溢出时改先缩放再相减，极值+大温度回归通过；原小温度路径保留。"
+    },
+    {
+      "id": "round1-B02",
+      "note": "attention在QKV投影前清零padding，masked MSE在减法平方前清零无效prediction/target；fp16大padding输出及NaN-padding双侧梯度回归通过。"
+    },
+    {
+      "id": "round1-B03",
+      "note": "C06/C07主答均行内标〔推断·手写练习〕。"
+    },
+    {
+      "id": "round1-B04",
+      "note": "C04补真实索引摘录/查询/URL及证据限制；C07改引卷二§2具体题目存证并说明非第三方快照，未声称本轮canonical全文可读。"
+    },
+    {
+      "id": "round1-W01",
+      "note": "Newton校验有限正容差、正整数步数且拒bool，末步残差检查有限性，新增回归通过。"
+    },
+    {
+      "id": "round1-W02",
+      "note": "k校验正整数并拒bool，越界/小数/bool回归通过。"
+    },
+    {
+      "id": "round1-W03",
+      "note": "补90度旋转、单节点反转、padding SDPA对照和全mask反向，声明与测试一致。"
+    },
+    {
+      "id": "round1-W04",
+      "note": "辉羲署名匿名牛油、日期2025-03-27 14:57及本轮直接正文核验已入存证。"
+    },
+    {
+      "id": "round1-W05",
+      "note": "PPO docstring明确有限输入和可指数化log-ratio契约，要求监测异常ratio，未改变clipping算法。"
+    }
+  ],
+  "checks": {
+    "structure": {
+      "status": "PASS",
+      "chains": 8,
+      "qa_nodes": 31,
+      "nodes_per_chain": [
+        4,
+        4,
+        3,
+        3,
+        5,
+        4,
+        4,
+        4
+      ],
+      "ids": "C01-C08连续"
+    },
+    "difficulty": {
+      "status": "PASS",
+      "L1": 2,
+      "L2": 6,
+      "L3": 0
+    },
+    "length": {
+      "status": "PASS",
+      "method": "Unicode码点，含英文/标点/空格/公式源代码",
+      "max_main": 239,
+      "max_followup": 135
+    },
+    "tests": {
+      "status": "PASS",
+      "command": "/tmp/embodied-interview-tests.9UAVwC/bin/python -m unittest discover -s tests -v",
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0,
+      "elapsed_seconds": 0.368,
+      "note": "审查代理独立运行；仅缺NumPy可选依赖警告，不影响本次Torch/标准库测试。"
+    },
+    "attention_mask": {
+      "status": "PASS",
+      "note": "已重新读取实现及所有测试。causal/key/query mask、空行零输出、padding SDPA对照、fp16 padding与全mask反向均覆盖；有限有效数值与可表示投影是显式契约。"
+    },
+    "flow_matching": {
+      "status": "PASS",
+      "note": "噪声→数据路径、目标data-noise、mask有效标量分母、条件传递和Euler时间方向保持正确；损失屏蔽修复未改变有效项公式。"
+    },
+    "ppo": {
+      "status": "PASS",
+      "note": "actor负号、min/clamp正负优势分支及old/advantage detach保持正确；原有clip/非clip梯度测试通过，正常输入四象限已在round1独立核验。"
+    },
+    "stdlib": {
+      "status": "PASS",
+      "note": "softmax修复、PID饱和与解饱和、旋转、Newton失败分支、KF方差、链表、正整数k堆和无权有向BFS均通过适用范围内核验。"
+    },
+    "provenance": {
+      "status": "PASS",
+      "note": "来源/推断各层与存证明确；C07概念题可由卷二具体存证支持，手写不冒充实录；C04实际索引短摘录可重现。"
+    },
+    "scope": "未验证生产控制稳定性、完整PPO训练性能或GPU性能；文档没有作此类承诺。"
+  },
+  "source_access_checks": [
+    {
+      "url": "https://www.nowcoder.com/discuss/919881358401372160?sourceSSR=dynamic",
+      "status": "round2独立先由标题搜索取得索引，再web open成功读取正文",
+      "metadata": "署名已注销；页面显示08-20 09:20，年份未显示",
+      "coverage": "C04朴素卷积、优化与循环/cache顺序一致",
+      "note": "canonical路径曾只返回导航；变体访问结果不推翻保守的canonical记录。页面含专栏推广，不扩大频次或保证事件真实性。"
+    },
+    {
+      "url": "https://www.nowcoder.com/feed/main/detail/b18ddc5475694fc0bcedc07f9764d10d?sourceSSR=dynamic",
+      "status": "round2通过web open成功读取正文",
+      "metadata": "网络冲浪十级选手兼潜水冠军；页面显示02-26 15:25，年份未显示",
+      "coverage": "PPO原理及重要性采样概念题",
+      "note": "正文最终仍采用卷二历史存证，不增加频次；变体可读是本次新增旁证，canonical本轮曾只返回导航。"
+    },
+    {
+      "url": "https://www.nowcoder.com/feed/main/detail/57033fe8898b4e85b97c48d8b2dcfb28",
+      "status": "本独立审查上下文直接核验正文",
+      "metadata": "匿名牛油，2025-03-27 14:57",
+      "coverage": "三面手撕softmax，未假称原帖讨论温度/全mask"
+    },
+    {
+      "url": "https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md",
+      "status": "本审查上下文已读取远端存证并核对本地文件",
+      "coverage": "§2 PPO/importance sampling、§6 Q/R题目；明确为历史调研存证"
+    }
+  ]
+}

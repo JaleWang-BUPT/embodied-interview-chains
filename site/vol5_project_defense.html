@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>卷五 · 项目深挖防御指南 · 追问链</title>
+<script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},chtml:{displayAlign:'left'}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mut:#656d76;--line:#e4e4e0;--acc:#0969da}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif}
+main{max-width:840px;margin:0 auto;padding:28px 18px 80px}
+h1{font-size:26px;line-height:1.4;margin:.4em 0 .2em}
+h2{font-size:20px;margin:2em 0 .6em;border-bottom:1px solid var(--line);padding-bottom:.3em}
+p{margin:.7em 0}
+a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
+code{background:#f0f1f2;border-radius:4px;padding:.1em .35em;font-size:.92em}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+.note{background:#f3f6fb;border-left:4px solid var(--acc);border-radius:6px;padding:10px 16px;margin:14px 0;font-size:15px;color:#33415c}
+details.chain{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 18px;margin:14px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+details.chain[open]{border-color:#d5d8dd}
+summary{cursor:pointer;font-weight:600;font-size:16.5px;padding:8px 0;list-style:none;position:relative;padding-right:64px;overflow-wrap:anywhere}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'展开';position:absolute;right:0;top:8px;font-size:12.5px;font-weight:400;color:var(--mut);border:1px solid var(--line);border-radius:20px;padding:1px 10px}
+details.chain[open] summary::after{content:'收起'}
+details.chain[open]>summary{border-bottom:1px dashed var(--line);margin-bottom:6px}
+.lv{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:0 7px;margin-right:4px;vertical-align:2px;color:#fff}
+.lv-l1{background:#1a7f37}.lv-l2{background:#0969da}.lv-l3{background:#cf222e}
+.freq{color:#9a6700;font-size:14px;margin-right:6px}
+.top{border-bottom:1px solid var(--line);margin-bottom:8px}
+.top nav{max-width:840px;margin:0 auto;padding:14px 18px;display:flex;gap:18px;align-items:baseline;flex-wrap:wrap}
+.top .brand{font-weight:700;color:var(--fg)}
+footer{border-top:1px solid var(--line);margin-top:60px}
+footer div{max-width:840px;margin:0 auto;padding:18px;color:var(--mut);font-size:13.5px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:14px 0}
+.card h2{border:none;margin:0 0 6px}
+.meta{color:var(--mut);font-size:14px}
+.review{font-size:14px;border-left:4px solid #1a7f37;background:#eff8f1;padding:10px 14px;margin:16px 0;overflow-wrap:anywhere}
+.review.pending,.review.stale,.review.legacy{border-color:#9a6700;background:#fff8df}
+.volume-nav{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;font-size:14px}
+p,li,.note{overflow-wrap:anywhere}
+@media(max-width:640px){main{padding:18px 12px 60px}summary{font-size:15.5px;padding-right:64px}summary::after{top:4px}}
+</style>
+</head>
+<body>
+<div class="top"><nav><span class="brand">具身智能面试追问链</span><a href="./index.html">📚 卷目录</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains" target="_blank" rel="noopener">GitHub</a></nav></div>
+<main>
+<div class="review pass">独立审查 PASS · 第2轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol5_round2.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./vol4_deployment_systems.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="./vol6_perception_slam.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol5_project_defense.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>卷五 · 项目深挖防御指南 · 追问链</h1>
+<div class="note">具身智能面试追问链题库 · 第五卷<br>本卷 <b>11 条链 · 40 个问答节点</b><br>难度分布：L1 <b>2</b> · L2 <b>8</b> · L3 <b>1</b></div>
+<p><b>使用方式</b>：拿自己真正做过的一个项目填答案。每个结论都备好配置、代码位置、日志或实验记录；没有做过的环节，说明负责人、交接接口与自己了解的边界。这里的“防御”指把证据讲清楚，不是编造经历或猜面试官想听什么。</p>
+<p><b>易错口径</b>：易错项为编者工程归纳，未另附现场原答证据的，不声称是候选人实际犯错记录。</p>
+<p><b>本卷追问模式</b>：</p>
+<ol><li><b>责任→数据流→具体实现→验证</b>：先区分团队成果和个人改动，再沿真实链路下钻。</li><li><b>选型→替代方案→约束变化</b>：一个方案能讲出适用条件，才扛得住反事实。</li><li><b>指标→测量协议→归因→失败例子</b>：一个漂亮数字需要一个可复现的分母。</li><li><b>经验与推断分开</b>：实录只证明提过这个问题；示例答案、准备模板及延伸练习是本仓库的工程归纳。</li></ol>
+<hr>
+<details class="chain" id="c01">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C01</b> · 从一条原始轨迹进入训练，讲到模型驱动机器人执行。</summary>
+<p><b>答</b>：先用一张自己能画出的数据流串联：采集的传感器/action/时钟→清洗与 episode 边界→坐标/单位/标签统一→按 episode 切分→chunk 与 mask→训练目标/可训练模块→归一化反变换→推理与控制周期→安全层→成功判据。每一步说输入、输出、一个关键不变量、一个真实故障及自己的代码边界；不能把“接开源模型”省略成“端到端”。</p>
+<p><b>追问 1</b>：公开数据与本体数据混训，需要统一什么？<br><b>答</b>：动作语义、维度/顺序、单位、绝对/增量与坐标系；相机布局、状态表示、控制频率和任务标签。无法可靠转换的字段要分支处理或排除。统计量只用训练划分计算，保留数据源身份以便配比与消融。</p>
+<p><b>追问 2</b>：轨迹末尾不足一个 chunk 怎么办？<br><b>答</b>：在本 episode 内截取，按约定 padding，并让 padding 的 mask 不参与损失；必要时重复末状态作为输入，但不能当成真实动作监督。采样、归一化和有效长度要一致，禁止跨 episode 接别的轨迹补满。</p>
+<p><b>追问 3</b>：为什么不能随机按帧划分训练/验证集？<br><b>答</b>：相邻帧高度相关，会让同一场景/轨迹泄漏到验证集。至少按 episode 分，泛化要求更强时再按物体、场景或采集日期分。不同切分对应不同泛化问题，不能用同场景 held-out 帧宣称新任务泛化。</p>
+<p><b>追问 4</b>：离线好、真机差，怎么区分数据、模型与执行问题？<br><b>答</b>：固定样本逐层核对预处理/标签与部署输出；回放已知动作检查控制接口；再在相同初始分布做模型闭环。若接口和回放正常而闭环逐步偏离，重点查覆盖/分布偏移；每次替换一环，留下反事实证据。</p>
+<p><b>易错</b>：整条链只说“用 LeRobot 格式、再 fine-tune”，却讲不清 action 是命令还是状态、末尾 padding 是否计损失。</p>
+<p><b>实录</b>：<a href="https://github.com/offerseed/interview-experience/issues/6" target="_blank" rel="noopener">offerseed #6</a>（第二轮 1/2/4/5/8；本链为跨题归纳，非单次连续问答逐字复现）。</p>
+</details>
+<details class="chain" id="c02">
+<summary><span class="lv lv-l1">L1</span> <span class="freq">〔实录·跨题归纳〕</span> <b>C02</b> · 团队项目这么大，你到底负责哪部分？</summary>
+<p><b>答</b>：用“团队目标→模块边界→我的交付→协作接口→验证结果”作答。明确哪些模块从零实现、哪些基于开源修改、哪些由同事负责；给出一项自己能定位到函数/实验记录的改动。共同完成的结果可以说“团队达到”，个人因果贡献需由自己负责的对照实验支持，不能直接认领整体提升。</p>
+<p><b>追问 1</b>：模型架构、训练与真机闭环分别是谁做的？<br><b>答</b>：按阶段列负责人和交付物，说明自己修改/运行/评审到什么程度。接入接口也有价值：可讲数据契约、错误处理和验收，不必把别人的训练称作自己独立研发。</p>
+<p><b>追问 2</b>：RL 是你做的还是别人做的？<br><b>答</b>：如实区分算法实现、配置调参、数据采集、部署评测和仅阅读论文；自己做过就讲 reward、采样与一次失败调试。没实现过就说清未做，再给方案思路；“会用开源”与“推导并实现”是不同经历。</p>
+<p><b>易错</b>：把“我参与的团队”说成“我独立完成”；追问一到参数、训练命令或数据量就改口。</p>
+<p><b>实录</b>：<a href="https://github.com/offerseed/interview-experience/issues/6" target="_blank" rel="noopener">offerseed #6</a>（独立贡献/模块）；RL 参与度原题另见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md" target="_blank" rel="noopener">卷二已删帖记录</a>（仅既有调研存证，不补计频次）。</p>
+</details>
+<details class="chain" id="c03">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·归纳〕</span> <b>C03</b> · 为什么选这个方案，不选更简单的替代方案？</summary>
+<p><b>答</b>：先讲任务约束与最低可行基线，再讲基线的具体失败证据，最后说明所选方法针对哪个瓶颈。列出精度、延迟、数据、算力和维护成本，说明哪个是硬约束。若没做正式对照，要明确选择基于文献/小实验，而非声称已经证明优越；足够简单的基线能达标时，复杂方案需要额外收益。</p>
+<p><b>追问 1</b>〔推断〕：数据量撑得住这个选型吗？<br><b>答</b>：用学习曲线、过拟合差距和任务覆盖回答，而不是只报总帧数。先分清独立 episode 与相似帧，比较冻结主干、小模型/LoRA 与全量训练；数据不足时优先接口与分布覆盖，再扩模型。</p>
+<p><b>追问 2</b>：为什么没有用另一种冻结策略或全量微调？<br><b>答</b>：把参数/激活/优化器内存、数据规模和可训练模块适配需求一起算；至少做小预算候选试验。某一方案没试过要说未试及原因，不能把“资源不允许”讲成“理论上一定更差”。</p>
+<p><b>易错</b>：只说方法新、论文效果好，却无法指出自己任务的基线缺陷和成本约束。</p>
+<p><b>实录</b>：<a href="https://github.com/offerseed/interview-experience/issues/6" target="_blank" rel="noopener">offerseed #6</a>（第二轮 6、第三轮 1/5：冻结/微调选择、有限资源与引入 RL 的必要性）。题单中的面试官自述原文未找回，不作引语。</p>
+</details>
+<details class="chain" id="c04">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔推断·准备模板〕</span> <b>C04</b> · 你会一个技术，怎样证明不只会背概念？</summary>
+<p><b>答</b>〔推断〕：给出三层证据：先用输入输出和假设说明概念；再解释实现中的关键数据结构/公式/调用关系；最后讲自己项目里一次具体选择、故障、修复与验收。深度来自真实细节，不要求所有项目都从零写框架，也不能用一串名词替代实现。</p>
+<p><b>追问 1</b>〔推断〕：源码细节该准备到什么程度？<br><b>答</b>：沿自己实际修改或调用的关键路径准备：入口、张量形状/所有权、同步点、失败返回和一个边界条件。没读过的内部实现不冒充读过，能说明接口假设和如何查证即可。</p>
+<p><b>追问 2</b>〔推断〕：讲一个真实线上或真机问题？<br><b>答</b>：按症状→候选原因→测量→最小复现→改动→回归讲，保留未选假设被排除的证据。机器人项目可用一次时间戳错位/指令超时，但必须是自己的经历；本文示例不能直接冒充经历。</p>
+<p><b>追问 3</b>〔推断〕：如果暂时想不起某个参数？<br><b>答</b>：先说明记忆边界，给出数量级、选择依据与实验记录位置；可解释参数如何影响行为。不要临时编精确小数，更不要把估计数字用于宣称已验证收益。</p>
+<p><b>易错</b>：把阅读文档、调用接口、改源码和从零实现说成同一种参与深度。</p>
+<p><b>实录</b>：题单“面试官三问法”没有保存原作者 URL，本链按原创准备模板标推断；真实项目贡献与失败核验的问题锚点参见 <a href="https://github.com/offerseed/interview-experience/issues/6" target="_blank" rel="noopener">offerseed #6</a>，不认领其为模板原作者。</p>
+</details>
+<details class="chain" id="c05">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C05</b> · 简历上的成功率提升，怎么证明测量可信？</summary>
+<p><b>答</b>：交代任务、初态分布、成功判据、试验次数、checkpoint 选择与失败是否全计入；对照方法用一致预算、物体/场景和协议。记录逐 trial 结果，报告比例及不确定性。把调参集与最终测试集分开；若方法差异只有几个百分点，需考虑样本波动、任务难度和配对设计，不能仅以一个平均数下结论。</p>
+<p><b>追问 1</b>：固定一个 checkpoint 还是每任务分别调？<br><b>答</b>：两种协议都能做，但回答不同问题：共享策略泛化与按任务适配不能直接混比。分别报告数据/训练预算、验证选模规则和每任务结果，测试集不能参与选 checkpoint。</p>
+<p><b>追问 2</b>：提升来自结构还是数据/训练/后处理？<br><b>答</b>：做控制变量消融：只改一个因素，其余预算/切分/种子保持可比；交互效应用组合消融。至少保留原基线、完整方案和关键单组件结果，报告失败任务，不能把同时增加数据的收益全算给结构。</p>
+<p><b>追问 3</b>：怎样证明语言中间推理真帮了动作决策？<br><b>答</b>：比较无中间结果、真实中间结果、打乱/替换结果；保持额外计算预算尽量可比，测任务成功与延迟。解释听起来合理不是因果证据；若打乱结果不影响动作，要怀疑模型根本没用该信息。</p>
+<p><b>易错</b>：拿最优一次 seed 对别人的均值，或只展示成功视频，不给失败分母和选模协议。</p>
+<p><b>实录</b>：<a href="https://github.com/offerseed/interview-experience/issues/6" target="_blank" rel="noopener">offerseed #6</a>（第二轮 9/10、第三轮 8：归因、可比性与中间结果效用；按主题重排）。</p>
+</details>
+<details class="chain" id="c06">
+<summary><span class="lv lv-l3">L3</span> <span class="freq">🔥×1</span> <b>C06</b> · 资源有限，重做这个项目你会怎样安排？</summary>
+<p><b>答</b>：先写可交付任务、资源和期限，再给分阶段验收：最小数据闭环与简单基线→固定协议测失败→按最大失败桶补数据/改组件→小规模回归。每阶段包含时间预算、可观察指标、停止条件与退路；“换更大模型、采更多数据”不算受约束方案。用已有实测决定优先级，未知事项先做最便宜的验证实验。</p>
+<p><b>追问 1</b>：双臂、两张 24 GB GPU、200 条演示，四周怎么安排？<br><b>答</b>：先验 action/时间/相机接口并跑可装下的预训练基线；以小任务集建立成功判据，第二阶段定向处理失败和过拟合，最后预留真机回归。不要先承诺全参数训练；先算显存，再选冻结/LoRA/动作头方案。</p>
+<p><b>追问 2</b>：只够补采 100 条轨迹，采什么？<br><b>答</b>：按失败频率×影响×可修复性选桶，优先缺覆盖的物体/位姿、边界状态和失败恢复；保留一部分代表分布样本。用小批补采先测边际收益，没收益再看标签/接口，避免盲目重复简单成功轨迹。</p>
+<p><b>追问 3</b>：两周验证一个研究想法，什么结果会让你放弃？<br><b>答</b>：预先写清假设、对照、最小实现、主要指标和失败阈值；先测关键瓶颈是否存在。若效果不超波动、成本超预算或收益来自混杂因素，就收敛/终止；负结果也保存配置、日志与解释。</p>
+<p><b>易错</b>：给出的计划只有工作清单，没有验收门槛、停止条件和真机时间预算。</p>
+<p><b>实录</b>：<a href="https://github.com/offerseed/interview-experience/issues/6" target="_blank" rel="noopener">offerseed #6</a>（跨题归纳第三轮1/2/10，保留原场景数字；不是同一问题现场连续三次追问）。</p>
+</details>
+<details class="chain" id="c07">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔推断·准备模板〕</span> <b>C07</b> · Idea、需求、验证和后续空间，怎样讲成一条证据链？</summary>
+<p><b>答</b>〔推断〕：如实说明 idea 的来源（自己、导师、同事、论文）与个人改动，再给出需求证据、基线缺口、首次实验、反例和当前边界。评价自己的方案用同一套标准：和谁比、预算多少、测了什么、哪些仍未解决。不能把团队提出的方向改写成个人原创，也不能凭表达紧张就推定别人造假。</p>
+<p><b>追问 1</b>〔推断〕：需求怎么锚定，为什么值得做？<br><b>答</b>：用用户/任务约束和失败日志说明问题发生在哪，区分必须解决的硬要求与可选目标。若只是研究假设，明确其探索性质，给出可检验命题，不虚构产品需求。</p>
+<p><b>追问 2</b>〔推断〕：你怎么知道结果达到可用水平？<br><b>答</b>：按预定验收指标、基线和部署边界说明；对失败/高风险任务单独报告。没有达到生产要求可说是原型；“论文分数高”不能替代真实场景验收。</p>
+<p><b>追问 3</b>〔推断〕：继续做还有多少空间，依据是什么？<br><b>答</b>：用失败桶、性能分析和学习曲线给出上限/瓶颈判断，估计下一步的成本收益。若缺证据就提最小验证实验；不把主观愿景写成已经证明的未来提升。</p>
+<p><b>易错</b>：为了显得“全能”认领 idea、代码和所有实验，导致责任与时间线互相矛盾。</p>
+<p><b>实录</b>：题单所记“知乎面试官八连问”原 URL 未落盘，不能确认逐字顺序。本链为显式推断模板，问题方向与 <a href="https://github.com/offerseed/interview-experience/issues/6" target="_blank" rel="noopener">offerseed #6</a> 的研究假设/证据判断相关，不计频次。</p>
+</details>
+<details class="chain" id="c08">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C08</b> · 为什么不用现成 IK 库，要自己做臂角法？</summary>
+<p><b>答</b>：先证明需求：目标冗余构型、约束、连续性、速度或可解释性是否现成接口满足不了。通用库提供运动学/数值工具，并不自动给出项目全部冗余控制策略；自研也要比较精度、奇异性、分支连续、可达率和最坏耗时。若没有特殊需求，复用成熟库往往更合理，自己实现的价值应由可测差异说明。</p>
+<p><b>追问 1</b>〔推断〕：换成库能实现同样目标吗？<br><b>答</b>：列出关节限位、seed、零空间目标、碰撞检查和失败恢复接口，先做原型再判断。可以用成熟库算 FK/Jacobian，自研只负责冗余策略；复用与创新不必二选一。</p>
+<p><b>追问 2</b>〔推断〕：怎样证明自研没有降低可靠性？<br><b>答</b>：对解析/数值解做 FK 反验，覆盖工作空间边缘、奇异点、分支切换和不可达目标；连续轨迹测试角度跳变、求解失败与时限。报告失败率和最坏耗时，而非只展示几个成功姿态。</p>
+<p><b>易错</b>：答“现成库太慢”却没给同硬件、同约束下的对照；把自研本身当贡献证明。</p>
+<p><b>实录</b>：<a href="https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md" target="_blank" rel="noopener">Cgxiaoxin 复盘</a>（零次方：为什么不借助 Pinocchio/IK 接口；后两层为推断）。其他控制选型见卷二。</p>
+</details>
+<details class="chain" id="c09">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·跨题归纳〕</span> <b>C09</b> · GPU、batch、动作频率和收益数字，怎样互相对账？</summary>
+<p><b>答</b>：为每个数字准备单位、统计口径、配置和分母。显存区分参数/梯度/优化器/激活与峰值；batch 区分每卡 micro batch、累积步数、卡数；延迟区分推理、端到端及 p99；成功率区分 trial 数与任务平均。把这些写成实验卡，配置有变更就更新，无法复现的数字不写成确定收益。</p>
+<p><b>追问 1</b>〔推断〕：有效 batch size 怎么算？<br><b>答</b>：常规数据并行、各卡批量相同时，为每卡 micro batch×数据并行卡数×梯度累积步数；变长/不满批与有效 token/action mask 会改变实际监督量。学习率与损失归一化也要对应，不能只套乘法。</p>
+<p><b>追问 2</b>：推理 5 Hz、控制 50 Hz，这两个数字矛盾吗？<br><b>答</b>：不矛盾。策略每次可生成 action chunk，由执行器按 50 Hz 消费；要说明 horizon、执行前缀、异步重规划及延迟预算。若一条动作只保持到下次推理，行为又与真正高频反馈控制不同。</p>
+<p><b>追问 3</b>〔推断〕：误差减小 20% 指什么？<br><b>答</b>：先说是相对下降还是绝对下降、MAE/RMSE/峰值哪一种、什么任务/单位和哪段轨迹；给原值与新值及试验次数。比如成功率 60%→80% 是增加20个百分点，相对增加约33.3%，不能混报。</p>
+<p><b>易错</b>：把 FPS 当成命令延迟，把百分点当百分比，或把总 batch 当每卡 micro batch。</p>
+<p><b>实录</b>：<a href="https://github.com/offerseed/interview-experience/issues/6" target="_blank" rel="noopener">offerseed #6</a>（第二轮 6/11 的配置、batch、频率问题；20% 为推断示例，不是假冒原题数字）。</p>
+</details>
+<details class="chain" id="c10">
+<summary><span class="lv lv-l1">L1</span> <span class="freq">〔实录+推断〕</span> <b>C10</b> · 被追到没做过的部分，怎样诚实地继续回答？</summary>
+<p><b>答</b>〔推断·作答策略〕：先说“这部分我没有独立实现；我负责的是 X，与它通过 Y 接口交接”。随后把回答分成已验证事实、文献/代码理解、方案推测三层；可以给排查/实验计划，但不能借措辞把推测变成经历。诚实边界不会抹掉真正做过的贡献，含糊认领会让已知细节也失去可信度。</p>
+<p><b>追问 1</b>〔推断〕：面试官复述你的说法，问“是不是插值”，怎么接？<br><b>答</b>：先确认复述在哪个假设下成立，再用输入、目标约束和数学对象区分：插值通过已知点，拟合可允许残差，控制还需考虑可执行性。若项目只是插值就承认，不用更大的名词掩盖实现。</p>
+<p><b>追问 2</b>〔推断〕：项目介绍怎样压缩为两分钟？<br><b>答</b>：背景/约束一句，基线失败一句，自己改动两句，验证与失败边界各一句；把细节留给后续下钻。让每个句子都有可追问的事实，省掉团队所有模块的流水账。</p>
+<p><b>易错</b>：把“没负责但知道接口”答成“这个我完全不知道”，或反过来临时编造一段亲身调试经历。</p>
+<p><b>实录</b>：<a href="https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md" target="_blank" rel="noopener">Cgxiaoxin 复盘</a>（零次方：辨识是否实际实现；滴石：确认式插值追问）。作答策略与两分钟模板为推断。</p>
+</details>
+<details class="chain" id="c11">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔推断·海外准备备注〕</span> <b>C11</b> · 海外研究面怎样准备项目与 cross-embodiment 讨论？</summary>
+<p><b>答</b>〔推断〕：准备一份可展开的英文研究叙述：problem、assumptions、method、evidence、failure、next experiment；能画数据流、解释公式并写最小代码。第三方 prep 页只能提供练习方向，不能据此断言某公司当前固定轮次或“最常见题”。实际安排以招聘方通知为准。</p>
+<p><b>追问 1</b>〔推断〕：一个策略迁移到不同机器人，先统一什么？<br><b>答</b>：观察/动作接口、坐标与单位、控制频率、状态及语言任务语义；无法统一的部分用本体条件或专用 head/adapter。关节维度相同不代表动力学和可达域相同，仍需目标本体数据与闭环测试。</p>
+<p><b>追问 2</b>〔推断〕：怎样评价迁移成功？<br><b>答</b>：分别报告 seen/unseen 机器人、任务、物体和场景，隔离新增数据量与适配算力；用相同协议比较从零训练/单本体和迁移策略。若目标本体参与预训练，不能再称其为完全未见本体。</p>
+<p><b>易错</b>：把备考网站的介绍当成公司正式流程，或把共享 action 维度当作跨本体泛化已经成立。</p>
+<p><b>实录</b>：本链没有可核实海外逐层面经，保留为推断备注；<a href="https://www.techinterview.net/blog/physical-intelligence-pi-interview-guide" target="_blank" rel="noopener">原题单所引第三方 prep 页</a> 本轮仅返回页面外壳，不计频次。</p>
+</details>
+<hr>
+<h2>题源说明</h2>
+<p>题源和重排范围见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol5.md" target="_blank" rel="noopener">卷五题源记录</a>。C04/C07/C11 均为推断准备模板；没有把失去原链接的“面试官自述”继续写成直接引语。其余原帖只支撑所列问题，答案为本仓库的独立工程归纳。</p><nav class="volume-nav"><a href="./vol4_deployment_systems.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="./vol6_perception_slam.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol5_project_defense.md" target="_blank" rel="noopener">Markdown 源文</a></nav>
+</main>
+<footer><div>公开面经、整理与推断练习分档标注 · 题源限制与审查范围见各链和记录 · 公式排版使用 MathJax，折叠无需 JavaScript · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a> · 渲染于 2026-10-26</div></footer>
+</body>
+</html>

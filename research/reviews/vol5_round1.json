@@ -1,0 +1,71 @@
+{
+  "target": "volumes/vol5_project_defense.md",
+  "round": 1,
+  "date": "2026-10-26",
+  "model": "gpt-6-astra",
+  "model_provenance": "主代理告知spawn_agent配置标签为gpt-6-astra；审查代理无法独立验证底层部署身份。模型隔离依赖调度记录。",
+  "independent_context": true,
+  "independent_context_detail": "仅接收独立审查任务与仓库环境，未参与起草；完整读取指定六文件，并独立打开公开原帖与官方文档；未调用子代理。",
+  "verdict": "FAIL",
+  "snapshot_sha256": {
+    "WORKFLOW.md": "719305de6f099ee188528b85195250ddd882022e1d6a3ea2a3736411394fb927",
+    "docs/format-spec.md": "e9b0d63ce3f4a800fad45c52f33ee68566bf79d715dfaccdc56713f5b4354fb2",
+    "volumes/vol5_project_defense.md": "80b9474ff3023f5a1c902ff2eeb9d7960074c3bb1fda62047626ff301f4e4f9d",
+    "research/sources-vol5.md": "eedba499fd4202755ed90f1653aca376df07066d60d451f92025df24698baa52"
+  },
+  "blocking": [
+    {
+      "id": "B01",
+      "category": "逐层来源与推断",
+      "locations": ["volumes/vol5_project_defense.md:61", "volumes/vol5_project_defense.md:169", "volumes/vol5_project_defense.md:186"],
+      "finding": "C03追问1仍是原题单里失去原链接的选型质疑；现引offerseed只直接支持资源场景、配置与冻结选择。C09追问1把原帖报告有效batch大小改成计算方法追问。C10主问是编者的诚实作答策略，链尾也承认策略为推断，但主答未行内标明。这些层不能仅靠链尾的相关问题锚点视为原题实录。",
+      "evidence_urls": ["https://github.com/offerseed/interview-experience/issues/6", "https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md"],
+      "fix": "给C03追问1、C09追问1、C10主答补〔推断〕，或提供可逐层核实的原题；C03/C09徽章同步表达混合身份。答案本身可保留。"
+    },
+    {
+      "id": "B02",
+      "category": "题源存证",
+      "locations": ["research/sources-vol5.md:3", "research/sources-vol5.md:4"],
+      "finding": "两条采用来源只有题号与主题摘要，没有落盘原题短摘录；Cgxiaoxin还缺页面日期/日期未知声明。当前原页可读，但现有摘要不能满足WORKFLOW要求的题目原文引用、作者/日期、URL存证，也不足以在链接变化后复验层级。",
+      "fix": "为两来源补少量原题短摘录及主问/追问映射、核验日期和获取方式；Cgxiaoxin区分页面更新日与具体面试日期（后者未知则写未知）。无需转载整页。"
+    }
+  ],
+  "warnings": [
+    {
+      "id": "W01",
+      "location": "research/sources-vol5.md:3",
+      "finding": "声称跨题重排均在实录行声明过强。C01/C05明确说明了重排，C03/C06主要只列题号，C02/C09在徽章才说明归纳。",
+      "fix": "统一在各链来源行注明跨题归纳/非连续追问；C06说明主问题是资源题的概括，后续选取第三轮1/2/10。"
+    },
+    {
+      "id": "W02",
+      "location": "volumes/vol5_project_defense.md",
+      "finding": "易错项具体可用，但原帖大多未记录候选人实际犯错。按format-spec规则5，不能把编者工程提醒呈现成实测失误。",
+      "fix": "无候选人失误证据的易错项注明〔推断·工程提醒〕，有实测记录的才保持实录身份。"
+    },
+    {
+      "id": "W03",
+      "location": "volumes/vol5_project_defense.md:184",
+      "finding": "C10追问1要求分辨插值、拟合和控制约束，整体L1略低于同卷涉及实现边界的L2链；这属于定级判断，不构成技术错误。",
+      "fix": "可保持L1作为沟通基础链，或统一按最深技术层调为L2并更新统计。"
+    }
+  ],
+  "checks": {
+    "structure": {"status": "PASS", "chains": 11, "qa_nodes": 40, "nodes_per_chain": [5, 3, 3, 4, 4, 4, 4, 3, 4, 3, 3], "ids": "C01-C11连续且唯一"},
+    "difficulty": {"status": "PASS_WITH_WARNING", "L1": 2, "L2": 8, "L3": 1, "note": "统计与导语一致；C06研究预算/停止条件定L3可接受，C10见W03。"},
+    "length": {"status": "PASS", "method": "按答案Unicode码点计数，包含英文、空格、标点及公式源码", "max_main": 172, "max_followup": 111, "limits": {"main": 350, "followup": 150}},
+    "required_fields": {"status": "PASS", "note": "导语、使用建议、11个易错行和11个带真实URL的来源行齐全。"},
+    "technical_facts": {"status": "PASS", "note": "episode切分、防泄漏、mask、有效batch数据并行公式、chunk执行频率、百分点算术、IK验证及跨本体边界均合理；未发现实质性技术错误。"},
+    "frequency": {"status": "PASS", "displayed": {"C01": 1, "C05": 1, "C06": 1, "C08": 1}, "note": "各自一位作者；题单旧频次未沿用，第三方prep未计数。"},
+    "unverified_quotes_and_company_process": {"status": "PASS", "note": "C04/C07失去原链接的面试官自述已降为推断；C11未编造Physical Intelligence固定流程或最常见题，不把prep当实录。"},
+    "per_layer_provenance": {"status": "FAIL", "issues": ["B01", "B02"]},
+    "order": {"status": "PASS_WITH_WARNING", "note": "C01问题选取顺序可核对；C05将评测与归因重排但已声明；C08扩展标推断；C03/C06等应统一重排声明，见W01。"}
+  },
+  "source_access_checks": [
+    {"url": "https://github.com/offerseed/interview-experience/issues/6", "status": "web可读原投稿正文", "note": "作者N0TPO3T，2026-09-29；仅问题回顾，无现场回答。"},
+    {"url": "https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md", "status": "web可读正文", "note": "核对零次方IK/实际辨识参与及滴石确认式插值问题；页面标更新2026-07-03，不能当具体面试日期。"},
+    {"url": "https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md", "status": "web可读存证", "note": "第8条含RL参与度问题；仅认可历史存证，不宣称重获已删原帖。"},
+    {"url": "https://www.techinterview.net/blog/physical-intelligence-pi-interview-guide", "status": "web仅返回页面外壳", "note": "不作为实录、公司流程或频次证据。"}
+  ],
+  "scope_limits": ["未修改正文、来源文件或renderer，未commit/push。", "审查可核对公开文本，无法保证匿名面经事件真实发生。", "FAIL只针对上述快照；修改后需重新审查。"]
+}

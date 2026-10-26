@@ -1,0 +1,46 @@
+{
+  "target": "publishing infrastructure",
+  "round": 2,
+  "date": "2026-10-26",
+  "reviewer_model": "gpt-6-astra",
+  "reviewer_model_provenance": "委派配置标签；底层部署标识未独立验证。",
+  "independent_context": true,
+  "previous_review": "research/reviews/publishing_round1.json",
+  "verdict": "PASS",
+  "blocking_issues": [],
+  "snapshot_sha256": {
+    "tools/content.mjs": "468126ef050022ffe723c6503b20b06c8e59df7da9473aa8c30633696b19d43f",
+    "tools/validate.mjs": "3345da118a96082ac9e48786e9e7756f0d8643ae2e573ea5274e519eeee3576e",
+    "tools/render.mjs": "ddbf2ca70615c404c79529005fdb0859dbad0dc2c9e2332f1333bc7ac4852fb8",
+    "tools/check-site.mjs": "3031acec6721190656c2dc14ea387346bb2804cf6569746af77b44e4768f9272",
+    "tests/content.test.mjs": "7a64d8558708c4855bc85b5e9ebe3d83ae2c5654fc05d371969d8c0dea6b162a",
+    ".github/workflows/deploy-pages.yml": "258a060412759383d3b9e08136f6a24b7d997e778e40e2a58b8c1855fe74392a",
+    "requirements-test.txt": "fd1f37e33f38a469ab591dbaf24887b6289dd06140dec67b681f1865bd33d01b"
+  },
+  "resolved_issues": [
+    {"id": "B01", "status": "RESOLVED", "evidence": "同卷候选记录出现重复轮号或非正整数轮号即pending；不能选旧PASS掩盖同轮FAIL。正常较高轮号FAIL仍优先。新增回归与只读内存案例通过。"},
+    {"id": "B02", "status": "RESOLVED", "evidence": "有快照的PASS要求independent_context严格为true，reviewer_model/model为非空字符串，全部哈希为64位小写十六进制；全部已列输入仍逐一校验，缺失也失效。无快照旧记录只显示legacy，不能过部署门禁。"},
+    {"id": "B03", "status": "RESOLVED", "evidence": "validator与renderer共享volumeFiles，拒绝volumes下不匹配命名规则的Markdown。check-site比对源与manifest完整集合、重新计算当前审查状态、要求每卷pass。"},
+    {"id": "W01", "status": "RESOLVED_FOR_GENERATED_VOLUMES", "evidence": "renderer仅对site下index.html、manifest.json和vol数字*.html执行非递归unlink，旧生成卷页不再残留；未清理其他资产。"}
+  ],
+  "warnings": [
+    {"id": "W01", "finding": "check-site将7卷/81链/322节点作为当前版本断言，符合本次发布范围；未来增删内容需同步改断言，不能只改Markdown。"},
+    {"id": "W02", "finding": "renderer在内容全部验证之前清理旧生成页，本地手动运行遇错会留下空或部分站点；CI先validate且失败不上传，因此不是本次部署门禁阻塞。可后续改为预检全部内容后再写输出。"}
+  ],
+  "checks": {
+    "node_regressions": {"command": "node --test tests/content.test.mjs", "passed": 5, "failed": 0, "skipped": 0},
+    "additional_read_only_cases": "PASS：内存测试0、负数、小数、字符串、null轮号均不能pass；缺失题源输入为stale；较新FAIL为pending。",
+    "shared_enumeration": "PASS：当前共享枚举为vol1至vol7共七个文件；静态核对未匹配Markdown会抛错，renderer/validator/check-site均使用该入口。",
+    "render_stats": "PASS（静态检查）：使用analyzeVolume计算每卷节点、难度与链数，汇总同一结果到目录与manifest，不读硬编码正文状态。",
+    "review_truthfulness": "PASS：新FAIL/无效轮号/缺独立模型声明/不匹配快照不会输出pass；旧无快照为历史审查标签。声明结构校验不等于鉴定模型真实身份。",
+    "ci_gating": "PASS（静态检查）：Node测试→require-reviewed校验→render→check-site→上传，deploy同时依赖build和examples。任何门禁失败均不会走正常部署依赖。",
+    "pytorch_requirement": "PASS：要求与第一轮相同；第一轮已确认官方CPU索引存在torch2.14.1 cp313 Linux x86_64 wheel；本轮未安装或执行Python例子。",
+    "known_content_state": "旧卷审查修复中的validate/check-site状态不计为基础设施缺陷；本记录不是全站全部已审的声明。"
+  },
+  "scope_limits": [
+    "只读代码审查和Node测试；未运行会修改site的renderer，也未实际执行GitHub Actions或部署。",
+    "round1 FAIL按原先记录的哈希先补录并保留；本轮新增round2，不覆盖历史。",
+    "未修改代码、正文、来源或CI配置，未commit/push。"
+  ],
+  "outcome": "PASS：第一轮三项发布门禁阻塞均已修复，5项Node回归与补充内存案例通过；待各卷审查满足门禁后由CI执行全站渲染和发布验证。"
+}

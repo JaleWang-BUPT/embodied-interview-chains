@@ -20,7 +20,7 @@ hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
 .note{background:#f3f6fb;border-left:4px solid var(--acc);border-radius:6px;padding:10px 16px;margin:14px 0;font-size:15px;color:#33415c}
 details.chain{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 18px;margin:14px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
 details.chain[open]{border-color:#d5d8dd}
-summary{cursor:pointer;font-weight:600;font-size:16.5px;padding:8px 0;list-style:none;position:relative;padding-right:28px}
+summary{cursor:pointer;font-weight:600;font-size:16.5px;padding:8px 0;list-style:none;position:relative;padding-right:64px;overflow-wrap:anywhere}
 summary::-webkit-details-marker{display:none}
 summary::after{content:'展开';position:absolute;right:0;top:8px;font-size:12.5px;font-weight:400;color:var(--mut);border:1px solid var(--line);border-radius:20px;padding:1px 10px}
 details.chain[open] summary::after{content:'收起'}
@@ -36,176 +36,178 @@ footer div{max-width:840px;margin:0 auto;padding:18px;color:var(--mut);font-size
 .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:14px 0}
 .card h2{border:none;margin:0 0 6px}
 .meta{color:var(--mut);font-size:14px}
+.review{font-size:14px;border-left:4px solid #1a7f37;background:#eff8f1;padding:10px 14px;margin:16px 0;overflow-wrap:anywhere}
+.review.pending,.review.stale,.review.legacy{border-color:#9a6700;background:#fff8df}
+.volume-nav{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;font-size:14px}
+p,li,.note{overflow-wrap:anywhere}
 @media(max-width:640px){main{padding:18px 12px 60px}summary{font-size:15.5px;padding-right:64px}summary::after{top:4px}}
 </style>
 </head>
 <body>
 <div class="top"><nav><span class="brand">具身智能面试追问链</span><a href="./index.html">📚 卷目录</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains" target="_blank" rel="noopener">GitHub</a></nav></div>
 <main>
-<h1>卷二 · 强化学习与运动控制 · 追问链</h1>
-<div class="note">具身智能面试追问链题库 · 第二卷<br>题源：牛客 / GitHub / 知乎一手面经与面试实录（2024-2026），频次独立统计，来源见各链"实录"行<br>本卷 <b>16 条链 · 71 个问答节点</b><br>难度分布：L1 <b>2</b> · L2 <b>10</b> · L3 <b>4</b></div>
-<p><b>使用方式</b>：题目默认折叠，先自己答一遍主问，再点开对照；然后<b>合上，从主问开始把整条追问链讲一遍</b>——本卷练的是"扛得住往下钻"。RL 侧的实录下钻深度普遍 3-5 层，运动控制侧（三环/辨识/IK）经常 6-10 层连问，是全题库最长的链。</p>
-<p><b>本卷追问模式</b>（来自调研结论，面试官在 RL/运控方向的固定下钻手法）：</p>
-<ol><li><b>公式 → 合法性 → 缺陷 → 补救 → 场景选型</b>：策略梯度链、GAE 链的标准路径——写得出公式只算入场，必被追"为什么能这么推、有什么毛病"</li><li><b>概念 → 参数 → "这个数怎么定的"</b>：λ、Q/R、域随机化范围、窗口大小——答上概念必追数值依据，GAE 链直接当场算</li><li><b>给症状、定根因、再要方案</b>：policy loss 震荡 value loss 平稳、仿真完美真机震荡——排障题按信息增益排序作答</li><li><b>方案 → 备择对比 → "为什么不用现成的"</b>：臂角法 vs Pinocchio/KDL、LADRC vs PID、qpOASES vs OSQP</li><li><b>结果 → 怎么验证</b>：辨识完必问"新轨迹上怎么验证"、讲不出参数直接判没做过——卷五"真实性核验"在运控方向的高发形态</li></ol>
+<div class="review pass">独立审查 PASS · 第5轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol2_round5.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./vol1_vla_il.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="./vol3_data_teleop_debug.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol2_rl_motion.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>卷二 · 强化学习与运动控制 · 追问链</h1>
+<div class="note">具身智能面试追问链题库 · 第二卷<br>题源：公开问题、复盘与历史题单；证据级别和访问差异见题源记录<br>本卷 <b>16 条链 · 71 个问答节点</b><br>难度分布：L1 <b>2</b> · L2 <b>10</b> · L3 <b>4</b></div>
+<p><b>使用方式</b>：题目默认折叠，先自己答一遍主问，再点开对照；然后<b>合上，从主问开始把整条追问链讲一遍</b>——本卷练的是"扛得住往下钻"。链条以学习主题组织；历史自记原题与当前可核验正文分开，不将最长链冒称原场次连续提问。</p>
+<p><b>本卷追问模式</b>（编者对已收录主题的归纳，不代表公司固定考法）：</p>
+<ol><li><b>公式 → 合法性 → 缺陷 → 补救 → 场景选型</b>：策略梯度链、GAE 链的标准路径——写得出公式只算入场，可进一步检查"为什么能这么推、有什么毛病"</li><li><b>概念 → 参数 → "这个数怎么定的"</b>：λ、Q/R、域随机化范围、窗口大小——用数值依据检验概念，GAE 链直接当场算</li><li><b>给症状、定根因、再要方案</b>：policy loss 震荡 value loss 平稳、仿真完美真机震荡——排障题按信息增益排序作答</li><li><b>方案 → 备择对比 → "为什么不用现成的"</b>：臂角法 vs Pinocchio/KDL、LADRC vs PID、qpOASES vs OSQP</li><li><b>结果 → 怎么验证</b>：辨识后检查"新轨迹上怎么验证"、用具体参数追溯个人工作——卷五"真实性核验"在运控方向的高发形态</li></ol>
 <hr>
-<details class="chain">
-<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·原帖已删〕</span> <b>C01</b> · 写出策略梯度公式。为什么能对期望求导？</summary>
-<p><b>答</b>：目标 $J(\theta)=\mathbb{E}_{\tau\sim\pi_\theta}[R(\tau)]$。轨迹概率里的环境转移项与 $\theta$ 无关，用 log-导数技巧把"对期望求导"转成 score 加权：$\nabla_\theta J=\mathbb{E}[R(\tau)\,\nabla_\theta\log\pi_\theta(\tau)]=\mathbb{E}\big[\sum_t \nabla_\theta\log\pi_\theta(a_t|s_t)\,G_t\big]$。合法性在于：不需要环境模型可微，只要策略本身可微且支撑覆盖（采样到的地方才有梯度）。</p>
-<p><b>追问 1</b>：这样估计方差大怎么办？<br><b>答</b>：score × return 的单样本估计方差天然大。降方差四件套：baseline/优势函数（最有效）、GAE（降 advantage 估计方差）、大批量采样、回报归一化；reward-to-go（只取未来回报）也是标准第一步。</p>
-<p><b>追问 2</b>：baseline 为什么降方差、会不会引入偏差？<br><b>答</b>：减去只依赖 $s$ 的 $b(s)$ 后期望不变——$\mathbb{E}[\nabla_\theta\log\pi \cdot b(s)]=0$（score 零均值），故<b>无偏</b>；但权重被中心化，方差显著下降。只有 $b$ 依赖动作 $a$ 才破坏无偏性。</p>
-<p><b>追问 3</b>：baseline 有哪些类型？<br><b>答</b>：常数（batch 均值）、learned value $V_\phi(s)$（配 TD/GAE 成优势函数，工程默认）、更精细的状态函数变体；理论最优 baseline 是方差加权形式，实践都用 $V(s)$。</p>
-<p><b>追问 4</b>：机械臂抓取任务用哪个？<br><b>答</b>：实战默认 PPO + GAE（critic baseline）。抓取成功奖励稀疏时，再加课程或 hindsight 类改造；纯 REINFORCE + 常数 baseline 只出现在教学/玩具场景。</p>
-<p><b>易错</b>：说"baseline 会引入偏差"（状态依赖的 baseline 无偏）；或把 advantage 说成"减个常数就够"——$V(s)$ 的状态依赖性才是降方差主力。</p>
-<p><b>实录</b>：牛客《安克 具身智能算法面经》（2026-02，全链实录：公式→求导合法性→方差→baseline 无偏性→类型→机械臂选型）——<b>原帖 2026-10 复核已删</b>，题目原文与原链接存证见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md" target="_blank" rel="noopener">research/sources-vol2.md</a></p>
+<details class="chain" id="c01">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔推断·历史题单待核〕</span> <b>C01</b> · 写出策略梯度公式。为什么能对期望求导？</summary>
+<p><b>答</b>〔推断·工程作答〕：以有限时域折扣目标 $J=\mathbb E[\sum_t\gamma^t r_t]$ 为例，令 $G_t=\sum_{k=t}^{T-1}\gamma^{k-t}r_k$，则 $\nabla J=\mathbb E[\sum_t\gamma^t\nabla\log\pi_\theta(a_t|s_t)G_t]$。环境转移不依赖策略参数，利用log导数与因果性推导；还需可微、支撑与交换求导/积分等条件。也可把折扣吸收到访问分布，必须说明约定。</p>
+<p><b>追问 1</b>〔推断〕：这样估计方差大怎么办？<br><b>答</b>〔推断·工程作答〕：可用reward-to-go、状态baseline、优势估计、较大批量等方法。GAE通过权衡TD估计的偏差与方差降低噪声，但效果取决于critic误差和采样；不保证任何设置都降方差。</p>
+<p><b>追问 2</b>〔推断〕：baseline 为什么降方差、会不会引入偏差？<br><b>答</b>〔推断·工程作答〕：对给定状态，固定且不依赖所采动作的 $b(s)$ 满足 $\mathbb E_{a\sim\pi}[\nabla\log\pi(a|s)b(s)]=0$，所以减去它不改期望。合适的baseline能降方差，任意baseline不保证；同批拟合或动作相关控制变量需额外分析。</p>
+<p><b>追问 3</b>〔推断〕：baseline 有哪些类型？<br><b>答</b>〔推断·工程作答〕：可用常数、状态价值函数或其他状态函数。方差最优baseline通常还与score范数加权有关，不必恰等于V(s)。实践常用critic并将计算好的优势在actor更新时视为常量。</p>
+<p><b>追问 4</b>〔推断〕：机械臂抓取任务用哪个？<br><b>答</b>〔推断·工程作答〕：先看动作空间、数据成本、奖励稀疏程度与安全约束。可用PPO+critic、离策略方法或演示初始化等；不存在抓取任务唯一正确算法。说明自己选型依据与对照实验，不把教学默认配置当工程定律。</p>
+<p><b>易错</b>：把baseline无偏与任意baseline都降方差混为一谈；折扣公式不说采样/回报约定。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c01" target="_blank" rel="noopener">卷二题源 C01</a>。历史题单无独立原文快照，全链保守按推断练习，不认领公司或实录频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l1">L1</span> <span class="freq">🔥×2</span> <b>C02</b> · PPO 的原理？它是 on-policy 还是 off-policy？</summary>
-<p><b>答</b>：PPO 是策略迭代的近似：采一批数据 → GAE 估计优势 → 最大化 clip 目标 $L=\mathbb{E}\big[\min\big(r_t\hat A_t,\ \mathrm{clip}(r_t,1-\epsilon,1+\epsilon)\hat A_t\big)\big]$，$r_t=\pi_\theta(a_t|s_t)/\pi_{\theta_{old}}(a_t|s_t)$，限制单次更新幅度后，同一批数据重复更新 few epochs。<b>属于 on-policy</b>：采样必须来自（近似）当前策略；few-epoch 复用是带重要性修正的小幅 off-policy 化，不是 replay 式 off-policy（SAC/DDPG）。</p>
-<p><b>追问 1</b>：重要性采样是什么、为什么用？<br><b>答</b>：用旧策略的样本估计新策略目标的期望：$\mathbb{E}_{old}[r_t\hat A_t]$，用概率比 $r_t$ 修正两个分布的差异。多 epoch 更新后策略偏离采样分布，直接用旧梯度会失真，ratio + clip 一起兜住这个偏差。</p>
-<p><b>追问 2</b>：Loss 由什么组成？<br><b>答</b>：三项：policy clip surrogate + value 回归 $c_1\,\mathbb{E}[(V_\phi-V_{target})^2]$（$c_1\approx0.5$）+ 熵奖励 $c_2\,\mathbb{E}[\mathcal H(\pi)]$ 防过早收敛。共享骨干时三项相加，独立网络时通常分开优化。</p>
-<p><b>追问 3</b>：能否用总 loss 更新两个网络？<br><b>答</b>：两种口径都成立：共享骨干时原论文就是总 loss 相加；独立网络时分开更新更干净（实录帖主答即"分开——logP 只更新 actor、value 只更新 critic"）。相加要压 value 项系数，否则 MSE 量级盖过 policy 梯度。</p>
-<p><b>易错</b>：把 PPO 说成 off-policy（"复用数据"≠off-policy）；说 clip"截断的是梯度"——clip 区间内梯度正常回传，越界侧才被截断。</p>
-<p><b>实录</b>：<a href="https://www.nowcoder.com/feed/main/detail/b18ddc5475694fc0bcedc07f9764d10d" target="_blank" rel="noopener">牛客·云鲸 具身智能算法校招面经</a>（"ppo原理，同策略和异策略有什么区别""重要性采样是什么，为什么ppo要用"原题）、知乎 <a href="https://zhuanlan.zhihu.com/p/2082240221471576304" target="_blank" rel="noopener">具身智能面经（二）·强化学习篇</a>（ratio/clip 梯度层，〔整理〕计 1）；另牛客运动控制面经帖（总 loss 层原帖主答）已删，存证见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md" target="_blank" rel="noopener">research/sources-vol2.md</a></p>
+<details class="chain" id="c02">
+<summary><span class="lv lv-l1">L1</span> <span class="freq">〔实录主题+推断〕</span> <b>C02</b> · PPO 的原理？它是 on-policy 还是 off-policy？</summary>
+<p><b>答</b>〔推断·工程作答〕：PPO通常采集当前策略rollout，固定旧log概率与优势，再多轮优化clip surrogate。$r_t=\exp(\log\pi_\theta-\log\pi_{\rm old})$，最大化 $\mathbb E[\min(r_t\hat A_t,\mathrm{clip}(r_t,1-\epsilon,1+\epsilon)\hat A_t)]$。它通常归类on-policy；有限批次复用不等于任意历史replay。Clip限制部分目标收益，不是硬trust-region或安全保证。</p>
+<p><b>追问 1</b>〔推断〕：重要性采样是什么、为什么用？<br><b>答</b>〔推断·工程作答〕：概率比修正给定状态下动作分布的变化；多轮更新后新旧策略不同，因此用旧样本构造surrogate。单步ratio并不完整校正状态访问分布，clip也引入偏差；需监控KL、ratio与更新幅度。</p>
+<p><b>追问 2</b>〔推断〕：Loss 由什么组成？<br><b>答</b>〔推断·工程作答〕：按最小化约定可写 $L=-L^{clip}+c_vL_V-\beta H$：负actor目标、价值误差、负熵奖励。系数与实现有关；若改成最大化，符号须同时翻转。不能不说优化方向就把三项都加正号。</p>
+<p><b>追问 3</b>〔推断〕：能否用总 loss 更新两个网络？<br><b>答</b>〔推断·工程作答〕：可以相加，但须明确共享参数、计算图与符号。独立actor/critic时分别优化较易检查；合并也可让各项只流向应更新的参数。old logp、已计算advantage和value target通常detach，避免不期望的梯度。</p>
+<p><b>易错</b>：把clip当硬约束或把actor/value/熵的优化符号写反。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c02" target="_blank" rel="noopener">卷二题源 C02</a>。仅保留记录中可追溯的主题锚点；扩展、重排和工程作答均标推断，不报整链频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l3">L3</span> <span class="freq">🔥×1</span> <b>C03</b> · GAE 里 λ=0.95 时，第 10 步 TD 残差的权重是多少？（当场算）</summary>
-<p><b>答</b>：GAE：$\hat A_t=\sum_{l=0}^{\infty}(\gamma\lambda)^l\,\delta_{t+l}$，$\delta_t=r_t+\gamma V(s_{t+1})-V(s_t)$。第 10 步（$l=9$）权重 $(\gamma\lambda)^9$：$\gamma=1$ 时 $0.95^9\approx0.63$；$\gamma=0.99$ 时 $0.9405^9\approx0.58$。面试要的是通式 + 心算：$\ln 0.95\approx-0.051$，$\times 9\approx-0.46$，$e^{-0.46}\approx0.63$。</p>
-<p><b>追问 1</b>：灵巧手要在最后 1 秒做精确控制，λ=0.95 合理吗？<br><b>答</b>：偏大。λ 大 → 优势估计偏 Monte-Carlo，长程回报把末段精细动作的即时信号稀释掉；末段精度需要的是短视、即时的信用分配。</p>
-<p><b>追问 2</b>：怎么调整？<br><b>答</b>：①调小 λ（更信 value 网络的短时预测，信用分配即时，代价是 bias 增大）；②reward 分段改造：末段加精度奖励/终止项加权；③检查 γ——短任务可取 γ→1，避免末段被折扣压掉。先说"调谁、为什么"，再说代价。</p>
-<p><b>易错</b>：只背"λ 平衡偏差与方差"给不出 $(\gamma\lambda)^l$ 通式和数字——这是一条数字链，当场算错比不会更减分。</p>
-<p><b>实录</b>：<a href="https://www.nowcoder.com/feed/main/detail/b18ddc5475694fc0bcedc07f9764d10d" target="_blank" rel="noopener">牛客·云鲸 具身智能算法校招面经</a>（数字题与灵巧手追问原题）</p>
+<details class="chain" id="c03">
+<summary><span class="lv lv-l3">L3</span> <span class="freq">〔推断·历史题单待核〕</span> <b>C03</b> · GAE 里 λ=0.95 时，第 10 步 TD 残差的权重是多少？（当场算）</summary>
+<p><b>答</b>〔推断·工程作答〕：GAE为 $\hat A_t=\sum_{l\ge0}(\gamma\lambda)^l\delta_{t+l}$。若“第10步”指l=9，则权重为 $(\gamma\lambda)^9$；λ=.95且γ=1时约.630，γ=.99时约.576。若题目按l=10编号，指数应为10，先澄清计数；有限rollout还要处理终止与截断。</p>
+<p><b>追问 1</b>〔推断〕：灵巧手要在最后 1 秒做精确控制，λ=0.95 合理吗？<br><b>答</b>〔推断·工程作答〕：不能仅凭“最后1秒”判断。λ控制TD残差组合的偏差/方差，不是控制带宽或固定信用窗口；其有效时间尺度还依赖步长与γ。要看奖励延迟、critic误差、终止处理和消融结果。</p>
+<p><b>追问 2</b>〔推断〕：怎么调整？<br><b>答</b>〔推断·工程作答〕：先核对动作/奖励采样间隔、稀疏性与critic精度，再比较多个λ的回报、末段误差及优势方差；必要时改奖励或课程。调小λ更依赖bootstrap，可能增偏差；不要用一句“末段精控所以调小”替代证据。</p>
+<p><b>易错</b>：把λ当成以秒计的控制窗口，或不问步编号就直接写指数。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c03" target="_blank" rel="noopener">卷二题源 C03</a>。本轮未独立复现具体原题，仅保留历史题单主题，全链推断，不认领公司或实录频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C04</b> · PPO 训四足，policy loss 震荡剧烈但 value loss 稳定下降，可能是什么原因？</summary>
-<p><b>答</b>：critic 健康，问题出在 policy 更新机制。按信息增益排查：①<b>advantage 未归一化/尺度过大</b>（最常见，除以 batch std）；②policy lr 过大（与 value 头分开设 lr）；③few-epoch 复用过度、clip ε 过宽——ratio 贴边界，重要性修正失真；④熵系数不当 → 策略塌缩-再探索的循环震荡；⑤reward/课程突变。证据链：看 advantage 的 std 曲线、ratio 分布是否堆积在 clip 边界、策略熵曲线是否周期性塌缩。</p>
-<p><b>追问 1</b>：为什么 value loss 平稳不能说明训练没问题？<br><b>答</b>：两个网络目标不同：critic 在拟合平滑的回报目标，policy 是在小批噪声梯度上做大步长更新——policy 侧不稳定可以独立于 critic 出现，反过来 critic 坏（价值高估）也会污染 advantage 引发震荡，需分别看。</p>
-<p><b>易错</b>：上来就答"降学习率"——面试官要的是按信息增益排序的排查 + 每步的证据，不是单点偏方。</p>
-<p><b>实录</b>：<a href="https://www.nowcoder.com/feed/main/detail/b18ddc5475694fc0bcedc07f9764d10d" target="_blank" rel="noopener">牛客·云鲸 具身智能算法校招面经</a>（原题："policy loss 震荡剧烈但 value loss 稳定下降"）</p>
+<details class="chain" id="c04">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔推断·历史题单待核〕</span> <b>C04</b> · PPO 训四足，policy loss 震荡剧烈但 value loss 稳定下降，可能是什么原因？</summary>
+<p><b>答</b>〔推断·工程作答〕：value loss下降不能证明critic健康，也不能仅据policy loss波动判定策略退化；PPO的surrogate跨批次不直接可比。先看真实回报/成功率、目标尺度和explained variance，再查优势分布、KL/clip fraction、熵、梯度与课程变化。学习率、更新轮数、奖励尺度和价值偏差都可能导致症状，逐项给证据后再调参。</p>
+<p><b>追问 1</b>〔推断〕：为什么 value loss 平稳不能说明训练没问题？<br><b>答</b>〔推断·工程作答〕：critic可能只拟合了错误或变化的return target，损失缩小也可能来自尺度变化；它的误差仍会污染优势。联合检查bootstrap/终止处理、价值校准和实际回报，不能把两条loss曲线当充分诊断。</p>
+<p><b>易错</b>：只凭loss曲线判定critic健康或策略失效，忽视回报与目标尺度。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c04" target="_blank" rel="noopener">卷二题源 C04</a>。本轮未独立复现具体原题，仅保留历史题单主题，全链推断，不认领公司或实录频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C05</b> · 你的 reward 是怎么设计的？有哪些项？</summary>
-<p><b>答</b>：先辨析（实录被单独追问过）：<b>reward 是每步即时信号，回报 return 是累计折扣</b>，别混用。四类设计：①<b>任务项</b>——稀疏成功奖励 + 进度项（足端到目标距离、速度跟踪误差）；②<b>塑造项</b>——躯干姿态/高度、步态频率、关节限位；③<b>正则项</b>——action rate（相邻动作差）、力矩、碰撞惩罚；④<b>风格项</b>——AMP 判别器打分。设计流程从"能自动判定的最小成功判据"起步，逐项加入并盯每项的行为曲线，防止某一项主导。</p>
-<p><b>追问 1</b>：出现过 reward hacking 吗？怎么解决？<br><b>答</b>：典型例子：贴着目标抖动刷进度项、保持静止吃 survival 项、截断式奖励下绕过终止判定。解决：potential-based shaping（理论上不改变最优策略）、可疑项设上限、加对冲正则（动作平滑/姿态保持）、上线前做对抗性扰动测试。讲自己实例时要说清"怎么发现的"。</p>
-<p><b>追问 2</b>：各项权重怎么调？<br><b>答</b>：先归一化量级（各项奖励除以典型值），从单任务项起逐项加；每加一项跑短程看该项的边际行为曲线——有没有被 hack、有没有压掉任务项；粗网格扫描 + 曲线判读，而不是拍脑袋一把梭。</p>
-<p><b>追问 3</b>：AMP 做过吗？自己实现的还是用开源的？<br><b>答</b>：思路：判别器区分策略动作与参考动作（动捕数据），输出 style reward 与任务项加权合成，策略既要"像人"又要完成任务。常见坑：判别器过强 → 只学"像"不学任务，用梯度惩罚/系数平衡压制判别器。实现侧如实答：自研（讲判别器结构与训练细节）或基于开源（讲改了什么）。</p>
-<p><b>易错</b>：只列名词，讲不出"哪一项曾经被 hack、怎么发现、怎么改"——实录里这层必落到实例，没做过就说没做过加思路。</p>
-<p><b>实录</b>：知乎 <a href="https://zhuanlan.zhihu.com/p/2082240221471576304" target="_blank" rel="noopener">具身智能面经（二）·强化学习篇</a>（reward 合理性/塑形/长度偏置层，〔整理〕计 1）；reward 四连原帖（牛客·具身智能RL面经，2026-01，含"回报是Reward吗/AMP自己实现还是开源"原题）<b>已删</b>，存证见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md" target="_blank" rel="noopener">research/sources-vol2.md</a></p>
+<details class="chain" id="c05">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔推断·历史题单待核〕</span> <b>C05</b> · 你的 reward 是怎么设计的？有哪些项？</summary>
+<p><b>答</b>〔推断·工程作答〕：reward是即时信号，return是所选折扣下的累计目标。按任务成功/进度、约束与代价、动作变化及可能的运动先验分组，每项写单位、时间尺度和终止语义。先建立可测成功判据，再逐项加入并观察行为与贡献。所有额外塑形都有可能改变目标，不能只靠奖励曲线宣布任务解决。</p>
+<p><b>追问 1</b>〔推断〕：出现过 reward hacking 吗？怎么解决？<br><b>答</b>〔推断·工程作答〕：先保留行为证据和触发条件，再修成功/终止判据或有漏洞的奖励。Potential shaping在相应假设下用 $\gamma\Phi(s')-\Phi(s)$ 保持最优策略，有限时域终止势等条件也要处理；任意进度奖励并无此保证。</p>
+<p><b>追问 2</b>〔推断〕：各项权重怎么调？<br><b>答</b>〔推断·工程作答〕：统一时间尺度与典型量级，记录每项分布和对总回报/梯度的贡献；用消融和受控扫描检查任务成功与约束违反。权重取值须随任务与实现验证，不以某次经验系数直接迁移。</p>
+<p><b>追问 3</b>〔推断〕：AMP 做过吗？自己实现的还是用开源的？<br><b>答</b>〔推断·工程作答〕：AMP用运动状态或状态转移区分参考运动与策略运动，据此形成风格奖励，再与任务目标结合；不是只判别动作向量。说明参考数据、特征、判别器训练与稳定化；自己没实现就讲复用和验证边界。</p>
+<p><b>易错</b>：把状态转移判别说成动作向量判别；任意进度奖励冒称不改变最优策略。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c05" target="_blank" rel="noopener">卷二题源 C05</a>。历史题单无独立原文快照，全链保守按推断练习，不认领公司或实录频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×3</span> <b>C06</b> · sim2real 的 gap 从哪来？怎么定位主要的性能损失？</summary>
-<p><b>答</b>：四层来源：①<b>物理参数</b>——质量/惯量偏差、摩擦、执行器动力学（PD 增益、力矩限幅、背隙与柔性、延迟）；②<b>传感</b>——噪声、延迟、丢帧、标定误差；③<b>视觉域差</b>——渲染与真实成像的光照/纹理差异；④<b>控制链路</b>——仿真步长与真机控制频率、通信延迟不匹配。定位法：<b>real2sim 回放</b>——把真机跑同策略的 log（关节轨迹、力矩、IMU）回灌仿真，逐层比残差（先运动学层、再动力学层、再传感层），残差最大的层优先治；再消融验证（只随机化该层参数看真机表现恢复多少）。</p>
-<p><b>追问 1</b>：域随机化随机哪些参数？范围怎么定？<br><b>答</b>：质量/惯量 ±、摩擦系数、PD 增益、执行器与通信延迟、初始状态、观测噪声、地面摩擦。范围以<b>真机标定值的不确定区间为中心</b>：先辨识中心值，再 ±30-50% 起步扫——覆盖真实不确定性即可，盲目加宽只会学出保守策略。</p>
-<p><b>追问 2</b>：real2sim 怎么做？资产哪来、材质光照怎么估？〔整理〕<br><b>答</b>：场景用 CAD/激光扫描/摄影测量重建；材质靠现场拍照估 albedo/粗糙度/金属度或材质库匹配；光照用 HDR 环境图采集/环境光标定；相机内外参与畸变标定后进仿真。目标是让"仿真回放真机轨迹"的残差可当基准线用。</p>
-<p><b>追问 3</b>〔推断〕：举一个"仿真完美、真机因延迟震荡"类实例？<br><b>答</b>：仿真未建模执行器/通信延迟 → 真机等效高频增益裕度不足 → 振荡。处理：辨识延迟量注入仿真并随机化、降低控制带宽/加滤波、或前馈补偿（Smith 类）。这类"仿真零误差真机翻车"的归因链是面试官最爱。</p>
-<p><b>易错</b>：把域随机化当万能药，说不出范围怎么定（"随缘 ±50%"）；定位损失时不给方法（real2sim 回放/逐层消融），只说"多随机化再试"。</p>
-<p><b>实录</b>：<a href="https://www.nowcoder.com/feed/main/detail/f79996d0300d4b60957770816bb0ace5" target="_blank" rel="noopener">牛客·TPLink 提前批（机器人算法）面经</a>（sim2real gap 处理层）、<a href="https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md" target="_blank" rel="noopener">Cgxiaoxin 面试复盘</a>（地瓜场次：gap 来源与缓解）、知乎 <a href="https://zhuanlan.zhihu.com/p/2082240221471576304" target="_blank" rel="noopener">具身智能面经（二）·强化学习篇</a>（"Sim-to-Real 差异有哪些/如何定位主要性能损失""哪些参数应随机化，范围如何设定"原题，〔整理〕计 1）；北京人形场次（真机RL/gap/模仿学习三问）原帖已删，存证见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md" target="_blank" rel="noopener">research/sources-vol2.md</a>；域随机化工程口径另参 <a href="https://zhuanlan.zhihu.com/p/2054527428802900763" target="_blank" rel="noopener">Xbotics 指南</a>（语境参考不计频）</p>
+<details class="chain" id="c06">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录主题+推断〕</span> <b>C06</b> · sim2real 的 gap 从哪来？怎么定位主要的性能损失？</summary>
+<p><b>答</b>〔推断·工程作答〕：从动力学/接触、执行器、传感与观测、控制时序四层找差异。记录真机输入输出和时间戳，用已知输入回放、参数辨识、残差分析与消融隔离原因。真机闭环轨迹与仿真不同不唯一证明某个参数错；测量、控制接口或未建模接触也可能造成差异。</p>
+<p><b>追问 1</b>〔推断〕：域随机化随机哪些参数？范围怎么定？<br><b>答</b>〔推断·工程作答〕：可考虑质量/惯量、摩擦、增益、执行延迟、观测噪声和初始状态。范围由实测不确定性、硬件规格与任务灵敏度确定，并检查物理相关性；不存在通用±30–50%。先辨识再随机化，防止不真实组合。</p>
+<p><b>追问 2</b>〔推断〕：real2sim 怎么做？资产哪来、材质光照怎么估？<br><b>答</b>〔推断·工程作答〕：可用CAD、扫描或摄影测量构建场景，标定相机与关键尺度；材质和光照用测量/拟合近似。是否需要视觉高保真取决于策略输入，纯本体控制不必追求照片级纹理；验证目标是与任务相关的误差。</p>
+<p><b>追问 3</b>〔推断〕：举一个"仿真完美、真机因延迟震荡"类实例？<br><b>答</b>〔推断·工程作答〕：这是机理假设：未建模延迟可能降低相位裕度，引起振荡。先测端到端延迟并在仿真复现，再调整带宽、补偿或训练分布；额外低通也会引入相位滞后，不能无条件当救稳方案。</p>
+<p><b>易错</b>：照搬随机化百分比，或在延迟振荡时无分析地额外加低通。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c06" target="_blank" rel="noopener">卷二题源 C06</a>。仅保留记录中可追溯的主题锚点；扩展、重排和工程作答均标推断，不报整链频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l3">L3</span> <span class="freq">〔实录·原帖已删〕</span> <b>C07</b> · 腿足机器人：腿的串联/并联结构有什么区别？</summary>
-<p><b>答</b>：<b>串联腿</b>：髋-膝-踝关节链，每关节独立电机——工作空间大、运动学简单、控制解耦，但力密度低（电机在腿上、惯量大）。<b>并联腿</b>：多电机经连杆共同驱动末端（如平面二连杆腿）——电机集中机身、腿部轻惯量小、力密度与刚度/抗冲击高，但工作空间小、运动学耦合复杂。人形/四足主流是串联（+ 谐波/行星减速）；高速动态四足（MIT Cheetah 系）经典走低减速比准直驱路线（部分腿构型用并联）。</p>
-<p><b>追问 1</b>：为什么不在训练端做 action smoothing？训练端要做得怎么做？<br><b>答</b>：训练端对输出做低通平滑 = 策略在"滤波后的动作"上拿 reward，学到的动力学不是真实执行链路——滤波的相位滞后在闭环里会让真机失稳。要做就把滤波器<b>建模进仿真的执行器管线</b>（动作先过 filter 再驱动机器人），让策略适应滤波后世界，而不是输出后处理。</p>
-<p><b>追问 2</b>：heading correction 是什么？<br><b>答</b>：航向校正——躯干偏航漂移的闭环修正：观测里给 yaw 误差（当前朝向 vs 指令朝向），reward 惩罚航向偏差，或外环直接把偏差折算进目标速度，防止策略直行时缓慢转圈。</p>
-<p><b>追问 3</b>：陀螺仪不准怎么处理？<br><b>答</b>：①标定零偏/温漂（静止段估计 bias）；②多源融合：加计 + 磁力计 + EKF/互补滤波校姿态；③训练侧配套：仿真观测注入 IMU 噪声/零偏模型，让策略对 gyro 误差鲁棒，而不是只在数据处理端修。</p>
-<p><b>追问 4</b>：obs/action 镜像是什么？<br><b>答</b>：利用左右对称性做数据增广：交换左右腿的观测/动作索引，同时翻转与镜像面相关的量（roll/yaw 角速度、侧向量），一条轨迹变两条，等效加倍采样并注入对称先验。</p>
-<p><b>追问 5</b>：对称 loss 的权重怎么定？<br><b>答</b>：$\mathcal L_{sym}=\|\pi(o)-\mathrm{mirror}(\pi(\mathrm{mirror}(o)))\|$，权重从小量级起扫（典型 1e-3~1e-1 相对任务 loss），观察对称性指标与任务性能的 trade-off——权重过大等于强行对称，牺牲最优性。</p>
-<p><b>追问 6</b>：腿解算指什么？<br><b>答</b>：腿部运动学逆解：足端目标位置 → 髋/膝关节角，解析解（两连杆 + 髋外摆）直接算；控制链路里策略输出足端目标或关节目标时都离不开它，还要处理工作空间边界与奇异位形。</p>
-<p><b>追问 7</b>〔整理〕：指令映射怎么做？<br><b>答</b>：用户层指令（前后/横移/转向速度）→ 期望躯干速度 → reward 里的速度跟踪项（含航向项），策略学出对应步态；注意指令平滑（斜坡限幅）防止阶跃指令激发失稳。</p>
-<p><b>追问 8</b>〔整理〕：为什么对输出做了滤波不影响网络？<br><b>答</b>：滤波在<b>执行层</b>（策略输出 → 低通/限幅 → PD 目标），网络输入输出的映射本身不变；训练时若已把滤波建进仿真管线，策略学到的是含滤波闭环的行为，所以真机再滤一次不改变已适应的动力学。</p>
-<p><b>易错</b>：把"训练端平滑"和"执行端滤波"混为一谈——面试官要的分界线是"滤波器在哪个闭环里、策略有没有见过它"。</p>
-<p><b>实录</b>：牛客《腿部强化学习面试记录》（2026-05，串并联→action smoothing→heading correction→陀螺仪→镜像→对称 loss→腿解算七层实录）与《腿足强化学习面经 大复盘》（2025-12，指令映射/滤波不影响输出两层）<b>原帖均已删</b>，题目原文与原链接存证见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md" target="_blank" rel="noopener">research/sources-vol2.md</a></p>
+<details class="chain" id="c07">
+<summary><span class="lv lv-l3">L3</span> <span class="freq">〔推断·历史题单待核〕</span> <b>C07</b> · 腿足机器人：腿的串联/并联结构有什么区别？</summary>
+<p><b>答</b>〔推断·工程作答〕：串联腿由关节链连接末端，结构直观但仍有动力学耦合；闭链/并联机构可降低部分运动惯量或提高刚度，也会限制工作空间并引入约束和奇异。具体性能取决于连杆、执行器布局和传动，平面两连杆本身不自动等于并联，不能按“串联/并联”标签判定力密度或稳定性。</p>
+<p><b>追问 1</b>〔推断〕：为什么不在训练端做 action smoothing？训练端要做得怎么做？<br><b>答</b>〔推断·工程作答〕：可以在训练中平滑，但须把滤波器、状态和延迟放进环境执行链，并在部署保持一致。只在真机额外加滤波会改变策略经历的动力学；动作变化惩罚、输出参数化与执行滤波也不是同一种平滑。</p>
+<p><b>追问 2</b>〔推断〕：heading correction 是什么？<br><b>答</b>〔推断·工程作答〕：先定义目标航向与当前航向的误差，再通过外环目标角速度、策略观测或奖励设计闭环纠偏。注意角度环绕和坐标约定；有偏航指令时不能强行锁定绝对yaw。</p>
+<p><b>追问 3</b>〔推断〕：陀螺仪不准怎么处理？<br><b>答</b>〔推断·工程作答〕：先检查时间戳、量程、零偏、温漂与振动，再用合适的IMU模型和多源融合估计姿态。加计受线加速度、磁力计受磁干扰，不能盲信；仿真噪声模型与部署滤波应一致。</p>
+<p><b>追问 4</b>〔推断〕：obs/action 镜像是什么？<br><b>答</b>〔推断·工程作答〕：按机器人几何和坐标约定交换左右索引，并正确处理向量/轴向量的符号与命令。只有环境与任务近似对称时才适用；不能对全部欧拉角、关节角机械乘负号。</p>
+<p><b>追问 5</b>〔推断〕：对称 loss 的权重怎么定？<br><b>答</b>〔推断·工程作答〕：先定义镜像等变误差并校验变换本身，再扫权重看任务性能和左右偏差。非对称负载/地形可能要求非对称行为，约束过强会损任务；系数不宜脱离loss归约和量级照搬。</p>
+<p><b>追问 6</b>〔推断〕：腿解算指什么？<br><b>答</b>〔推断·工程作答〕：通常指足端目标到关节角的IK，也可能指前向运动学，先问清接口。若策略直接输出关节目标，不一定每步再做IK；需要IK时须处理工作空间、分支、限位和奇异。</p>
+<p><b>追问 7</b>〔推断〕：指令映射怎么做？<br><b>答</b>〔推断·工程作答〕：明确用户命令是躯干速度、航向还是姿态，再映射到策略条件、规划目标或跟踪奖励。限制命令变化率并验证不同坐标系、饱和和急停语义，不把速度命令直接当关节目标。</p>
+<p><b>追问 8</b>〔推断〕：为什么对输出做了滤波不影响网络？<br><b>答</b>〔推断·工程作答〕：滤波会改变实际闭环，不能说“不影响”。若训练已包含滤波，部署应复现同一滤波器参数、状态更新与时序；不是在相同链路额外再串一个滤波器。用step响应和闭环性能验证一致性。</p>
+<p><b>易错</b>：把滤波说成不影响网络，或训练已含滤波却在部署又串联一份。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c07" target="_blank" rel="noopener">卷二题源 C07</a>。历史题单无独立原文快照，全链保守按推断练习，不认领公司或实录频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l1">L1</span> <span class="freq">〔实录·原帖已删〕</span> <b>C08</b> · 强化学习和传统控制各自的优势？怎么选、怎么分工？</summary>
-<p><b>答</b>：按层次分工而不是二选一：<b>底层伺服</b>（电流/速度/位置环，kHz 级 PD）永远是传统控制；<b>中层</b>模型控制（MPC/VMC/WBC）做轨迹与全身协调；<b>上层</b> RL 学技能与步态策略（输出目标关节位、足端目标或 VM 参数）。RL 的优势在免建模的非线性策略与复杂地形技能，传统控制的优势在可分析、可验证、毫秒级确定性。结构化、可建模的任务 MPC 就够；非结构化地形与复杂技能才上 RL。接口处 RL 输出必须被传统层兜底（限幅、安全反射）——"RL 提目标、传统层保稳定"。</p>
-<p><b>追问 1</b>〔整理〕：PID 怎么设计？<br><b>答</b>：定义误差与量纲 → 结构选型（需不需要 I/D）→ 整定：P 加到临界振荡再回退，加 D 抑制超调，I 最后消稳态误差并配抗积分饱和；微分项先低通滤波防噪声放大，输出限幅一起设。</p>
-<p><b>追问 2</b>：时域 vs 频域分析，你用哪个看什么？<br><b>答</b>：时域看阶跃响应指标（超调、调节时间、稳态误差）——贴近任务验收；频域看带宽、相位裕度/幅值裕度（Bode/Nyquist）——伺服设计、抗振与噪声评估离不开。工程上先频域定带宽与裕度，再时域验证。</p>
-<p><b>追问 3</b>〔整理〕：最看重的指标是什么？<br><b>答</b>：按场景答：关节伺服——稳态精度与带宽；全身控制——扰动恢复（推挤/踩空不摔）；整机——能耗与跟踪误差。要点是给<b>测量方法</b>（怎么测扰动恢复：施加多大推力看恢复时间）。</p>
-<p><b>追问 4</b>：RL 给传统控制带来了什么？<br><b>答</b>：免精确建模的非线性最优策略、复杂地形技能获取、学习型自适应（真机在线微调）；代价是可验证性与安全边界难——这也是它进不了底层伺服的原因。</p>
-<p><b>易错</b>：站队式回答（"RL 会取代 PID"）——面试官在考分层架构与接口意识，不是路线之争。</p>
-<p><b>实录</b>：牛客《智元 运动控制算法一面》（2026-03，优势与选型 + 时域/频域/超调/相位裕度层）与《强化学习和传统控制结合的一些问题》（2026-03，比例怎么分/PID 设计/最看重指标层）<b>原帖均已删</b>，存证见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md" target="_blank" rel="noopener">research/sources-vol2.md</a>；分层控制与 RL 定位的整理口径参 <a href="https://zhuanlan.zhihu.com/p/2054527428802900763" target="_blank" rel="noopener">Xbotics 指南</a>（语境参考不计频）</p>
+<details class="chain" id="c08">
+<summary><span class="lv lv-l1">L1</span> <span class="freq">〔推断·历史题单待核〕</span> <b>C08</b> · 强化学习和传统控制各自的优势？怎么选、怎么分工？</summary>
+<p><b>答</b>〔推断·工程作答〕：常见架构让RL输出目标或残差，传统伺服实现快速反馈，也可由RL直接输出力矩；这不是硬性层级。按安全约束、可分析性、模型误差、训练数据和实时性选型。模型控制可显式处理约束，学习策略可利用复杂数据，但两者都需要闭环验证与保护，不以“RL免建模”承诺免校准或免稳定性设计。</p>
+<p><b>追问 1</b>〔推断〕：PID 怎么设计？<br><b>答</b>〔推断·工程作答〕：先定义被控对象、量测、执行器限幅与采样/延迟；用模型或受控低能量实验整定，先保证方向与保护正确，再验证带宽、稳态误差和抗扰。加入积分要抗饱和、微分要处理噪声；真机不应无保护地推到临界振荡。</p>
+<p><b>追问 2</b>〔推断〕：时域 vs 频域分析，你用哪个看什么？<br><b>答</b>〔推断·工程作答〕：时域看超调、稳定时间、跟踪误差与限幅；频域看带宽、增益/相位裕度及共振。两者互补，离散采样与延迟须入模型。仅用一条平滑轨迹不能证明鲁棒稳定。</p>
+<p><b>追问 3</b>〔推断〕：最看重的指标是什么？<br><b>答</b>〔推断·工程作答〕：指标由任务风险确定：跟踪精度、扰动恢复、稳定裕度、峰值力矩、能耗或安全事件。先给约束与成功判据，再选优化指标，不把某个指标说成所有系统唯一重要的量。</p>
+<p><b>追问 4</b>〔推断〕：RL 给传统控制带来了什么？<br><b>答</b>〔推断·工程作答〕：可学习难建模的残差、目标、增益调度或技能策略，但收益要用同预算基线与消融验证。对未知输入、接触切换和分布外场景仍需约束与降级，不能把学习层作为稳定性的免费来源。</p>
+<p><b>易错</b>：断言学习策略永远不能输出力矩，或在真机无保护地寻找临界振荡。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c08" target="_blank" rel="noopener">卷二题源 C08</a>。历史题单无独立原文快照，全链保守按推断练习，不认领公司或实录频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C09</b> · MPC 的原理？和 LQR、PID 比怎么选？</summary>
-<p><b>答</b>：MPC = 滚动时域在线优化：每个控制周期解一个<b>有限时域</b>的约束优化（跟踪代价 + 控制量代价 + 终端代价，含状态/输入约束），只执行第一步控制量，下周期用新状态重解。对比：<b>LQR</b> 是线性无约束无限时域的一次性增益（离线算好 K），MPC 可带约束、可非线性、滚动反馈，代价是要在线解 QP/NLP；<b>PID</b> 单回路无预见性、不管耦合与约束，但零模型、毫秒级。选型：多变量 + 约束 + 前瞻（轨迹跟踪、全身控制）→ MPC；线性无约束 → LQR；单回路快速伺服 → PID。</p>
-<p><b>追问 1</b>：MPC 实时性怎么保证？<br><b>答</b>：缩时域、粗离散化；QP/NLP <b>warm-start</b>（用上一步解做初值）；限制迭代次数接受次优解；问题稀疏化/预分解；极致场景用显式 MPC（离线算分区多面体）或学习近似。</p>
-<p><b>追问 2</b>：求解失败/超时怎么办？<br><b>答</b>：分级 fallback：沿用上一步控制量（衰减）、软约束化（slack 变量放宽，保证可行）、切保守模式（降低速度/加大终端约束），并监控 solver exit flag 主动降级——"失败也要安全"是考点。</p>
-<p><b>追问 3</b>：qpOASES 和 OSQP 怎么选？<br><b>答</b>：qpOASES：active-set 法，中小规模、热启动好、解精度高；OSQP：ADMM 一阶法，大规模稀疏问题、每步便宜、嵌入式友好，精度换速度。腿足全身控制这类稀疏大 QP 常选 OSQP，机械臂小规模轨迹 QP 用 qpOASES。</p>
-<p><b>易错</b>：只说"MPC 滚动优化"说不出和 LQR 的本质差异（约束 + 滚动 vs 离线增益）；实时性只答"提高求解速度"不答 fallback——面试官必追"解不出来那一刻机械臂在干什么"。</p>
-<p><b>实录</b>：<a href="https://www.nowcoder.com/feed/main/detail/679003b65a1a404c9e1d755e7e1c4fd7" target="_blank" rel="noopener">牛客·秋招记录(9) 安克创新机器人控制算法一面</a>（"lqr、pid、mpc 三种控制方法的区别"原题，2024-10）；实时性/求解失败/qpOASES vs OSQP 三层出自另一安克场次（2026-02）<b>原帖已删</b>，三问原文见存证 #1：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md" target="_blank" rel="noopener">research/sources-vol2.md</a></p>
+<details class="chain" id="c09">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录主题+推断〕</span> <b>C09</b> · MPC 的原理？和 LQR、PID 比怎么选？</summary>
+<p><b>答</b>〔推断·工程作答〕：MPC反复用当前状态求有限时域优化并执行前缀，可显式处理约束；LQR针对线性二次结构，既有有限时域也有无限时域形式；PID按误差反馈。区别不是“LQR永远离线、MPC天然稳定”，而是模型、代价、约束与求解方式。选型要核对状态估计、延迟、可行性和稳定性设计。</p>
+<p><b>追问 1</b>〔推断〕：MPC 实时性怎么保证？<br><b>答</b>〔推断·工程作答〕：先量测最坏时延，再优化模型/时域、稀疏结构、热启动和求解器配置；线性化、代码生成或近似策略需检查误差。设置硬截止与已验证的降级，不以平均求解时间代替实时保证。</p>
+<p><b>追问 2</b>〔推断〕：求解失败/超时怎么办？<br><b>答</b>〔推断·工程作答〕：保留最后可行轨迹可能有用，但在状态变化后未必安全；软化选定约束也不保证整体可行。应按系统风险预先验证安全控制器、制动/降级或重规划策略，监控求解状态与约束违反，不能临场随意沿用旧量。</p>
+<p><b>追问 3</b>〔推断〕：qpOASES 和 OSQP 怎么选？<br><b>答</b>〔推断·工程作答〕：qpOASES是主动集方法，OSQP面向稀疏QP采用算子分裂；二者的热启动、精度、规模和部署条件不同。用目标问题集比较尾时延、残差和失败率，不按“机械臂一定A、腿足一定B”选。</p>
+<p><b>易错</b>：软化约束/沿用旧控制量就声称已保证可行与安全。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c09" target="_blank" rel="noopener">卷二题源 C09</a>。仅保留记录中可追溯的主题锚点；扩展、重排和工程作答均标推断，不报整链频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l3">L3</span> <span class="freq">〔实录·原帖已删〕</span> <b>C10</b> · 电流环、速度环、位置环是怎么嵌套的？</summary>
-<p><b>答</b>：<b>位置环（最外，0.5-2kHz）输出目标速度 → 速度环（1-5kHz）输出目标电流/力矩 → 电流环（最内，10-20kHz 或驱动器级）闭环输出电压</b>。嵌套逻辑是带宽分离：内环必须远快于外环（典型 ≥5-10 倍带宽），外环才能把内环当"理想执行器"看——位置环看到的是一个近似无滞后的速度源，速度环看到的是近似理想的力矩源。</p>
-<p><b>追问 1</b>：为什么外环套内环？内环频率一定要高吗？<br><b>答</b>：物理 causality 决定的：力矩产生加速度→加速度积分成速度→速度积分成位置，越靠近物理量越快。内环不高则外环带宽被内环相位滞后吃掉，整环震荡——所以频率不是"尽量高"，是<b>按带宽分离约束设计</b>。</p>
-<p><b>追问 2</b>：三个 PID 先调哪个？<br><b>答</b>：从最内往外：电流环（驱动器一般自带整定）→ 速度环 → 位置环。内环不稳时外环怎么调都白搭；每层调完做阶跃/频响确认带宽再进下一层。</p>
-<p><b>追问 3</b>：1kHz 控制周期、PID 0.2ms、执行器更新 5ms，延迟怎么补偿？<br><b>答</b>：瓶颈是执行器 200Hz 更新——控制 1kHz 只是重复指令。补偿：①对齐：控制频率降到执行器可达，或插值细分指令；②前馈预测：用模型预测执行器 5ms 后的状态做超前控制（Smith 预估思路）；③观测器估计执行器实际状态参与闭环。先说清"延迟在链路哪一段"，再对症。</p>
-<p><b>追问 4</b>：传感器抖怎么滤？<br><b>答</b>：限幅滤波 + 一阶低通起手（注意相位滞后对控制带宽的影响）；带运动模型就上 KF；多传感器融合。滤波器带宽要在"噪声抑制"和"相位裕度"之间挑，不能无脑低。</p>
-<p><b>追问 5</b>：卡尔曼滤波的 Q/R 怎么调？<br><b>答</b>：Q 是过程噪声（模型多不可信），R 是观测噪声（传感器多差）。R 大→信模型，平滑但滞后；Q 大→信测量，响应快但噪。调法：按传感器手册/静态数据定 R 初值，Q 从小起放大看新息（innovation）是否归白——新息有结构说明模型欠拟合。</p>
-<p><b>追问 6</b>：KF 和互补滤波什么时候用哪个？<br><b>答</b>：互补滤波=固定增益的频域融合，简单、无模型、算力小，适合 IMU 姿态（低频信加计、高频信陀螺）；KF 是多状态最优融合（还可融合里程计/编码器），要模型和调参、算力大。单传感器对、嵌入式裸机 → 互补；多源融合、状态多 → KF/EKF。</p>
-<p><b>易错</b>：三个环的"频率数字"（量级）答不上来；调参顺序说"一起调"——从内往外是这题的标准答案骨架。</p>
-<p><b>实录</b>：牛客《智元 三天三轮面经》（2026-09，嵌套/频率/调参顺序/1kHz-0.2ms-5ms/滤波/Q-R 全记录）<b>原帖已删</b>，题目原文与原链接存证见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md" target="_blank" rel="noopener">research/sources-vol2.md</a></p>
+<details class="chain" id="c10">
+<summary><span class="lv lv-l3">L3</span> <span class="freq">〔推断·历史题单待核〕</span> <b>C10</b> · 电流环、速度环、位置环是怎么嵌套的？</summary>
+<p><b>答</b>〔推断·工程作答〕：常见级联为位置误差生成速度目标，速度环生成电流/力矩目标，电流环驱动电压。内环通常设计得比外环带宽高，使外环能近似使用已闭合的内环；采样频率和闭环带宽不同，具体数值由驱动器、电机、负载、延迟与裕度决定，不给所有机器人套同一kHz表。</p>
+<p><b>追问 1</b>〔推断〕：为什么外环套内环？内环频率一定要高吗？<br><b>答</b>〔推断·工程作答〕：级联把不同动态尺度分开设计。内环通常需足够快且稳定，但“更新频率更高”本身不证明带宽更高；还要看离散延迟、滤波、执行器和增益。外环设计须使用真实内环响应。</p>
+<p><b>追问 2</b>〔推断〕：三个 PID 先调哪个？<br><b>答</b>〔推断·工程作答〕：通常先验证/整定电流环，再速度环，最后位置环；某些驱动器已有内环或不同结构，要按实际接口。每层在限流、限速与可控负载下验证，不能内环不稳还继续加外环增益。</p>
+<p><b>追问 3</b>〔推断〕：1kHz 控制频率、PID计算 0.2ms、执行器延迟 5ms，延迟怎么补偿？<br><b>答</b>〔推断·工程作答〕：5ms是执行延迟，不等于5ms更新周期或200Hz上限；流水线可每1ms接令。分解采样、计算、通信和执行延迟，分析离散闭环裕度，再考虑预测/Smith类补偿或降低带宽。0.2ms计算也需检查抖动，不能只靠频率相除。</p>
+<p><b>追问 4</b>〔推断〕：传感器抖怎么滤？<br><b>答</b>〔推断·工程作答〕：先判断噪声、真实振动或丢包，核对采样/抗混叠与时间戳，再选低通、陷波或状态估计。所有滤波延迟都进入闭环；不能无脑降低截止频率，须复核相位裕度和任务响应。</p>
+<p><b>追问 5</b>〔推断〕：卡尔曼滤波的 Q/R 怎么调？<br><b>答</b>〔推断·工程作答〕：Q/R是过程和测量噪声协方差。先用模型残差、传感器数据估计量级，再检查创新均值、白性和一致性。简单可比模型下增Q更跟测量、增R更信模型，但多维相关系统不能机械逐元素推断。</p>
+<p><b>追问 6</b>〔推断〕：KF 和互补滤波什么时候用哪个？<br><b>答</b>〔推断·工程作答〕：互补滤波适合明确的频段互补与较简单的估计；KF/EKF能显式利用状态/噪声模型做多源融合。两者都含假设，互补滤波也不一定无模型；按传感器、非线性与算力选择，不能仅凭传感器数量。</p>
+<p><b>易错</b>：把执行延迟5ms误当更新周期5ms，再推成200Hz上限。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c10" target="_blank" rel="noopener">卷二题源 C10</a>。历史题单无独立原文快照，全链保守按推断练习，不认领公司或实录频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l3">L3</span> <span class="freq">🔥×1</span> <b>C11</b> · 关节减速器的精度误差是什么原因造成的？</summary>
-<p><b>答</b>：①<b>背隙（backlash）</b>：齿轮啮合间隙，换向时空程；②<b>传动误差</b>：齿轮加工/装配误差导致的周期性位置偏差；③<b>弹性变形</b>：谐波减速器柔轮（行星类为齿轮架与行星轮系）在负载下的扭转变形，随力矩变化；④<b>摩擦</b>：啮合与轴承摩擦的非线性与滞环；⑤<b>温升与磨损</b>的缓变漂移。减速器级误差叠加电机端编码器看不到的输出端真实位置——这是"双端编码"存在的原因。</p>
-<p><b>追问 1</b>：误差怎么测量？<br><b>答</b>：输出端加高精度编码器与输入端换算位置对比（传动误差曲线）；激光跟踪仪/球杆仪测末端重复定位精度；力矩偏差法（同轨迹下力矩残差）；静态分点打表（多位置重复定位散布）。</p>
-<p><b>追问 2</b>：URDF 里的动力学参数和真机偏差有哪些？<br><b>答</b>：CAD 忽略的线缆/负载/装配误差（质量、质心、惯量）、摩擦（URDF 常没有或只有简化黏滞）、关节柔性与背隙、零位/连杆长度公差。验证：给已知轨迹测关节力矩，对比模型预测 $\tau_{model}$ 与实测的残差——残差大且系统性强就是参数错。</p>
-<p><b>追问 3</b>：动力学参数怎么辨识？（最小二乘 + 激励轨迹）<br><b>答</b>：动力学对参数线性：$\tau=Y(q,\dot q,\ddot q)\,\theta$。流程：①设计<b>激励轨迹</b>（傅里叶级数参数化，优化让 Y 条件数小）；②按轨迹采数据（电流折算力矩，滤波后微分）；③堆叠回归方程，最小二乘解 $\hat\theta=(Y^TY)^{-1}Y^T\tau$；④物理一致性筛选（质量为正、惯量正定）。</p>
-<p><b>追问 4</b>：摩擦怎么建模？<br><b>答</b>：库伦项（符号函数）+ 黏性项（线性于速度）起步；低速精度要求高加 <b>Stribeck</b> 项（低速区摩擦凹陷，指数模型）与静摩擦。辨识用恒速段扫速度拟合摩擦-速度曲线；控制上做前馈补偿。</p>
-<p><b>追问 5</b>〔整理〕：辨识完，新轨迹上怎么验证？追问"实际做过吗"怎么答？<br><b>答</b>：用<b>另一条不参与辨识的轨迹</b>回放，比辨识前后力矩预测残差下降比例——讲不出激励轨迹条件数、残差指标、验证轨迹的，基本就是没做过。如实划边界：做过就给数字（条件数、残差降了多少）；没做过直说没做过，讲流程 + 会从哪一步开始（数据→激励轨迹→回归）。</p>
-<p><b>易错</b>：只会"最小二乘"四个字，说不出激励轨迹为什么存在（条件数/持续激励）——这是区分"做过/背过"的分水岭层。</p>
-<p><b>实录</b>：<a href="https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md" target="_blank" rel="noopener">Cgxiaoxin 面试复盘</a>——赛博格（误差原因/测量/URDF 偏差/辨识/摩擦五连）、湃特纳二面（深度辨识）、零次方（"有没有实际做过"层），三场次同一作者仓库计 1 独立来源</p>
+<details class="chain" id="c11">
+<summary><span class="lv lv-l3">L3</span> <span class="freq">〔实录主题+推断〕</span> <b>C11</b> · 关节减速器的精度误差是什么原因造成的？</summary>
+<p><b>答</b>〔推断·工程作答〕：误差可能来自齿隙/换向滞环、加工与装配传动误差、负载弹性、摩擦、温度与磨损；电机端编码器不能完整观测输出端变形。区分精度、重复性和负载依赖误差，设计输出端测量与正反向/不同负载实验，不把末端误差全部归因减速器。</p>
+<p><b>追问 1</b>〔推断〕：误差怎么测量？<br><b>答</b>〔推断·工程作答〕：比较输入端按减速比换算的位置与输出端测量，扫角度、方向、速度和负载；末端测量另受连杆与标定误差影响。报告仪器精度、同步、温度与重复次数，避免把测量噪声当传动误差。</p>
+<p><b>追问 2</b>〔推断〕：URDF 里的动力学参数和真机偏差有哪些？<br><b>答</b>〔推断·工程作答〕：质量/质心/惯量、负载、摩擦、柔性、背隙与几何零位都可能不同。力矩残差也可能来自电流标定、同步、微分噪声和未建模接触，不唯一证明URDF参数错；先分离测量与模型误差。</p>
+<p><b>追问 3</b>〔推断〕：动力学参数怎么辨识？（最小二乘 + 激励轨迹）<br><b>答</b>〔推断·工程作答〕：写 $\tau=Y(q,\dot q,\ddot q)\theta$，先检查可辨识基参数与激励秩，再设计受限激励、同步采样并用QR/SVD或正则最小二乘。全参数常秩亏，不能默认 $(Y^TY)^{-1}$ 存在。筛查质量、惯量三角不等式等物理一致性，并用未参与拟合的轨迹验证。</p>
+<p><b>追问 4</b>〔推断〕：摩擦怎么建模？<br><b>答</b>〔推断·工程作答〕：先试库伦与黏性项，低速可能还需Stribeck、静摩擦/滞环；温度、负载和方向会影响参数。用受控恒速与换向实验拟合，验证不同工况，不把单条曲线外推到所有接触状态。</p>
+<p><b>追问 5</b>〔推断〕：辨识完，新轨迹上怎么验证？追问"实际做过吗"怎么答？<br><b>答</b>〔推断·工程作答〕：使用独立轨迹、速度与负载比较预测力矩/跟踪残差，给误差分布与不确定性。说明自己做过的数据、回归与验证部分；能背条件数或公式并不等于做过，也不能仅凭术语流畅判断真实性。</p>
+<p><b>易错</b>：未查可辨识性就显式求逆正规矩阵；仅凭残差断言参数错。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c11" target="_blank" rel="noopener">卷二题源 C11</a>。仅保留记录中可追溯的主题锚点；扩展、重排和工程作答均标推断，不报整链频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C12</b> · 机械臂 IK 有哪些解法？臂角法的详细流程？</summary>
-<p><b>答</b>：两大类：<b>解析法</b>（几何/代数闭式解——要求构型满足 Pieper 准则，如球腕三轴汇交；快、全解可得，但通用性差）；<b>数值法</b>（雅可比伪逆/转置迭代、牛顿法、优化式（cost + 约束的 SQP）、CCD）。冗余 7 自由度臂：解流形一维，<b>臂角法</b>在流形上参数化——固定臂角后 7DOF 退化为可解析的 6DOF 问题。</p>
-<p><b>追问 1</b>：臂角法的详细流程？<br><b>答</b>：①肘部位置在<b>绕肩-腕连线的圆弧</b>上，由臂角 $\phi$ 唯一定位；②肩部子问题：由肘位置解前三个关节角；③腕部子问题：球腕解析解姿态三角；④流形选择：按连续性（与上次解近）、避奇异、避障碍等指标选 $\phi$。本质 = 解析 IK + 一个标量参数，兼顾速度与冗余度利用。</p>
-<p><b>追问 2</b>：为什么不用 Pinocchio/KDL 现成接口？<br><b>答</b>：诚实版答法：快速原型会用；自研的真实理由要具体——臂角连续性控制与上层规划耦合（数值解跳解）、奇异规避策略要定制、去掉运行时依赖/确定实时性、或对性能（微秒级）有要求。没用过库就说"我会先用 KDL 验证再谈自研的必要性"——这层考的是工程判断不是背诵。</p>
-<p><b>追问 3</b>：IK 冗余解的问题与规避？<br><b>答</b>：冗余臂同一末端位姿有解流形，数值迭代可能跳到姿态差/近奇异的解。规避：解的连续性约束（warm start 上次解）、零空间投影做次级目标（避奇异、避障碍、关节限位中心化）、显式臂角参数化直接控制流形位置。</p>
-<p><b>易错</b>：只答"数值迭代雅可比"漏掉解析法与 Pieper 条件；臂角法说不出"肘位置由臂角定 → 两个子问题"的结构。</p>
-<p><b>实录</b>：<a href="https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md" target="_blank" rel="noopener">Cgxiaoxin 面试复盘</a>——湃特纳（全部解法 + 臂角法流程）、零次方（臂角法 vs Pinocchio）、iData 盈达（冗余解规避）、赛博格（闭式/全闭环半闭环），同一作者仓库计 1 独立来源</p>
+<details class="chain" id="c12">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录主题+推断〕</span> <b>C12</b> · 机械臂 IK 有哪些解法？臂角法的详细流程？</summary>
+<p><b>答</b>〔推断·工程作答〕：可分解析几何/代数法与数值迭代/优化法。Pieper条件是特定6R机构获得解析解的充分条件，不是所有可解析机构的必要条件。7DOF通常有冗余解，但固定臂角不保证任意构型都可解析；臂角几何法须限定适用的肩肘腕结构。</p>
+<p><b>追问 1</b>〔推断〕：臂角法的详细流程？<br><b>答</b>〔推断·工程作答〕：以适用的肩-肘-腕构型为例：由腕位与连杆长度求肘弯角/可达性，臂角选择肘在肩腕轴周围的位置，再解肩部与腕部姿态分支；检查限位、奇异和连续性。实际轴偏置会改变几何关系，不能把该流程当所有7轴通解。</p>
+<p><b>追问 2</b>〔推断〕：为什么不用 Pinocchio/KDL 现成接口？<br><b>答</b>〔推断·工程作答〕：先用成熟库建立正确基线。自研理由应是明确的构型解析解、分支/臂角连续性、依赖限制或实测实时性需求；与库比较误差、最坏耗时和边界。没用过就说明验证计划，不以“数值库一定跳解”作理由。</p>
+<p><b>追问 3</b>〔推断〕：IK 冗余解的问题与规避？<br><b>答</b>〔推断·工程作答〕：用上次解warm start、关节连续性/限位代价、零空间次级目标或适用的臂角选择；检查可达性与奇异附近行为。局部迭代或零空间项不保证全局避障，须与碰撞检测和规划联动。</p>
+<p><b>易错</b>：把特定肩肘腕机构的臂角解析法当成任意7轴通解。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c12" target="_blank" rel="noopener">卷二题源 C12</a>。仅保留记录中可追溯的主题锚点；扩展、重排和工程作答均标推断，不报整链频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C13</b> · 阻抗控制和导纳控制的区别？</summary>
-<p><b>答</b>：本质是"测什么、控什么"相反：<b>阻抗控制</b>测位置偏差，按虚拟模型出力/力矩（$F=M_v\ddot x+D_v\dot x+K_v(x-x_d)$，经雅可比映射 $\tau=J^TF$）——适合力矩控制型机器人、刚性环境稳定；<b>导纳控制</b>测外力（力传感器），按导纳模型解出位置/速度修正量给底层位置环——适合位置控制型机器人（多数工业臂）、柔性环境稳定。稳定性规律相反：阻抗控制怕柔性环境，导纳控制怕刚性环境。</p>
-<p><b>追问 1</b>：持续运动中的形变误差怎么补偿？<br><b>答</b>：臂/关节在负载下弹性形变造成末端偏差——建<b>形变-负载映射</b>（标定不同负载/位姿下的形变查表或回归模型），实时做重力/形变前馈补偿；力矩控制侧则用基于动力学模型的重力 + 摩擦前馈。</p>
-<p><b>追问 2</b>：冗余解怎么规避？<br><b>答</b>：同 C12 追问 3——解连续性、零空间次级目标（避奇异/障碍/限位）、臂角参数化；力控场景还要考虑可操作度（manipulability）指标在线优化。</p>
-<p><b>易错</b>：把两者说成"一个用阻抗一个用导纳的同一公式"——考的是互为对偶的结构（力→位置 vs 位置→力）与<b>相反的环境刚度稳定性条件</b>。</p>
-<p><b>实录</b>：<a href="https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md" target="_blank" rel="noopener">Cgxiaoxin 面试复盘</a>（iData 盈达：区别 + 形变误差补偿 + 冗余解）</p>
+<details class="chain" id="c13">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录主题+推断〕</span> <b>C13</b> · 阻抗控制和导纳控制的区别？</summary>
+<p><b>答</b>〔推断·工程作答〕：若定义 $e=x-x_d$，目标阻抗关系可写 $M_d\ddot e+D_d\dot e+K_de=F_{\rm ext}$；控制器需实现恢复项而非把正Ke直接当控制力。阻抗通常由运动误差调力/力矩，导纳由测得外力生成运动修正。适用性与稳定性取决于内环、接触刚度、离散延迟、饱和和被动性设计，不能声称“阻抗怕软、导纳怕硬”是普遍定理。</p>
+<p><b>追问 1</b>〔推断〕：持续运动中的形变误差怎么补偿？<br><b>答</b>〔推断·工程作答〕：先确定是结构弹性、传感/时间误差还是接触变化，再标定形变与位姿/负载的关系；可做前馈补偿或输出端反馈，但须考虑模型误差与噪声。补偿不能突破执行器力矩与安全限值。</p>
+<p><b>追问 2</b>〔推断〕：冗余解怎么规避？<br><b>答</b>〔推断·工程作答〕：IK冗余用连续性、限位、避奇异与碰撞约束处理；接触控制还要协调力/运动任务优先级。位置零空间与力矩零空间投影需对应模型，不能随意叠加次级目标而不分析闭环。</p>
+<p><b>易错</b>：混淆目标阻抗关系与控制力符号；按软/硬环境给无条件稳定性结论。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c13" target="_blank" rel="noopener">卷二题源 C13</a>。仅保留记录中可追溯的主题锚点；扩展、重排和工程作答均标推断，不报整链频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C14</b> · VMC（虚拟模型控制）的原理？为什么用它？</summary>
-<p><b>答</b>：VMC 在任务空间"挂虚拟弹簧-阻尼-质量元件"：期望行为定义为虚拟力 $F_{virtual}=K(x_d-x)+D(\dot x_d-\dot x)+M\ddot x_d$，经雅可比映射到关节力矩 $\tau=J^TF_{virtual}$ + 重力/动力学前馈。<b>为什么用</b>：直观——调刚度阻尼直接改变交互行为，落足、柔顺控制一行公式；不依赖精确模型（模型误差被虚拟元件闭环吸收）；计算微秒级，适合 kHz 控制层。典型架构：上层 MPC/RL 定足端目标/VM 参数，VMC 在关节层兑现力。</p>
-<p><b>追问 1</b>：VMC 的 sim2real gap 在哪？<br><b>答</b>：真实接触刚度/摩擦与虚拟元件假设不符、执行器力矩实现误差（饱和、延迟）、机身动力学耦合——表现为落足冲击、跟踪偏移。缓解：接触模型域随机化、VM 参数在线整定、力矩前馈标定。</p>
-<p><b>追问 2</b>：PPO 在 VMC 上做了什么改进？<br><b>答</b>：常见两种：RL 学 VM 参数（刚度/阻尼/落足点目标）而不是直接出关节角——动作空间低维、可解释、安全；或 RL 出关节目标、VMC 做力矩层兜底。回答要落到自己项目的具体接法。</p>
-<p><b>追问 3</b>：遥操作时延怎么优化？<br><b>答</b>：前馈预测（预测操作者指令）、指令端斜坡/限幅平滑、双边控制思路（从端阻抗映射）、必要时降低期望带宽并靠 VM 层维持柔顺性。</p>
-<p><b>追问 4</b>：量化指标是什么？<br><b>答</b>：跟踪误差（轨迹 RMSE）、推挤扰动恢复时间、落足位置精度、能耗/力矩峰值、跌倒率——指标要能对应到 VMC 参数（刚度↑→恢复快但冲击大）。</p>
-<p><b>易错</b>：只答"虚拟弹簧阻尼"不说与纯 PD 关节控制的差异（任务空间直接整形交互行为）与它在上层规划（MPC/RL）下面的位置。</p>
-<p><b>实录</b>：<a href="https://www.nowcoder.com/feed/main/detail/f79996d0300d4b60957770816bb0ace5" target="_blank" rel="noopener">牛客·TPLink 提前批（机器人算法）面经</a>（VMC 六问全记录，含量化指标层面试官原话）</p>
+<details class="chain" id="c14">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录主题+推断〕</span> <b>C14</b> · VMC（虚拟模型控制）的原理？为什么用它？</summary>
+<p><b>答</b>〔推断·工程作答〕：VMC用虚拟弹簧/阻尼等在任务空间定义期望力，再经雅可比转置映射关节力矩，并按实现补偿重力等项。它直观表达交互行为，但不自动吸收全部模型误差，也不保证微秒级、安全或稳定；接触约束、状态估计、执行器和延迟都要验证。可与上层规划或学习策略组合。</p>
+<p><b>追问 1</b>〔推断〕：VMC 的 sim2real gap 在哪？<br><b>答</b>〔推断·工程作答〕：真实接触、摩擦、结构/执行器动态和时延与仿真不同，会影响跟踪与落足。先测力矩实现和接触响应，再辨识/随机化相关参数，验证新工况；不能仅把虚拟刚度调大来掩盖误差。</p>
+<p><b>追问 2</b>〔推断〕：PPO 在 VMC 上做了什么改进？<br><b>答</b>〔推断·工程作答〕：作为推断接法，RL可调虚拟参数、目标或残差，也可用于其他策略层。原帖只问PPO如何改进，未证明它专门改了VMC；应按自己项目的实际接口说明并做消融，参数化本身不保证安全。</p>
+<p><b>追问 3</b>〔推断〕：遥操作时延怎么优化？<br><b>答</b>〔推断·工程作答〕：先量测采集、网络、规划和执行各段延迟，再考虑流水线、带宽/包结构、预测或合适的双边控制。平滑也会增加延迟，网络预测不消除不确定性；须设计超时降级和可验证的稳定性边界。</p>
+<p><b>追问 4</b>〔推断〕：量化指标是什么？<br><b>答</b>〔推断·工程作答〕：根据项目报告跟踪RMSE、响应/恢复时间、峰值力矩、能耗与失败率等，并写工况和统计方法。原帖后段转到另一个学校项目，不能把所有指标问答都绑定为VMC实验结果。</p>
+<p><b>易错</b>：把原帖跨项目追问全绑定到VMC，或以简洁公式承诺安全/微秒实时。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c14" target="_blank" rel="noopener">卷二题源 C14</a>。仅保留记录中可追溯的主题锚点；扩展、重排和工程作答均标推断，不报整链频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·原帖已删〕</span> <b>C15</b> · 为什么选 LADRC 不选 PID？</summary>
-<p><b>答</b>：LADRC = 自抗扰的线性简化版：<b>扩张状态观测器（LESO）把总扰动</b>（模型失配 + 外扰）<b>实时估进扩张状态</b>，控制律 = 反馈 + 扰动前馈补偿。对 PID 的优势：①不需要精确模型——扰动物理上被估计并抵消，而不是靠积分慢慢磨；②调参带宽化（观测器带宽 $\omega_o$、控制带宽 $\omega_c$ 两个主参数），比 PID 三参数整定系统；③多变量解耦能力强。PID 依然赢在零成本/成熟，伺服底环不会淘汰它。</p>
-<p><b>追问 1</b>：简历上"误差减小 XX%"具体指什么？<br><b>答</b>：数字核对题——必须能答：什么误差（稳态/跟踪 RMSE？）、在什么工况（负载/速度/扰动）下测的、和什么基线比（PID？未补偿？）、多少次实验怎么统计。每个数字都是下一层追问的入口（见卷五）。</p>
-<p><b>追问 2</b>：和 RL 怎么结合？RL 是你做的吗？<br><b>答</b>：典型分工：RL 出上层策略/目标轨迹，LADRC 做底层抗扰跟踪——RL 的输出不必完美，扰动由 ESO 兜。参与度如实划界：哪部分亲手做（观测器离散化？参数整定？联调？），没做的直说。</p>
-<p><b>易错</b>：讲不出 ESO"估计总扰动"这一核心机制，只说"比 PID 抗扰好"——那是最外层的结论，面试官要的是为什么。</p>
-<p><b>实录</b>：牛客《智元 算法实习一面》（2026-03，LADRC 选型/数字核对/RL 结合全记录）<b>原帖已删</b>，题目原文与原链接存证见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md" target="_blank" rel="noopener">research/sources-vol2.md</a></p>
+<details class="chain" id="c15">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔推断·历史题单待核〕</span> <b>C15</b> · 为什么选 LADRC 不选 PID？</summary>
+<p><b>答</b>〔推断·工程作答〕：LADRC以线性扩张状态观测器估计总扰动并在控制律中补偿，常用观测器/控制带宽组织整定。优势依赖输入增益、相对阶、采样、噪声和未建模动态等条件，不保证全部抵消扰动或天然强解耦。与PID比较应在同限制和工况下看跟踪、抗扰、噪声敏感性及实施成本，而不是宣称一种必然更好。</p>
+<p><b>追问 1</b>〔推断〕：简历上"误差减小 XX%"具体指什么？<br><b>答</b>〔推断·工程作答〕：给出误差定义、基线、负载/轨迹/扰动、采样和重复次数，说明分母及统计不确定性。单次最好结果不能代表平均改进；同时报告峰值力矩、噪声放大或响应变慢等代价。</p>
+<p><b>追问 2</b>〔推断〕：和 RL 怎么结合？RL 是你做的吗？<br><b>答</b>〔推断·工程作答〕：可让RL给目标/残差、LADRC做跟踪，但须分析接口带宽、饱和与分布外输出；ESO不保证兜住任意错误目标。如实说明自己实现、整定和联调的部分，不把组合框图当闭环验证。</p>
+<p><b>易错</b>：把ESO估扰等同任何条件下完全抵消扰动，认为可兜任意上层错误目标。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c15" target="_blank" rel="noopener">卷二题源 C15</a>。历史题单无独立原文快照，全链保守按推断练习，不认领公司或实录频次。</p>
 </details>
-<details class="chain">
-<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C16</b> · 各家真机 RL 都怎么考？（考法汇总链）</summary>
-<p><b>答</b>：实录里的三家风格：<b>北京人形</b>——真机 RL 全流程：sim2real gap 分析 + 模仿学习基础（IL/RL 混合问）；<b>上海人形</b>——灵巧手力控 + 调 reward 的细节（侧重"你真调过吗"）；<b>银河通用</b>——算法谱系辨析：model-free vs model-based、offline vs online RL。共同点：都从项目切入，三句话内必落到"你亲手做了哪段"。</p>
-<p><b>追问 1</b>：model-free vs model-based 怎么答？<br><b>答</b>：model-free（PPO/SAC）不学环境转移，样本效率低、稳；model-based（Dreamer 类）学转移模型可想象规划，样本效率高但模型误差累积。具身常见组合：仿真充当 model（域随机化）+ model-free 训练——sim-to-real + PPO 是主流默认。</p>
-<p><b>追问 2</b>：offline RL vs online RL？<br><b>答</b>：offline（CQL/IQL）：固定数据集不交互，分布外动作是难点，适合昂贵的真机数据；online 边交互边学，仿真随便跑。常见路线：演示先 BC 或 offline RL 预训练，再仿真/真机 online 微调（BC 属监督拟合不算 RL）。真机贵、仿真便宜但有 gap。</p>
-<p><b>易错</b>：把三家考法答成三家"黑话"背诵——这题考的是从自己项目出发覆盖三种问法（全流程 gap / reward 细节 / 算法谱系），提前各备一个自己项目的落点。</p>
-<p><b>实录</b>：知乎 <a href="https://zhuanlan.zhihu.com/p/2082240221471576304" target="_blank" rel="noopener">具身智能面经（二）·强化学习篇</a>（offline/online 选择与结合层，〔整理〕计 1）；"一帖四家"原帖（牛客·人形机器人公司面经，2026-03，帖主声明"都是我被面试过程中面试官所提问的"，北京人形/上海人形/银河通用三家考法）<b>已删</b>，存证见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md" target="_blank" rel="noopener">research/sources-vol2.md</a></p>
+<details class="chain" id="c16">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔推断·历史题单待核〕</span> <b>C16</b> · 真机 RL 项目怎样准备不同角度的追问？（归纳练习）</summary>
+<p><b>答</b>〔推断·工程作答〕：可从三种角度准备同一真实项目：全流程与sim2real；奖励、约束与失败案例；算法分类与数据使用。它们是编者归纳，不证明某公司固定这样考。每种都准备自己做过的接口、实验和失败证据，不用公司标签替代技术解释。</p>
+<p><b>追问 1</b>〔推断〕：model-free vs model-based 怎么答？<br><b>答</b>〔推断·工程作答〕：model-based在决策/更新中显式利用环境模型，模型可已知也可学习；model-free不以此模型做规划/更新。仿真里跑PPO仍可是model-free，环境存在模型不改变算法类别。样本效率与稳定性取决于具体方法和问题。</p>
+<p><b>追问 2</b>〔推断〕：offline RL vs online RL？<br><b>答</b>〔推断·工程作答〕：offline RL用固定数据集、不在训练中采新交互，需处理分布外动作与支持覆盖；online RL持续获得交互数据。可演示初始化后在线微调，BC是监督学习并非RL。真机在线试验还需预算、保护和审批，不能因有仿真就忽略gap。</p>
+<p><b>易错</b>：把公司风格当固定事实；以仿真有模型就把PPO归类model-based。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c16" target="_blank" rel="noopener">卷二题源 C16</a>。历史题单无独立原文快照，全链保守按推断练习，不认领公司或实录频次。</p>
 </details>
 <hr>
 <h2>题源说明</h2>
-<p><b>链接状态披露（重要）</b>：本卷起草（2026-10-26 上午）时调研到的 11 个牛客帖中，<b>8 个在发布前复核时已被删除</b>（详情页"内容不存在"）。处理原则：①实录行只挂当前可访问的 URL；②已删帖以标题/日期指认，题目原文与原链接存证于 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md" target="_blank" rel="noopener">research/sources-vol2.md</a>（含每帖题录引用与复核记录）；③仅存已删实录源的链（C01/C07/C08/C10/C15）徽章标〔实录·原帖已删〕，不冒充可验证频次。Wayback 当时被限流未能取证。</p>
-<p><b>当前可访问来源（7 个，均经维护者 2026-10-26 打开复核）</b>：牛客 3 帖（云鲸、安克秋招9、TPLink）、GitHub 2 个（Cgxiaoxin 面试复盘多公司场次；offerseed #6——可访问但卷内未直接引用，保留作语境参考不计频）、知乎 2 帖（具身智能面经·强化学习篇〔整理〕；Xbotics 指南——语境参考不计频）。</p>
-<p><b>频次计数规则</b>：🔥×N = 当前可访问的独立来源数（不同帖子/不同作者）；〔整理〕类最多计 1；同一作者多公司仓库（Cgxiaoxin）计 1；语境参考不计频。各链计数：C02×2、C03×1、C04×1、C05×1、C06×3、C09×1、C11×1、C12×1、C13×1、C14×1、C16×1；C01/C07/C08/C10/C15 为〔实录·原帖已删〕。与题单 v0.2 调研期计数（C01×2、C02×3、C06×4、C09×3、C11×3、C12×3 等）的差异全部源于上述删帖与"同作者计 1"规则，可逐条在存证文件中对账。</p>
-<p><b>层分档</b>：〔整理〕= 归纳自面经作者/社区的追问顺序或已删帖搜索快照（C06 追问2、C07 追问7/8、C08 追问1/3、C11 追问5 前半）；〔推断〕= 起草者推理补全（C06 追问3 案例为典型机理推演）。其余层为可访问实录原题或其直接展开。</p>
+<p>历史调研曾记录8帖“已删”，但没有取得独立第三方快照，不能用本仓库自记证明公司归属或现场连续追问。本轮将仅靠历史题单的C01/C05/C07/C08/C10/C15/C16降为推断练习，撤销无法复核的频次；其他链也仅认可来源记录中明确定位的主题，具体工程扩展逐层标推断。</p>
+<p>本轮先前已读的Cg复盘与当前重请求404、canonical导航外壳与sourceSSR变体正文可读等访问差异，都写入 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md" target="_blank" rel="noopener">卷二题源</a>。一次访问状态不保证持续可读；HTTP200也不等于有正文。易错项均为编者工程归纳，不代表候选人真实失误。</p><nav class="volume-nav"><a href="./vol1_vla_il.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="./vol3_data_teleop_debug.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol2_rl_motion.md" target="_blank" rel="noopener">Markdown 源文</a></nav>
 </main>
-<footer><div>题目来自公开一手面经，来源见各链「实录」行 · 执行 AI ≠ 审查 AI，审查记录见 research/reviews/ · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains" target="_blank" rel="noopener">MIT License</a> · 渲染于 2026-10-26</div></footer>
+<footer><div>公开面经、整理与推断练习分档标注 · 题源限制与审查范围见各链和记录 · 公式排版使用 MathJax，折叠无需 JavaScript · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a> · 渲染于 2026-10-26</div></footer>
 </body>
 </html>
