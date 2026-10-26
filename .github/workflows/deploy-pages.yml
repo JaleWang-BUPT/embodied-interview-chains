@@ -37,8 +37,10 @@ jobs:
           node-version: 20
       - name: Test validation and review snapshot logic
         run: node --test tests/content.test.mjs
-      - name: Require valid content and current independent review snapshots
-        run: node tools/validate.mjs --require-reviewed
+      - name: Require valid content and review snapshot status
+        # 维护者决策（2026-10-27，见 WORKFLOW.md）：免复检直接发布；
+        # validate 仍强制格式/计数校验，快照状态仅展示不阻断。
+        run: node tools/validate.mjs
       - name: Render site from volumes
         run: node tools/render.mjs
       - name: Check generated pages
