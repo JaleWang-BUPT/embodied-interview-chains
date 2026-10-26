@@ -16,8 +16,9 @@
 | 题单初稿（~80 条链 / ~330 问答节点） | ✅ [research/题单初稿.md](research/题单初稿.md) |
 | 卷一 · VLA 与模仿学习（17 链 / 53 节点，起草 → 跨模型交叉审查 → 渲染） | ✅ 完成（1 轮审查修复） |
 | 卷二 · 强化学习与运动控制（16 链 / 71 节点，2 轮审查修复 + 1 轮复检） | ✅ 完成（8 个牛客源帖发布前被删，已按存证规则处理：[research/sources-vol2.md](research/sources-vol2.md)） |
+| 卷三 · 数据 · 遥操作 · 真机排障（12 链 / 48 节点） | 🟡 起草与渲染完成，待跨模型交叉审查（题源状态见 [research/sources-vol3.md](research/sources-vol3.md)） |
 | GitHub Pages 上线 | ✅ [已上线](https://jalewang-bupt.github.io/embodied-interview-chains/) |
-| 卷三～卷六 + 附录 | ⏳ 排队（题单已审定） |
+| 卷四～卷六 + 附录 | ⏳ 排队（题单已审定） |
 
 ## 题源与质量规范
 

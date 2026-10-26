@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>卷三 · 数据 · 遥操作 · 真机排障 · 追问链</title>
+<script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},chtml:{displayAlign:'left'}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--bg:#fbfbfa;--fg:#1f2328;--mut:#656d76;--line:#e4e4e0;--acc:#0969da}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif}
+main{max-width:840px;margin:0 auto;padding:28px 18px 80px}
+h1{font-size:26px;line-height:1.4;margin:.4em 0 .2em}
+h2{font-size:20px;margin:2em 0 .6em;border-bottom:1px solid var(--line);padding-bottom:.3em}
+p{margin:.7em 0}
+a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
+code{background:#f0f1f2;border-radius:4px;padding:.1em .35em;font-size:.92em}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+.note{background:#f3f6fb;border-left:4px solid var(--acc);border-radius:6px;padding:10px 16px;margin:14px 0;font-size:15px;color:#33415c}
+details.chain{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 18px;margin:14px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+details.chain[open]{border-color:#d5d8dd}
+summary{cursor:pointer;font-weight:600;font-size:16.5px;padding:8px 0;list-style:none;position:relative;padding-right:28px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'展开';position:absolute;right:0;top:8px;font-size:12.5px;font-weight:400;color:var(--mut);border:1px solid var(--line);border-radius:20px;padding:1px 10px}
+details.chain[open] summary::after{content:'收起'}
+details.chain[open]>summary{border-bottom:1px dashed var(--line);margin-bottom:6px}
+.lv{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:0 7px;margin-right:4px;vertical-align:2px;color:#fff}
+.lv-l1{background:#1a7f37}.lv-l2{background:#0969da}.lv-l3{background:#cf222e}
+.freq{color:#9a6700;font-size:14px;margin-right:6px}
+.top{border-bottom:1px solid var(--line);margin-bottom:8px}
+.top nav{max-width:840px;margin:0 auto;padding:14px 18px;display:flex;gap:18px;align-items:baseline;flex-wrap:wrap}
+.top .brand{font-weight:700;color:var(--fg)}
+footer{border-top:1px solid var(--line);margin-top:60px}
+footer div{max-width:840px;margin:0 auto;padding:18px;color:var(--mut);font-size:13.5px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:14px 0}
+.card h2{border:none;margin:0 0 6px}
+.meta{color:var(--mut);font-size:14px}
+@media(max-width:640px){main{padding:18px 12px 60px}summary{font-size:15.5px;padding-right:64px}summary::after{top:4px}}
+</style>
+</head>
+<body>
+<div class="top"><nav><span class="brand">具身智能面试追问链</span><a href="./index.html">📚 卷目录</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains" target="_blank" rel="noopener">GitHub</a></nav></div>
+<main>
+<h1>卷三 · 数据 · 遥操作 · 真机排障 · 追问链</h1>
+<div class="note">具身智能面试追问链题库 · 第三卷<br>题源：牛客 / GitHub / CSDN 一手面经与整理（2025-2026）；可访问来源与调研存证见各链「实录」行<br>本卷 <b>12 条链 · 48 个问答节点</b><br>难度分布：L1 <b>1</b> · L2 <b>9</b> · L3 <b>2</b></div>
+<p><b>使用方式</b>：这卷不要背「先看日志、再逐层排查」这种空话。回答时固定走三步：<b>先保安全与复现现场 → 按时间线/信号链切层 → 给每个假设配一个可证伪的观测</b>。数据题则要把时间戳、坐标系、标签语义说成一条可执行的数据契约。</p>
+<p><b>本卷追问模式</b>（来自调研结论）：</p>
+<ol><li><b>数据怎么来 → 时间怎么对齐 → 标签到底是什么 → 怎么验证</b>：会采不等于能训，时间戳和标签语义错一层，模型会稳定地学错。</li><li><b>给症状 → 先分层 → 再测量 → 最后改</b>：摔倒、死机、掉压、卡顿都先保留故障现场；没有证据就换参数，通常只会把问题藏起来。</li><li><b>方案 → 带宽/时延/缓存数字核对</b>：波特率、帧长、中断频率、缓冲区必须能当场估算，不接受「换 DMA 就好了」。</li><li><b>训练侧 ↔ 执行侧对账</b>：目标指令、实测状态、action chunk、底层实际执行不是同一个量；真机问题常出在它们之间的接口。</li><li><b>修复 → 如何证明修好了</b>：时间对齐做事件回放，电源问题做空载/带载对比，步态问题做单关节与悬空试验，卡顿问题看端到端时间线。</li></ol>
+<hr>
+<details class="chain">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×2</span> <b>C01</b> · 机器人学习的数据怎么采？采哪些信息？</summary>
+<p><b>答</b>：先从训练样本反推采集契约，而不是先开相机。每条 episode 至少记录：任务/成功判据、各相机原始帧与曝光时间、机器人关节位置/速度/力矩或电流、末端位姿、夹爪、力/触觉、操作者输入、下发指令、控制模式、错误码与安全事件。所有流带<b>同一时钟域的单调时间戳</b>、单位、坐标系、设备/标定版本和 episode 边界；原始数据只追加不覆盖，清洗结果另存并可回溯。</p>
+<p><b>追问 1</b>：遥操作、自由度和坐标系具体怎么定？<br><b>答</b>：先定 action 接口：关节目标最贴本体，末端增量更易跨操作者但依赖 IK。明确自由度映射、夹爪语义、限位与缩放；每个位姿写 frame id，固定 $T_{world}^{base}$、$T_{base}^{camera}$、$T_{tool}^{tcp}$ 的方向、单位和版本，禁止靠字段名猜坐标系。</p>
+<p><b>追问 2</b>：时间对齐怎么做？<br><b>答</b>：硬件触发/PTP 最优；做不到就统一主机单调时钟，在<b>采样产生处</b>打时间戳并估计设备时钟偏置与漂移。不要用落盘时刻代替采样时刻。每条流保留原始时间戳、序号和丢帧标志，再离线按训练时刻对齐。</p>
+<p><b>追问 3</b>：相机 30 Hz、关节 100 Hz 怎么对齐，为什么必须同步？<br><b>答</b>：以决策时刻为锚：图像取不晚于该时刻的最近帧，连续状态在邻点间插值，离散事件用前值保持；绝不跨 episode。不同步会把「看到的状态」配上别的时刻动作，快速运动时等价于系统性标签噪声，模型会学出滞后与过冲。</p>
+<p><b>易错</b>：只说「ROS bag 自动带时间戳」——消息到达时间不等于传感器采样时间；不写时钟域、frame、单位和标定版本的数据，录得再多也无法可靠复现。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/discuss/940358189898280960" target="_blank" rel="noopener">牛客·智元机器人具身智能算法一面</a>（本体/自由度/传感器→数采方式→频率/格式→标注/清洗）+ <a href="https://blog.csdn.net/2303_77547168/article/details/161990436" target="_blank" rel="noopener">具身智能 VLA 面经总结</a>（时间同步与 30/100 Hz 对齐，〔整理〕计 1）</p>
+</details>
+<details class="chain">
+<summary><span class="lv lv-l3">L3</span> <span class="freq">🔥×1</span> <b>C02</b> · 相机 30 Hz、状态 100 Hz、控制还有通信延迟，怎样构建时间对齐样本？</summary>
+<p><b>答</b>：先定义样本语义。若学习 $pi(o_t)\to u_t^{cmd}$：以<b>指令生成时刻</b> $t$ 为锚，取曝光时间不晚于 $t$ 的最近图像，状态插值到 $t$，标签用当时生成并下发的 $u_t^{cmd}$；另记录发送、接收、执行时间和估计延迟 $\Delta$。若学习动力学/结果预测，目标才是 $t+\Delta$ 后的实测状态。切分必须按 episode，缺帧/超龄观测显式 mask，不能随机拼帧。</p>
+<p><b>追问 1</b>：怎么验证对齐确实正确？<br><b>答</b>：做可观测事件：闪灯/蜂鸣与数字触发同步、夹爪触碰或关节阶跃；把图像事件、命令边沿、电流/编码器响应画在同一时间轴。再算命令与实测速度的互相关估延迟，按设备/时段看残差分布，并回放若干 episode 检查因果顺序。</p>
+<p><b>追问 2</b>：Action 标签是目标指令还是实测状态？<br><b>答</b>：默认是策略在该时刻应输出、交给控制器的<b>目标指令</b>，如目标关节角或末端增量；实测状态属于 observation/执行结果。数据格式必须同时写语义、frame、单位、绝对/增量、控制模式与时间戳，不能只叫 <code>action</code>。</p>
+<p><b>追问 3</b>：两者能互换吗？<br><b>答</b>：不能直接换。实测状态经过控制器、动力学、饱和、接触和延迟，是目标指令的响应；把它当 action 会改变学习目标。只有明确重建了逆动力学/延迟并验证误差，或任务本来就监督下一状态时，才能构造派生标签，且要与原始命令分字段保存。</p>
+<p><b>易错</b>：为了「对齐」把未来相机帧配给当前动作，离线指标会变好但部署时产生信息泄漏；或把关节实测位置直接命名为 action，训练与控制接口从根上不一致。</p>
+<p><b>实录</b>：<a href="https://github.com/offerseed/interview-experience/issues/6" target="_blank" rel="noopener">offerseed · VLA 算法实习生三轮面经 #6</a>（30/100 Hz + 通信延迟→验证对齐→Action 标签语义，原题顺序）</p>
+</details>
+<details class="chain">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C03</b> · 什么样的数据才算「有效」？</summary>
+<p><b>答</b>：有效不是「能打开」或「画面清楚」，而是对目标任务有边际训练价值。至少过五关：①标签/时序/标定正确；②包含目标类别与可学信号，不是严重遮挡、重复或空帧；③覆盖部署分布及关键长尾；④类别、场景、主体、采集批次不过度偏斜；⑤经小规模训练/消融能改善目标指标。每条样本保存质量分、拒绝原因和来源，避免筛选器把难例全删掉。</p>
+<p><b>追问 1</b>：密集检测几十到几百类，怎么做 balance？<br><b>答</b>：先按「类别 × 场景 × 尺度 × 遮挡 × 来源」统计实例数与共现。对长尾类定最低配额，用 class-aware/平方根重采样；训练侧配合 focal/class-balanced loss。验证集保持真实分布，并单报 macro、tail AP，不能靠过采样伪造线上分布。</p>
+<p><b>追问 2</b>：1 万张里挑 2000 张有效数据，怎么挑？<br><b>答</b>：先规则剔除损坏、近重复、无目标和标注异常；再用已有 detector/embedding 产出置信度、目标覆盖与多样性特征。分层抽样保证每类/场景下限，在每层做聚类取代表样本，同时保留低置信但疑似难例；最后人工复核边界样本，而不是只挑模型最自信的「简单题」。</p>
+<p><b>追问 3</b>：100 万张里只有几万张含目标，怎样低成本捞出来？<br><b>答</b>：两级召回：便宜的文本/OCR/轻量 detector/向量检索做<b>高召回候选集</b>，再用强模型重排与人工抽检。按桶估计 precision/recall，主动学习优先标模型不确定且多样的样本；每轮用新标注更新检索器。目标是控制漏检，不是一开始就追求高精度。</p>
+<p><b>易错</b>：把「有效」等同于高置信、高清、成功轨迹——这样会系统性删掉遮挡、失败恢复和长尾难例，训练集很好看，部署分布却没覆盖。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/feed/main/detail/2848ed4b83034fbaad17f0166c956d2b" target="_blank" rel="noopener">牛客·京东探索研究院具身智能算法一面</a>（有效性→密集检测 balance→1 万挑 2000→100 万捞目标，原题四连）</p>
+</details>
+<details class="chain">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔整理〕</span> <b>C04</b> · 真机遥操作和 UMI 各有什么优势、偏差与适用范围？</summary>
+<p><b>答</b>：<b>真机遥操作</b>直接得到目标本体上的图像、状态与可执行 action，接触动力学真实、标签离部署接口最近；代价是占机器人、慢、贵，且受操作者抖动、时延和本体能力限制。<b>UMI</b>让人拿便携夹爪/相机在自然环境示范，扩场景快、无需把机器人搬进现场；代价是相机轨迹/夹爪状态要重建并 retarget 到机器人，视角、动力学与可达性有 embodiment gap。选型看任务是否重接触、是否要跨场景扩量，以及 retarget 误差能否接受。</p>
+<p><b>追问 1</b>：什么时候优先用哪种？<br><b>答</b>：精密插接、力控、双臂约束与安全敏感任务优先真机遥操；需要大量家庭/长尾场景、机器人难以进入现场时优先 UMI。常见组合是 UMI 做预训练覆盖，少量目标本体遥操做后训练和接口校准，最终以真机闭环成功率裁决。</p>
+<p><b>追问 2</b>：VR/主从臂的最小采集链路怎么搭？<br><b>答</b>：操作者设备位姿→统一参考帧→尺度/工作空间映射→IK/约束投影→限速限位与碰撞检查→底层控制；并行记录原始输入、映射后目标、实测状态、多相机与安全事件。先用单臂低速任务跑通延迟、坐标系和急停，再扩双臂/力反馈。</p>
+<p><b>追问 3</b>：怎样从「能遥操」变成「可训练数据集」？<br><b>答</b>：校准并版本化变换；定义 episode/成功判据；同步所有模态；自动检查丢帧、抖动、限位、碰撞和动作饱和；人工复核成功/失败原因；按任务/场景/操作者切分，最后做 replay——相同 action 在安全条件下能复现，才算过数据验收。</p>
+<p><b>易错</b>：说 UMI「没有本体所以没有偏差」——它只是把真机占用成本换成了位姿估计、retarget、视角和动力学偏差；或只录成功轨迹，不录操作者修正与失败恢复。</p>
+<p><b>实录</b>：<a href="https://blog.csdn.net/2303_77547168/article/details/161990436" target="_blank" rel="noopener">具身智能 VLA 面经总结</a>（遥操/示教/VR 的优缺点，〔整理〕）；技术边界参考 <a href="https://arxiv.org/abs/2402.10329" target="_blank" rel="noopener">UMI 论文</a>（不计频）</p>
+</details>
+<details class="chain">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔整理〕</span> <b>C05</b> · 怎样获得高质量「思考-行为」数据？</summary>
+<p><b>答</b>：先把「思考」定义成可监督、可验证的结构：目标、当前证据、子任务、约束、预期结果与失败恢复；行为则是带时间戳的动作和执行结果。采集时同步第一视角/状态/action，让操作者在关键决策点做短标注或事后基于回放标注，避免边操作边长篇口述改变行为。质量由<b>计划与场景事实一致、动作可执行、结果成功、时间边界对齐、失败原因可信</b>共同决定，不以文字越长越好。</p>
+<p><b>追问 1</b>：LLM 生成这类数据，质量看哪些维度？<br><b>答</b>：正确性（物体/状态/约束不幻觉）、可执行性（动作在本体能力与安全边界内）、因果一致性（理由真能支持动作）、时序/粒度一致、覆盖与多样性、重复/污染率，以及训练后的下游增益。自动规则/仿真 verifier、独立模型评审与人工 gold set 要交叉使用。</p>
+<p><b>追问 2</b>：没有大规模金标准，怎么证明评估可靠？<br><b>答</b>：先做小而强的分层人工集，双人标注算一致性；在此集上校准 judge 的阈值、偏差与置信区间。再对高分、低分和边界桶分别抽检，监控不同任务/语言/场景的漂移。单个 LLM judge 只能筛选，不能自证正确。</p>
+<p><b>追问 3</b>：生成数据怎样进入训练？<br><b>答</b>：生成→规则/执行器验证→去重与难度分桶→人工抽检→按置信度加权；先以小比例混入真实数据做消融，分别看总体、长尾和安全指标。保留 provenance、生成器版本和拒绝原因；若收益只出现在同源 judge 指标、不出现在真机/独立评测，就停止扩量。</p>
+<p><b>易错</b>：用同一个 LLM 生成、打分、再宣布高质量；或把语言上流畅的解释当成物理上正确的决策，完全不做执行/结果验证。</p>
+<p><b>实录</b>：<a href="https://blog.csdn.net/2303_77547168/article/details/161990436" target="_blank" rel="noopener">具身智能 VLA 面经总结</a>（「思考-行为」数据与 LLM 生成数据质量两问，〔整理〕）</p>
+</details>
+<details class="chain">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·调研存证〕</span> <b>C06</b> · 机器人突然摔倒，怎么排查？</summary>
+<p><b>答</b>：先急停、断开自主输出并确认人员/机构安全；不要立刻重启覆盖现场。以「最后一个稳定支撑相→首次异常→保护触发」为时间轴分层：①指令/规划是否突变；②状态估计、IMU、接触与时钟是否跳变；③WBC/PID 输出是否饱和、符号/模式是否错；④关节电流/力矩/温度/总线是否异常；⑤电源掉压、线束、机构松动。每层都对比期望与实测，并在吊架/低增益/单关节条件下最小复现。</p>
+<p><b>追问 1</b>：log 怎么采才够定位？<br><b>答</b>：用统一单调时钟记录命令、状态估计、原始 IMU/编码器/足力、接触相、控制输出、限幅、驱动器错误、电流/电压/温度、通信序号与丢包；故障前后用环形缓冲保留窗口，事件触发冻结。日志要带软件提交、参数/标定版本和机器人编号。</p>
+<p><b>追问 2</b>：板子和电脑之间怎么传日志？<br><b>答</b>：控制面与日志面分离：板端先写无阻塞环形缓冲，低优先级任务经以太网/USB/CAN 分帧发送；每帧带版本、长度、序号、时间戳与 CRC。带宽不足先保关键量并降采样，原始高频数据本地落盘；电脑端按序重组，明确丢帧而不是静默补零。</p>
+<p><b>易错</b>：摔倒后第一反应是「把增益调小再跑」；没有保存首次异常前的原始传感、限幅和错误码，只分析摔倒后的连锁反应。</p>
+<p><b>实录</b>：牛客·智元实录原帖 URL 在早期调研中未落盘；原题与缺失状态如实存证见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol3.md" target="_blank" rel="noopener">research/sources-vol3.md</a></p>
+</details>
+<details class="chain">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·调研存证〕</span> <b>C07</b> · 板子偶尔死机，怎么设计排查与恢复？</summary>
+<p><b>答</b>：先区分「CPU 真停」「任务死锁」「中断风暴」「内存破坏」「外设/总线永久等待」「欠压/时钟复位」。最小侵入地记录 reset cause、关键任务心跳、栈水位、堆水位、HardFault 寄存器、最后状态机和外设超时；用 GPIO/trace 标出关键路径，逐步关闭模块复现。恢复上要有通信/外设超时、局部重启和最终硬件看门狗，但复位不能代替根因定位。</p>
+<p><b>追问 1</b>：看门狗喂狗时间怎么定？<br><b>答</b>：超时必须大于正常最坏响应：最长关键任务周期 + 最长合法阻塞（Flash 擦写/通信）+ 调度抖动 + 时钟误差裕量，同时小于系统可接受的失联时间。关键任务各报带序号心跳，由健康监控汇总后喂狗；不要在独立定时中断里无条件喂。</p>
+<p><b>追问 2</b>：复位后怎么知道死前卡在哪里？<br><b>答</b>：启动最早期先读 reset-cause；HardFault/看门狗预警或软件监控触发时，最小化保存 PC/LR、SP、当前任务、心跳位图、栈水位和最后若干事件。下次启动先导出再清除。若芯片无预警，就持续把轻量 breadcrumbs 写入 no-init/retention 区。</p>
+<p><b>追问 3</b>：复位后 RAM 数据还在吗，怎么利用？<br><b>答</b>：<b>不能一概而论</b>：软/看门狗复位时 SRAM 物理内容可能保留，但启动代码会重拷 <code>.data</code>、清 <code>.bss</code>；掉电则不可靠。需查芯片手册，把故障区放进 retention/backup/no-init section，加 magic、版本、长度和 CRC，验证不同复位源；关键证据仍应落非易失存储。</p>
+<p><b>易错</b>：把狗喂在高优先级中断里，主业务已经死锁仍持续喂狗；或笼统说「复位后 RAM 一定清空/一定保留」，忽略复位源与启动文件。</p>
+<p><b>实录</b>：原题见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol3.md" target="_blank" rel="noopener">卷三调研存证</a>；当前可访问的分层佐证：<a href="https://www.nowcoder.com/discuss/927105116836986880" target="_blank" rel="noopener">牛客·看门狗复位与现场保留</a>（不补计整链频次）</p>
+</details>
+<details class="chain">
+<summary><span class="lv lv-l1">L1</span> <span class="freq">〔实录·调研存证〕</span> <b>C08</b> · 一条标称 12 V 的电源线上只读到 5 V，怎么查？</summary>
+<p><b>答</b>：先限流、确认量程和<b>同一参考地</b>，核对测点确是 12 V rail 而非稳压后的 5 V。按能量路径分段量：电源空载输出→保险/防反接→连接器/线束→开关管/DC-DC→负载端；同时测每段两端压降。断电测对地阻抗/二极管档找短路或反灌，通电看输入电流与热源，示波器抓启动和纹波。根因常是电源限流/掉压、接触电阻、负载短路、转换器损坏或 5 V 支路反向灌入。</p>
+<p><b>追问 1</b>〔推断〕：空载 12 V、接负载后掉到 5 V，说明什么？<br><b>答</b>：优先怀疑过流限流、线束/连接器压降或负载短路，而不是「万用表坏了」。记录电源限流点和负载电流，逐段断开支路并用电子负载替代；哪个支路接入后掉压，就把范围收敛到该支路。</p>
+<p><b>追问 2</b>〔推断〕：能不能直接换更大功率电源试？<br><b>答</b>：不能先这么做。若后级短路，更强电源只会扩大损坏。应使用可调限流电源，从低电流缓升并监控温升；确认额定电压、极性、地与保护器件后再替换，且不要绕过保险/限流。</p>
+<p><b>易错</b>：黑表笔接了错误地仍相信读数；或一看到 5 V 就认定 DC-DC 坏了，不做空载/带载、逐段压降和反灌检查。</p>
+<p><b>实录</b>：早期实录原 URL 未落盘；原题与缺失状态见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol3.md" target="_blank" rel="noopener">research/sources-vol3.md</a></p>
+</details>
+<details class="chain">
+<summary><span class="lv lv-l3">L3</span> <span class="freq">〔实录·调研存证〕</span> <b>C09</b> · 上位机和下位机怎么通信？波特率怎么定？</summary>
+<p><b>答</b>：先由距离、带宽、节点数、抗干扰和实时性选物理链路（板内 UART/SPI，以太网；多节点强干扰常用 CAN/RS-485）。应用帧至少含 magic、版本、类型、长度、序号、发送时间、payload、CRC。波特率按最坏负载算：$B \ge f\,L_{wire}/\rho$，$f$ 是帧率、$L_{wire}$ 是每帧线上 bit 数、$\rho$ 是允许利用率；再核对时钟误差、线长和收发器能力，不能只报「115200」。</p>
+<p><b>追问 1</b>：丢包怎么办？<br><b>答</b>：序号检测丢帧，统计发送/接收/CRC/超时计数并带时间戳定位。先分清发送端没发、物理层损坏、接收 FIFO 溢出还是解析丢弃；连续流用 DMA 环形缓冲和水位告警。控制流通常丢旧保新，配置/升级数据才走确认重传。</p>
+<p><b>追问 2</b>：用什么校验？<br><b>答</b>：偶发误码用 CRC（如 CRC-16/32），长度/版本/范围检查抓协议错误；简单和校验只能抓部分错误，不能替代 CRC。CRC 只检测损坏，不检测丢包/乱序，后者靠序号和超时；安全场景还需认证，CRC 不是防篡改。</p>
+<p><b>追问 3</b>：校验失败要重传吗？<br><b>答</b>：看数据时效。参数、标定、固件块必须 ACK/NACK + 序号 + 有界重试；高频状态和控制指令重传后往往已过期，应丢弃并等最新帧，连续丢包则进入安全模式。任何重试都要幂等并设上限，防重传风暴。</p>
+<p><b>追问 4</b>：怎样保证实时性？<br><b>答</b>：定义端到端 deadline，固定/有界帧长，控制与日志分通道或设优先级；接收用 DMA + 环形缓冲，ISR 只搬数据/唤醒任务，解析在任务中；使用最新值队列，监控队龄而不只看吞吐。对 WCET、总线利用率和拥塞故障做压力测试。</p>
+<p><b>追问 5</b>：中断优先级怎么排？<br><b>答</b>：按「错过 deadline 的损失 + 数据不可恢复性」排：安全保护/控制定时器通常最高，易溢出的接收与 DMA 完成其次，日志最低；还要满足 RTOS 可调用 API 的优先级边界。高优先级 ISR 必须短，否则会反过来饿死控制。</p>
+<p><b>追问 6</b>：中断里能不能 <code>printf</code>？为什么慢？<br><b>答</b>：生产代码通常不能。格式化尤其浮点会耗 CPU/栈，stdio 可能拿锁且不可重入，串口发送还可能按字节阻塞；115200 8N1 发 100 字节光线上时间就约 8.7 ms。ISR 只写定长二进制事件到无阻塞 buffer，由低优先级任务异步输出。</p>
+<p><b>追问 7</b>：波特率和中断频率怎么算缓冲区？<br><b>答</b>：8N1 每字节 10 bit，115200 baud 上限约 11,520 B/s，逐字节中断约 11.5 kHz。若 CPU 最坏 20 ms 不能消费，会积约 230 B；再加一帧 64 B 与裕量，至少取 512 B。还要保证平均输入小于消费速率，否则再大 buffer 也只会晚点溢出。</p>
+<p><b>易错</b>：把 CRC 当成「不会丢包」，控制帧一律重传；或只按平均吞吐选串口和 buffer，不算最坏阻塞时间、线上帧开销与 ISR 频率。</p>
+<p><b>实录</b>：整链原题见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol3.md" target="_blank" rel="noopener">卷三调研存证</a>；末层当前可访问佐证：<a href="https://www.nowcoder.com/discuss/924292551824113664" target="_blank" rel="noopener">牛客·嵌入式追问复盘</a>（不补计整链频次）</p>
+</details>
+<details class="chain">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">🔥×1</span> <b>C10</b> · 机器人步态异常，怎样定位问题来自哪一层？</summary>
+<p><b>答</b>：先把症状量化为发生相位、方向、关节、速度与地面条件，再对齐五层期望/实测：①指令与步态相位；②状态估计/IMU/足接触；③规划/WBC 的 CoM、足端与接触力；④关节目标、实测、力矩/电流、饱和/温度；⑤结构松动、线束与电源。做站立→单腿/吊架→低速直行→转向的渐进复现，并交换左右参数/硬件看异常是否随之迁移。</p>
+<p><b>追问 1</b>：关节「软、无力」怎么排查？<br><b>答</b>：先看是否进错控制模式、使能/刹车、Kp/Kd/力矩限幅与安全降额；再比期望力矩、下发力矩、电流和实际运动。若命令大但电流上不去，查电压、驱动器、过温/限流和线束；电流大却不出力，查传动打滑、减速器/抱闸；命令本身小则回到控制与标定。</p>
+<p><b>追问 2</b>：怎么判断是标定参数还是运动学参数？<br><b>答</b>：编码器零偏常表现为跨姿态近似固定的关节偏置；连杆长度/轴线等运动学误差会随构型系统变化。用独立量具/外部定位采多构型点：先验零位后看 FK 末端残差是否随姿态变化，再做参数敏感性拟合。单纯「软」通常优先查增益、限幅、驱动与机构，不要先改 DH/URDF。</p>
+<p><b>易错</b>：上来就重新标定或调 PID，不先判断异常跟着关节、相位、方向还是地面走；同时改多个参数，最后无法归因。</p>
+<p><b>实录</b>：<a href="https://www.nowcoder.com/feed/main/detail/e67c0fbaa90f4a179b45cf4ac4625d68" target="_blank" rel="noopener">牛客·小鹏机器人测试业务面经</a>（步态异常定位→关节软掉；同帖含运动学标定语境）</p>
+</details>
+<details class="chain">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录+整理〕</span> <b>C11</b> · VLA 真机停滞、动作不连贯或卡顿，怎样定位瓶颈？</summary>
+<p><b>答</b>：先做端到端 trace，而不是只测 <code>model.forward()</code>：$t_{capture}$、传输/解码、预处理、排队、GPU 推理、后处理、发布、控制器接收和实际执行都打同一时钟时间戳，同时记录 queue depth、chunk age 与 deadline miss。用 p50/p95/p99 区分稳定慢、抖动和周期性阻塞；若吞吐够但队列增长，是背压/旧帧堆积，不是单纯算力不足。</p>
+<p><b>追问 1</b>：确认推理延迟高后怎么处理？<br><b>答</b>：先消除同步拷贝与重复编码，做预处理/推理/执行异步流水和预分配；再用 FP16/BF16、编译/算子融合、视觉 token/分辨率裁剪或小模型。控制端用 action chunk 覆盖推理间隔并设超时 hold/安全停；优化要同时看延迟分位数与真机成功率。</p>
+<p><b>追问 2</b>：推理期间机器人已运动，新 chunk 从哪里执行？<br><b>答</b>：不能默认从预测序列第 0 步硬接。按 chunk 的生成观测时刻估计当前已执行到的相位，丢掉过期前缀；更稳妥是 RTC/重规划从<b>当前实测状态</b>续接，或对重叠预测做 temporal ensembling。队龄超过阈值直接丢弃，禁止执行陈旧动作。</p>
+<p><b>追问 3</b>：怎么区分模型预测、chunk 拼接和底层控制问题？<br><b>答</b>：三次隔离：离线画模型原始 chunk 看边界是否跳；固定 chunk 用软件执行器回放看拼接；把最终目标送仿真/空载底层看跟踪误差。原始就跳是模型/数据，原始连续而合成后跳是拼接，目标连续但实测停顿则查控制频率、限幅、通信与 watchdog。</p>
+<p><b>易错</b>：只报平均推理耗时；或通过增大 chunk 掩盖停顿，却不处理旧观测、队列堆积和 chunk 边界，动作会更流畅但更陈旧。</p>
+<p><b>实录</b>：<a href="https://github.com/offerseed/interview-experience/issues/6" target="_blank" rel="noopener">offerseed #6</a>（推理/控制频率不一致、chunk 交界停顿与归因原题）+ <a href="https://blog.csdn.net/2303_77547168/article/details/161990436" target="_blank" rel="noopener">具身智能 VLA 面经总结</a>（真机卡顿/延迟，〔整理〕）</p>
+</details>
+<details class="chain">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录·调研存证〕</span> <b>C12</b> · 全身遥操作时，人一走动，机器人基座指令就不断漂移，怎么解决？</summary>
+<p><b>答</b>：先分清是<b>操作者参考系漂移</b>还是机器人自身定位漂移。对前者，不把头显/人体 world frame 的累计平移直接积分成底盘速度：启动时建立 operator anchor，手臂目标用躯干/肩部相对坐标；把人的位移经死区、缩放和限速映射为显式 locomotion 指令，并提供 clutch/recenter，周期性重锚。机器人基座则在自身 odom/map frame 用定位反馈闭环跟踪，避免两套 world frame 相互积分。</p>
+<p><b>追问 1</b>：怎样快速判断漂移来自哪一侧？<br><b>答</b>：同时画 operator-anchor 位姿、发送的 base command、机器人 odom/map 位姿。人静止而前两者漂，是追踪/重锚问题；命令为零但 odom 漂，是机器人定位问题。再分别冻结人体平移映射和机器人定位反馈做 A/B，禁止靠手动反向补偿猜根因。</p>
+<p><b>追问 2</b>：移动底盘和双臂怎样保持一致？<br><b>答</b>：在 map/odom 中规划底盘，在实时 base frame 表达双臂相对目标；每周期用最新 $T_{map}^{base}$ 变换，不把旧基座位姿烘进手臂目标。基座重定位/跳变时冻结或平滑手臂目标，并检查全身 IK、可达域与碰撞约束。</p>
+<p><b>易错</b>：把所有人的平移都当成底盘增量连续积分；或只给信号加低通，漂移速度变慢了，但坐标系和重锚错误仍在积累。</p>
+<p><b>实录</b>：原 GitHub 实录 URL 在早期调研中未落盘；原题与缺失状态如实存证见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol3.md" target="_blank" rel="noopener">research/sources-vol3.md</a>；遥操作坐标/参考系技术边界参考 <a href="https://arxiv.org/abs/2301.04317" target="_blank" rel="noopener">Humanoid Teleoperation Survey</a>（不计频）</p>
+</details>
+<hr>
+<h2>本卷题源说明</h2>
+<p><b>频次计数规则</b>：🔥×N = 当前可访问的独立实录/整理来源数；〔整理〕最多计 1。C01×2，C02/C03/C10×1；C04/C05 为整理链。C06/C07/C08/C09/C12 的题目已在调研期审定，但原 URL 未同步落盘，故统一标「实录·调研存证」且不显示 🔥 数字；C11 为可访问实录与整理的分层拼接，也不把局部覆盖误报成整链复现。逐条链接状态与缺失说明见 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol3.md" target="_blank" rel="noopener">research/sources-vol3.md</a>。</p>
+<p><b>边界说明</b>：本卷排障答案给的是跨平台诊断框架，不替代具体机器人/MCU/驱动器手册。尤其是 RAM 复位保持、watchdog 预警、通信电气限制与安全停机行为，必须以目标硬件 reference manual 和团队安全规范为准。</p>
+</main>
+<footer><div>题目来自公开一手面经，来源见各链「实录」行 · 执行 AI ≠ 审查 AI，审查记录见 research/reviews/ · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains" target="_blank" rel="noopener">MIT License</a> · 渲染于 2026-10-26</div></footer>
+</body>
+</html>
