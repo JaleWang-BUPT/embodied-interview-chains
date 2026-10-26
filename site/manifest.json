@@ -3,8 +3,8 @@
     {
       "file": "vol1_vla_il.html",
       "title": "卷一 · VLA 与模仿学习 · 追问链",
-      "chains": 22,
-      "nodes": 72,
+      "chains": 24,
+      "nodes": 87,
       "status": {
         "kind": "stale",
         "label": "内容已变更 · 待复检",
@@ -20,7 +20,7 @@
       "file": "vol2_rl_motion.html",
       "title": "卷二 · 强化学习与运动控制 · 追问链",
       "chains": 19,
-      "nodes": 82,
+      "nodes": 85,
       "status": {
         "kind": "stale",
         "label": "内容已变更 · 待复检",
@@ -35,8 +35,8 @@
     {
       "file": "vol3_data_teleop_debug.html",
       "title": "卷三 · 数据 · 遥操作 · 真机排障 · 追问链",
-      "chains": 15,
-      "nodes": 57,
+      "chains": 17,
+      "nodes": 66,
       "status": {
         "kind": "stale",
         "label": "内容已变更 · 待复检",
@@ -111,7 +111,7 @@
     }
   ],
   "totals": {
-    "chains": 94,
-    "nodes": 367
+    "chains": 98,
+    "nodes": 394
   }
 }

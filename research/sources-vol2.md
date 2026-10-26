@@ -171,3 +171,12 @@ TPLink主题顺序如上；PPO-VMC绑定、遥操作方案和指标归属均推�
 ### C19（题面原文）
 
 「讲一下 GRPO 的优点」。
+
+## 维护者提供场次（2026-10-27 · 第二批）
+
+智元、小米场次由维护者直接提供（**原帖链接待补**）；落位到本卷：
+
+- 智元 Q4「直接训 advantage head 过拟合严重，先做 π0.5 SFT 是否更好」→ C17 追问 5
+- 智元 Q5「用人工判定替换奖励分类器，如何设计实验」→ C18 追问 3
+- 小米 Q5「怎样组织一份 VLA 与 RL 结合的综述」→ C16 追问 3
+- 其余问题落位见 [卷一题源](https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md)。
