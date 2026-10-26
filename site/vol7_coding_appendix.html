@@ -53,8 +53,8 @@ p,li,.note{overflow-wrap:anywhere}
 <body>
 <div class="top"><nav><span class="brand">具身智能面试追问链</span><a href="./index.html">卷目录</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains" target="_blank" rel="noopener">GitHub</a></nav></div>
 <main>
-<div class="review pass">独立审查 PASS · 第5轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/appendix_round5.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./vol6_perception_slam.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol7_coding_appendix.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>附录 · 手撕追问链</h1>
-<div class="note">具身智能面试追问链题库 · 手撕附录<br>本卷 <b>8 条链 · 31 个问答节点</b><br>难度分布：L1 <b>2</b> · L2 <b>6</b> · L3 <b>0</b></div>
+<div class="review stale">内容已变更 · 待复检 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/appendix_round5.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./vol6_perception_slam.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol7_coding_appendix.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>附录 · 手撕追问链</h1>
+<div class="note">具身智能面试追问链题库 · 手撕附录<br>本卷 <b>9 条链 · 34 个问答节点</b><br>难度分布：L1 <b>2</b> · L2 <b>7</b> · L3 <b>0</b></div>
 <p><b>使用方式</b>：先在白板写输入、输出、形状/单位、边界和一个最小测试，再写实现。随文提供 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/examples/learning.py" target="_blank" rel="noopener">PyTorch 示例</a>、<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/examples/handwritten.py" target="_blank" rel="noopener">标准库示例</a> 和 <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/tree/main/tests" target="_blank" rel="noopener">测试目录</a>。它们用于理解与练习，不代表完整训练框架或生产控制器。</p>
 <p><b>本卷追问模式</b>：</p>
 <ol><li><b>先写对→再稳定→再优化</b>：浮点溢出、padding、越界、零导数都属于基本正确性。</li><li><b>数学量→代码语义</b>：布尔 mask 是“有效”还是“屏蔽”、log probability 是否按动作维求和，都先约定。</li><li><b>朴素实现→为什么慢→有证据的优化</b>：不能把更短的代码或更少参数直接叫更快。</li></ol>
@@ -130,6 +130,14 @@ p,li,.note{overflow-wrap:anywhere}
 <p><b>追问 3</b>〔推断〕：a 到 b 最短路径怎么找？<br><b>答</b>：无权图用BFS，入队即标visited，记录parent后回溯路径，O(V+E)。有非负权用Dijkstra，有负权需进一步确认；不把DFS找到第一条路径误称最短。测试环、不连通和start=goal。</p>
 <p><b>易错</b>：题面没问清就背模板；把第k个不同值当第k大，或对有权图直接用BFS。</p>
 <p><b>实录</b>：原题单仅有算法标签和不可核实的公司类别概括；本链作为推断练习，不计面经频次。</p>
+</details>
+<details class="chain" id="c09">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录+推断〕</span> <b>C09</b> · 写一个带 KV Cache 的自回归注意力伪代码；Training-time RTC 场景里怎么复用？</summary>
+<p><b>答</b>：核心是每步只算新 token 对全部历史的注意力。伪代码（单头示意，<code>:</code> 表示切片）：<code>k = W_k(x_t); v = W_v(x_t)</code>；<code>K = cat(K_cache, k); V = cat(V_cache, v)</code>；<code>q = W_q(x_t)</code>；<code>att = softmax(q @ K.T / sqrt(d) + mask) @ V</code>；<code>K_cache, V_cache = K, V</code>。每步一次前向只投影新 token，历史 K/V 只追加不重算：时间 O(T) 每步、显存 O(T·d)，且因果 mask 天然满足。可运行的多头/causal/padding 版本见 learning.py 与 tests。</p>
+<p><b>追问 1</b>〔推断〕：Training-time RTC 场景里 KV cache 怎么复用？<br><b>答</b>〔推断·工程作答〕：复用边界按 token 段划分：系统提示/子任务等稳定段可缓存；每步新观测段必须重算；RTC 的已承诺动作前缀作为条件 token，若与上一步逐位相同且位置编码一致才可复用。任何复用前先校验前缀逐位一致，否则位置错位产生静默错误。</p>
+<p><b>追问 2</b>〔推断〕：复用错了会怎样？怎么测试？<br><b>答</b>〔推断·工程作答〕：不报错的静默退化——注意力引用过期内容，输出漂移。测试：前缀不变性（同输入两次前向一致）、增量等价（带 cache 与全量重算逐步对齐），放进 CI。</p>
+<p><b>易错</b>：复用前不校验 token 与位置前缀；观测 token 也在追加却沿用上一步 cache。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-appendix.md#c09" target="_blank" rel="noopener">附录题源 C09</a>。题面为维护者提供场次原题，伪代码风格与 RTC 复用细节为推断练习，实现由本仓库独立编写。</p>
 </details>
 <hr>
 <h2>代码与复现</h2>

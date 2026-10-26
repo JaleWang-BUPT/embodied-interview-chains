@@ -53,8 +53,8 @@ p,li,.note{overflow-wrap:anywhere}
 <body>
 <div class="top"><nav><span class="brand">具身智能面试追问链</span><a href="./index.html">卷目录</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains" target="_blank" rel="noopener">GitHub</a></nav></div>
 <main>
-<div class="review pass">独立审查 PASS · 第3轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol4_round3.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./vol3_data_teleop_debug.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="./vol5_project_defense.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol4_deployment_systems.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>卷四 · 部署与系统 · 追问链</h1>
-<div class="note">具身智能面试追问链题库 · 第四卷<br>本卷 <b>14 条链 · 61 个问答节点</b><br>难度分布：L1 <b>1</b> · L2 <b>11</b> · L3 <b>2</b></div>
+<div class="review stale">内容已变更 · 待复检 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol4_round3.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./vol3_data_teleop_debug.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="./vol5_project_defense.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol4_deployment_systems.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>卷四 · 部署与系统 · 追问链</h1>
+<div class="note">具身智能面试追问链题库 · 第四卷<br>本卷 <b>15 条链 · 64 个问答节点</b><br>难度分布：L1 <b>1</b> · L2 <b>12</b> · L3 <b>2</b></div>
 <p><b>使用方式</b>：沿着“模型文件→输入缓冲→执行引擎→通信→控制器”讲清每个边界的所有权、单位、耗时与失败行为。量化、零拷贝、加线程都只是手段；回答要落到目标硬件上的精度、内存和最坏响应时间。</p>
 <p><b>易错口径</b>：本卷易错项为编者工程归纳，未标具体原答的，不认领为候选人现场失误。</p>
 <p><b>本卷追问模式</b>：</p>
@@ -190,6 +190,14 @@ p,li,.note{overflow-wrap:anywhere}
 <p><b>追问 2</b>〔推断〕：怎么区分时延与空间标定误差？<br><b>答</b>：先在静止多姿态检查几何残差，再改变运动速度/方向；时延误差通常随速度变化并可能在反向时变号，固定外参误差更呈构型相关规律。联合绘制时间偏差与空间残差，用独立序列验证，不能用一个常数位移补偿所有运动。</p>
 <p><b>易错</b>：把会运动的头手之间外参当成固定矩阵；仅用训练姿态的重投影误差验收。</p>
 <p><b>实录</b>：<a href="https://www.nowcoder.com/users/159227329" target="_blank" rel="noopener">莱修贤原作者动态</a>（银河：手眼步骤）+ <a href="https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md" target="_blank" rel="noopener">Cgxiaoxin 复盘</a>（安努：多相机动态参考系）。两来源覆盖不同层，不报整链复现频次。</p>
+</details>
+<details class="chain" id="c15">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录主题+推断〕</span> <b>C15</b> · 为什么以 45 Hz 异步调度？60 Hz 下动作幅度剧烈的根因是什么？</summary>
+<p><b>答</b>〔推断·工程作答〕：异步调度把推理与执行解耦：执行层按固定节拍消费最新可用动作段，推理线程独立跑，互不阻塞。45 Hz 这类数字应答成"实测吞吐留余量"：贴着模型最坏推理频率会造成饥饿，调度节拍还要匹配 chunk 动作采样率，避免一个推理周期内重复消费同一段。60 Hz 下动作幅度剧烈的典型根因：调度快于模型有效输出节奏导致同段动作被跳变消费，或指令间缺插值产生阶跃——先量化推理延迟分布与指令时间线再定因。</p>
+<p><b>追问 1</b>〔推断〕：推理延迟具体是多少？<br><b>答</b>〔推断·工程作答〕：答测量方法不给拍脑袋数：报 p50/p95/p99 分位，注明输入长度、批次、硬件与精度；延迟分布直接决定可用调度频率与余量。</p>
+<p><b>追问 2</b>〔推断〕：连续运行三小时依赖哪些容错机制？<br><b>答</b>〔推断·工程作答〕：看门狗与卡死检测、异常动作监控与安全停、观测断流/超时降级、通信重连与状态复位、日志与低速降级模式，且恢复路径要事先演练过。</p>
+<p><b>易错</b>：把调度频率拍脑袋设成模型标称频率——不看延迟分布与饥饿余量，长跑必出事故。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol4.md#c15" target="_blank" rel="noopener">卷四题源 C15</a>。题面为维护者提供场次原题组，作答与展开为推断，具体数字以实测为准。</p>
 </details>
 <hr>
 <h2>题源与技术参考</h2>

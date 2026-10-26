@@ -53,8 +53,8 @@ p,li,.note{overflow-wrap:anywhere}
 <body>
 <div class="top"><nav><span class="brand">具身智能面试追问链</span><a href="./index.html">卷目录</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains" target="_blank" rel="noopener">GitHub</a></nav></div>
 <main>
-<div class="review pass">独立审查 PASS · 第5轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol2_round5.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./vol1_vla_il.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="./vol3_data_teleop_debug.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol2_rl_motion.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>卷二 · 强化学习与运动控制 · 追问链</h1>
-<div class="note">具身智能面试追问链题库 · 第二卷<br>题源：公开问题、复盘与历史题单；证据级别和访问差异见题源记录<br>本卷 <b>16 条链 · 71 个问答节点</b><br>难度分布：L1 <b>2</b> · L2 <b>10</b> · L3 <b>4</b></div>
+<div class="review stale">内容已变更 · 待复检 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol2_round5.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./vol1_vla_il.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="./vol3_data_teleop_debug.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol2_rl_motion.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>卷二 · 强化学习与运动控制 · 追问链</h1>
+<div class="note">具身智能面试追问链题库 · 第二卷<br>题源：公开问题、复盘与历史题单；证据级别和访问差异见题源记录<br>本卷 <b>19 条链 · 82 个问答节点</b><br>难度分布：L1 <b>2</b> · L2 <b>12</b> · L3 <b>5</b></div>
 <p><b>使用方式</b>：题目默认折叠，先自己答一遍主问，再点开对照；然后<b>合上，从主问开始把整条追问链讲一遍</b>——本卷练的是"扛得住往下钻"。链条以学习主题组织；历史自记原题与当前可核验正文分开，不将最长链冒称原场次连续提问。</p>
 <p><b>本卷追问模式</b>（编者对已收录主题的归纳，不代表公司固定考法）：</p>
 <ol><li><b>公式 → 合法性 → 缺陷 → 补救 → 场景选型</b>：策略梯度链、GAE 链的标准路径——写得出公式只算入场，可进一步检查"为什么能这么推、有什么毛病"</li><li><b>概念 → 参数 → "这个数怎么定的"</b>：λ、Q/R、域随机化范围、窗口大小——用数值依据检验概念，GAE 链直接当场算</li><li><b>给症状、定根因、再要方案</b>：policy loss 震荡 value loss 平稳、仿真完美真机震荡——排障题按信息增益排序作答</li><li><b>方案 → 备择对比 → "为什么不用现成的"</b>：臂角法 vs Pinocchio/KDL、LADRC vs PID、qpOASES vs OSQP</li><li><b>结果 → 怎么验证</b>：辨识后检查"新轨迹上怎么验证"、用具体参数追溯个人工作——卷五"真实性核验"在运控方向的高发形态</li></ol>
@@ -209,6 +209,32 @@ p,li,.note{overflow-wrap:anywhere}
 <p><b>追问 2</b>〔推断〕：offline RL vs online RL？<br><b>答</b>〔推断·工程作答〕：offline RL用固定数据集、不在训练中采新交互，需处理分布外动作与支持覆盖；online RL持续获得交互数据。可演示初始化后在线微调，BC是监督学习并非RL。真机在线试验还需预算、保护和审批，不能因有仿真就忽略gap。</p>
 <p><b>易错</b>：把公司风格当固定事实；以仿真有模型就把PPO归类model-based。</p>
 <p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c16" target="_blank" rel="noopener">卷二题源 C16</a>。历史题单无独立原文快照，全链保守按推断练习，不认领公司或实录频次。</p>
+</details>
+<details class="chain" id="c17">
+<summary><span class="lv lv-l3">L3</span> <span class="freq">〔实录主题+推断〕</span> <b>C17</b> · VLA 的 RL 后训练（RECAP 类）：怎样从最终效果确认 advantage 生效？</summary>
+<p><b>答</b>〔推断·工程作答〕：从消融验证而不是从公式：同一后训练管线开关 advantage 加权，对比任务成功率、失败修正率与人工干预密度；生效的表现是高价值动作被相对强化、低价值动作权重下降，且指标随训练推进单调改善。报告带试验数与方差，不凭单次运行下结论。</p>
+<p><b>追问 1</b>〔推断〕：RECAP Value Model 的输入输出是什么？<br><b>答</b>〔推断·工程作答〕：输入为观测/状态（含子任务条件与已执行历史的口径），输出为对结果回报的价值估计，用于计算动作段 advantage；具体输入字段按论文与实现核对，不凭框图硬背。</p>
+<p><b>追问 2</b>〔推断〕：advantage 的 30% 阈值是怎样得到的？<br><b>答</b>〔推断·工程作答〕：这类阈值通常按数据分布分位或经验扫描得出（保留顶部改进样本、滤噪声）；答法是给分布图与扫参曲线说明取舍，不背百分比本身。</p>
+<p><b>追问 3</b>〔推断〕：RECAP 离线训练与在线行为分布偏移怎样处理？<br><b>答</b>〔推断·工程作答〕：限制重要性权重/裁剪、保守目标约束偏离、持续用新经验更新 value、监控分布外动作比例并准备回退到基线策略。</p>
+<p><b>追问 4</b>〔推断〕：RL Token 方法的效果和适用性如何？压缩时丢了多少信息？<br><b>答</b>〔推断·工程作答〕：价值/经验序列压缩降低存储与训练开销；丢失的是高频细节与长尾场景。度量框架：固定下游评测对比全量与压缩的成功率差、重构误差与互信息类指标——"丢了多少"只有具体论文的实验口径，答度量方法不背数。</p>
+<p><b>易错</b>：把 advantage 公式写对就当"生效"——面试要的是消融证据、监控指标和失败边界。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c17" target="_blank" rel="noopener">卷二题源 C17</a>。题面为维护者提供场次原题组，作答与展开为推断。</p>
+</details>
+<details class="chain" id="c18">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录主题+推断〕</span> <b>C18</b> · 稀疏奖励可能失效，怎样缓解？失败样本和人工纠正轨迹怎样使用？</summary>
+<p><b>答</b>〔推断·工程作答〕：稀疏奖励失效=长期无信用信号。缓解：potential-based 进度塑形、课程/子目标分解、演示数据初始化（BC 或离线 RL）、探索维持与回放缓冲的成功/失败配比。失败样本不是垃圾：用于学习恢复策略、失败检测器和惩罚分支；人工纠正轨迹是高价值资产——它包含"从错误回到正轨"的状态-动作对，RECAP 类后训练正以经验+纠正为核心。</p>
+<p><b>追问 1</b>〔推断〕：纠正轨迹和普通演示混训还是分训？<br><b>答</b>〔推断·工程作答〕：分层使用：普通演示学基线策略，纠正数据加权或单独阶段训练恢复能力；两者分开评估，防止分布互相稀释。</p>
+<p><b>追问 2</b>〔推断〕：怎么防止模型学会"先犯错再纠正"？<br><b>答</b>〔推断·工程作答〕：对齐时机条件——只在已偏离状态给纠正动作监督；首次成功率与恢复成功率分开报告，前者才是任务指标。</p>
+<p><b>易错</b>：把失败样本一律过滤——恢复能力正来自失败覆盖，滤干净后模型遇错即卡死。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c18" target="_blank" rel="noopener">卷二题源 C18</a>。题面为维护者提供场次原题，作答与展开为推断。</p>
+</details>
+<details class="chain" id="c19">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录主题+推断〕</span> <b>C19</b> · 讲一下 GRPO 的优点。</summary>
+<p><b>答</b>〔推断·工程作答〕：GRPO=组相对策略优化：同一状态采一组动作/回答，用组内归一化回报作相对优势，不训练 value 网络。优点：省掉 critic 的显存与不稳定来源；组内均值天然当 baseline、降方差；实现简单，对离散序列生成（LLM/动作 token）工程友好；对多模态回报分布比单一学习基线更稳。</p>
+<p><b>追问 1</b>〔推断〕：和 PPO 的核心区别？<br><b>答</b>〔推断·工程作答〕：PPO 学 V(s) 做 baseline 并用 clip 限比率；GRPO 无 critic，优势来自组内相对比较，KL 项直接进损失防漂移。</p>
+<p><b>追问 2</b>〔推断〕：组大小怎么选？连续动作适用吗？<br><b>答</b>〔推断·工程作答〕：组大基线更稳但采样成本线性涨；连续动作需要主动采多样本组（温度/噪声），预算紧时不如 PPO+critic——适用性看动作空间与采样预算。</p>
+<p><b>易错</b>：把 GRPO 说成"不要 baseline"——它用组内均值当 baseline，只是不学参数化 value 网络。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol2.md#c19" target="_blank" rel="noopener">卷二题源 C19</a>。题面为维护者提供场次原题，作答与展开为推断。</p>
 </details>
 <hr>
 <h2>题源说明</h2>

@@ -1,8 +1,8 @@
 # 附录 · 手撕追问链
 
 > 具身智能面试追问链题库 · 手撕附录
-> 本卷 **8 条链 · 31 个问答节点**
-> 难度分布：L1 **2** · L2 **6** · L3 **0**
+> 本卷 **9 条链 · 34 个问答节点**
+> 难度分布：L1 **2** · L2 **7** · L3 **0**
 > 审查状态：以对应内容快照的独立审查记录为准
 
 **使用方式**：先在白板写输入、输出、形状/单位、边界和一个最小测试，再写实现。随文提供 [PyTorch 示例](https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/examples/learning.py)、[标准库示例](https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/examples/handwritten.py) 和 [测试目录](https://github.com/JaleWang-BUPT/embodied-interview-chains/tree/main/tests)。它们用于理解与练习，不代表完整训练框架或生产控制器。
@@ -163,6 +163,22 @@
 **易错**：题面没问清就背模板；把第k个不同值当第k大，或对有权图直接用BFS。
 
 **实录**：原题单仅有算法标签和不可核实的公司类别概括；本链作为推断练习，不计面经频次。
+</details>
+
+<details class="chain">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录+推断〕</span> <b>C09</b> · 写一个带 KV Cache 的自回归注意力伪代码；Training-time RTC 场景里怎么复用？</summary>
+
+**答**：核心是每步只算新 token 对全部历史的注意力。伪代码（单头示意，`:` 表示切片）：`k = W_k(x_t); v = W_v(x_t)`；`K = cat(K_cache, k); V = cat(V_cache, v)`；`q = W_q(x_t)`；`att = softmax(q @ K.T / sqrt(d) + mask) @ V`；`K_cache, V_cache = K, V`。每步一次前向只投影新 token，历史 K/V 只追加不重算：时间 O(T) 每步、显存 O(T·d)，且因果 mask 天然满足。可运行的多头/causal/padding 版本见 learning.py 与 tests。
+
+**追问 1**〔推断〕：Training-time RTC 场景里 KV cache 怎么复用？
+**答**〔推断·工程作答〕：复用边界按 token 段划分：系统提示/子任务等稳定段可缓存；每步新观测段必须重算；RTC 的已承诺动作前缀作为条件 token，若与上一步逐位相同且位置编码一致才可复用。任何复用前先校验前缀逐位一致，否则位置错位产生静默错误。
+
+**追问 2**〔推断〕：复用错了会怎样？怎么测试？
+**答**〔推断·工程作答〕：不报错的静默退化——注意力引用过期内容，输出漂移。测试：前缀不变性（同输入两次前向一致）、增量等价（带 cache 与全量重算逐步对齐），放进 CI。
+
+**易错**：复用前不校验 token 与位置前缀；观测 token 也在追加却沿用上一步 cache。
+
+**实录**：[附录题源 C09](https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-appendix.md#c09)。题面为维护者提供场次原题，伪代码风格与 RTC 复用细节为推断练习，实现由本仓库独立编写。
 </details>
 
 ---

@@ -53,8 +53,8 @@ p,li,.note{overflow-wrap:anywhere}
 <body>
 <div class="top"><nav><span class="brand">具身智能面试追问链</span><a href="./index.html">卷目录</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains" target="_blank" rel="noopener">GitHub</a></nav></div>
 <main>
-<div class="review pass">独立审查 PASS · 第3轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol1_round3.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./index.html">全部七卷</a><a href="./vol2_rl_motion.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol1_vla_il.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>卷一 · VLA 与模仿学习 · 追问链</h1>
-<div class="note">具身智能面试追问链题库 · 第一卷<br>题源：公开资料与历史题单；逐层证据边界见卷末及题源记录<br>本卷 <b>17 条链 · 53 个问答节点</b>（主表 16 条 + 扩展练习 1 条）<br>难度分布：L1 <b>1</b> · L2 <b>13</b> · L3 <b>3</b></div>
+<div class="review stale">内容已变更 · 待复检 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol1_round3.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./index.html">全部七卷</a><a href="./vol2_rl_motion.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol1_vla_il.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>卷一 · VLA 与模仿学习 · 追问链</h1>
+<div class="note">具身智能面试追问链题库 · 第一卷<br>题源：公开资料与历史题单；逐层证据边界见卷末及题源记录<br>本卷 <b>22 条链 · 72 个问答节点</b>（主表 16 条 + 扩展练习与维护者场次新增 6 条）<br>难度分布：L1 <b>1</b> · L2 <b>16</b> · L3 <b>5</b></div>
 <p><b>使用方式</b>：题目默认折叠，先自己答一遍主问，再点开对照；然后<b>合上，从主问开始把整条追问链讲一遍</b>——本卷练的是"扛得住往下钻"，不是名词解释。链条用于组织知识；未经本轮外部原文核实的旧题按推断练习，不认领原场次连续追问。</p>
 <p><b>本卷追问模式</b>（编者对历史调研主题的归纳，不是面试频率统计）：</p>
 <ol><li><b>数字怎么定的</b>：chunk size、插值窗口 N、推理步数、显存——用数值依据检查概念</li><li><b>给症状、定根因</b>：复现慢/抖动、真机成功率低、训练 loss 降但效果差，可用来检查跨层接口</li><li><b>训练侧↔部署侧跨层</b>：训练问题也需要检查"真机上跑起来会怎样"</li><li><b>方案→备择对比</b>：为什么不用 X（现成库 / 另一种 action head）</li><li><b>诚实边界</b>：没做过的层直说"没做过+怎么排查"，比编造安全</li></ol>
@@ -125,6 +125,7 @@ p,li,.note{overflow-wrap:anywhere}
 <p><b>追问 2</b>〔推断〕：RTC 具体怎么实现？<br><b>答</b>〔推断·工程作答〕：估计推理延迟，保留此期间不能更改的旧动作前缀，在新chunk采样中施加前缀约束并对未来段作过渡引导。按绝对执行时刻交接。具体inpainting/软掩码依实现而定；RTC不是任意新旧轨迹的事后平均。</p>
 <p><b>追问 3</b>〔推断〕：提速有什么办法？<br><b>答</b>〔推断·工程作答〕：分别测预处理、模型与通信耗时，再考虑少步采样、量化、token压缩、蒸馏或异步流水线。提速后复测成功率、尾延迟和安全约束，参数更少不自动等于闭环更快。</p>
 <p><b>追问 4</b>〔推断〕：桌面高度是固定的吗？深度敏感任务要加什么？<br><b>答</b>〔推断·工程作答〕：先核对训练覆盖与相机/坐标标定。高度变化可能需要深度、腕部视觉或精定位反馈，也可补覆盖数据。插入等接触任务还要力/柔顺与失败恢复；增加模态不保证消除深度误差。</p>
+<p><b>追问 5</b>〔推断〕：预测 50 步、实际执行多少？Temporal smoothing 窗口多大？<br><b>答</b>〔推断·工程作答〕：执行前缀=重规划周期内消耗的动作点数，不是全部 50 步；重叠段按时间对齐替换或做 ensembling。窗口大小由推理延迟、响应需求和抖动指标扫出，答实验口径不背固定数。</p>
 <p><b>易错</b>：把某篇模型论文的结论、某次硬件测量或题单猜测说成通用事实；先限定模型版本、接口与证据，再给可复现的验证。</p>
 <p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md#c08" target="_blank" rel="noopener">卷一题源 C08</a>。保留可核实主题锚点，具体工程展开/重排为推断，不报整链频次。</p>
 </details>
@@ -149,6 +150,7 @@ p,li,.note{overflow-wrap:anywhere}
 <p><b>答</b>〔推断·工程作答〕：先核对成功判定和评测分布，再把真机rollout按时间线与训练数据比较：图像/状态、动作语义/归一化、坐标标定、通信延迟、低层跟踪、接触与失败恢复覆盖。每个假设给可观测证据和最小复现。离线损失低不保证闭环成功，排查顺序应由当前证据决定，而非固定先怪模型或数据。</p>
 <p><b>追问 1</b>〔推断〕：VLA 策略任务没做成，怎么系统 debug？<br><b>答</b>〔推断·工程作答〕：按观测、语言/任务条件、状态时间对齐、动作输出/反归一化、低层执行和数据覆盖切层。保存每层输入输出，先做日志回放与受控测试；单靠看最终视频不能定位哪个接口出错。</p>
 <p><b>追问 2</b>〔推断〕：前向反向都能跑，第一次 optimizer.step() 显存溢出，怎么定位？<br><b>答</b>〔推断·工程作答〕：Adam常在首次step懒初始化动量状态，foreach/fused实现还可能有临时峰值；状态dtype随参数与优化器配置而定，不总是FP32。比较step前后分配与峰值，再选状态分片/offload、低精度优化器或减小批量；检查点主要省激活，未必解决持久状态。</p>
+<p><b>追问 3</b>〔推断〕：推理出现问题，从哪里开始排查？如何排查数据集？<br><b>答</b>〔推断·工程作答〕：从输出往回走：动作分布/反归一化→观测（图像、时间戳、标定）→指令与状态对齐→数据。数据集排查：按失败类别检索样本回看；抽验时间戳/标签/坐标系一致性；对比真机观测与训练集统计分布；剔除重复、截断、错标与覆盖缺口。</p>
 <p><b>易错</b>：OOM 就怪"模型太大"——很多是优化器状态 + 激活峰值的时间点问题，说得出"为什么第一次 step 才爆"才是懂显存。</p>
 <p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md#c11" target="_blank" rel="noopener">卷一题源 C11</a>。保留可核实主题锚点，具体工程展开/重排为推断，不报整链频次。</p>
 </details>
@@ -197,6 +199,48 @@ p,li,.note{overflow-wrap:anywhere}
 <p><b>答</b>〔推断·工程作答〕：跨本体训练先对齐观测和动作语义：坐标系、单位、关节/末端表示、控制模式与频率，再定义本体条件、缺失维mask和数据配比。仅padding到同一维度不能消除语义差异。可共享视觉语言骨干并按本体适配动作接口，加入新本体后做数据回放和受控闭环验证；人形、机械臂与四足不必由完全相同低层策略直接控制。</p>
 <p><b>易错</b>：把某篇模型论文的结论、某次硬件测量或题单猜测说成通用事实；先限定模型版本、接口与证据，再给可复现的验证。</p>
 <p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md#c17" target="_blank" rel="noopener">卷一题源 C17</a>。旧引用未取得逐层独立外证，全链作为推断练习，不据历史自记认领公司或频次。</p>
+</details>
+<details class="chain" id="c18">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录主题+推断〕</span> <b>C18</b> · LeRobot v3.0 对比 v2.1 的优点有哪些？</summary>
+<p><b>答</b>〔推断·工程作答〕：LeRobot 是开源机器人学习库，版本差异主要在数据与工具链而非模型架构。按公开 release 口径：v3.0 数据集格式改为分块存储与流式加载，大数据集的随机访问与训练吞吐更好；机器人/遥操作/电机总线统一为配置化抽象，跨硬件适配成本更低；推理可走策略服务异步化，便于部署解耦。逐项优点以官方 release notes 为准，子模块节奏不同，不能说成全面重写。</p>
+<p><b>追问 1</b>〔推断〕：从 v2.1 升级要改什么？<br><b>答</b>〔推断·工程作答〕：数据集版本转换（先小规模验证往返无损再批量）、自定义机器人/电机类迁移到新抽象、训练与录制脚本 API 变更。先跑通最小录制-训练-回放闭环再全量切换。</p>
+<p><b>追问 2</b>〔推断〕：这些优点怎么核实？<br><b>答</b>〔推断·工程作答〕：读 changelog 对应 PR 与基准（加载时间、随机访问延迟），再用自己数据集对比新旧格式的加载与训练吞吐，给出硬件与规模口径，不背宣传数字。</p>
+<p><b>易错</b>：把 v2.1→v3.0 的数据集/工具链升级当成某 VLA 模型变强——库版本与模型能力是两回事。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md#c18" target="_blank" rel="noopener">卷一题源 C18</a>。题面为维护者提供场次原题，作答与展开为推断。</p>
+</details>
+<details class="chain" id="c19">
+<summary><span class="lv lv-l3">L3</span> <span class="freq">〔实录主题+推断〕</span> <b>C19</b> · 如果给 π0.5 加入触觉模态，你会怎么设计？</summary>
+<p><b>答</b>〔推断·工程作答〕：先定传感器与表示：指尖阵列输出力图/特征通道，视触觉（GelSight 类）出图像。注入位置二选一：作为额外 token 进 VLM 序列（共享语义推理，动主干多）或只给动作专家 cross-attention（主干改动小）；缺触觉样本用模态 mask 保持预训练兼容。数据侧：带触觉遥操作重采、插入/滑移类任务增采，触觉流与图像/状态同步到统一时钟。先小任务闭环看消融收益再扩任务面。</p>
+<p><b>追问 1</b>〔推断〕：触觉信号怎么 token 化？<br><b>答</b>〔推断·工程作答〕：空间下采样+线性投影成固定数量 token，或轻量编码器出连续特征序列；对齐控制节拍，缺失帧显式 mask，不做跨模态插值填充。</p>
+<p><b>追问 2</b>〔推断〕：怎么验证触觉真有收益？<br><b>答</b>〔推断·工程作答〕：固定任务集对比有无触觉的成功率、滑移率与插入时间，按物体属性（刚性/透明/软）分桶看增益来源；收益不明显先查同步与噪声再谈模态价值。</p>
+<p><b>易错</b>：触觉直接与图像拼张量、不做同步与缺失处理——模态错位会让模型学到假相关。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md#c19" target="_blank" rel="noopener">卷一题源 C19</a>。题面为维护者提供场次原题，设计展开为推断。</p>
+</details>
+<details class="chain" id="c20">
+<summary><span class="lv lv-l3">L3</span> <span class="freq">〔实录主题+推断〕</span> <b>C20</b> · Training-time RTC 的训练目标是什么？训练和推理原理？和推理时 RTC 什么关系？</summary>
+<p><b>答</b>〔推断·工程作答〕：推理时 RTC（PI 的 real-time chunking）在推理端把"延迟窗口内已承诺执行的旧动作前缀"作约束采样，不动训练。Training-time RTC 思路相反：把"条件于已承诺前缀、续写剩余动作"放进训练分布——对演示轨迹构造中途切换点，训练目标仍是动作回归/流匹配，只是条件里多了已执行前缀、数据多了重规划增广。训练吸收了重规划分布后，推理管线无需新增采样约束。</p>
+<p><b>追问 1</b>〔推断〕：为什么先说"推理与原来没区别"？<br><b>答</b>〔推断·工程作答〕：前缀条件在训练中已见过，推理不需要 inpainting/掩码或事后融合，模型天生会衔接——这是与推理时 RTC 的核心差异：一个改训练分布，一个改推理采样。</p>
+<p><b>追问 2</b>〔推断〕：怎样保证 RTC 前缀与后缀衔接？<br><b>答</b>〔推断·工程作答〕：前缀按绝对执行时刻占用时间轴，衔接点附近加平滑/连续性约束，训练覆盖各类切换时相；推理验证边界速度/加速度跳变指标。</p>
+<p><b>追问 3</b>〔推断〕：为什么适合叠料箱双臂这类任务？<br><b>答</b>〔推断·工程作答〕：双臂协同+接触密集导致重规划频繁，中途改动作代价高；前缀条件训练让高频重规划不引入分布偏移，剩余动作可以边执行边改而不抖。</p>
+<p><b>追问 4</b>〔推断〕："根据最新状态重规划剩余动作"是什么意思？<br><b>答</b>〔推断·工程作答〕：只重生成尚未执行的动作段；已下发且不可撤回的前缀保持承诺，新观测只进入剩余段的生成条件。</p>
+<p><b>易错</b>：把训练时 RTC 和推理时 inpainting 混为一谈——前者改训练分布而推理不变，后者改推理采样而不动训练。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md#c20" target="_blank" rel="noopener">卷一题源 C20</a>。题面为维护者提供场次原题组，原理展开为推断，具体实现以 RTC 官方说明与所面团队口径为准。</p>
+</details>
+<details class="chain" id="c21">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录主题+推断〕</span> <b>C21</b> · 什么时候需要更新或清空 KV Cache？</summary>
+<p><b>答</b>〔推断·工程作答〕：增量解码只对"未变前缀"安全。三类必须处理：①新观测到达——图像/状态 token 是新内容，包含旧观测的 KV 不能复用（观测段需重新 prefill）；②任务/子任务切换或新 episode——上下文语义变化，整体重建；③上下文过长——裁剪历史并核对位置编码一致性。处理不当的后果：陈旧观测污染注意力、位置错位、显存持续增长。</p>
+<p><b>追问 1</b>〔推断〕：为什么换一张图就不能盲复用？<br><b>答</b>〔推断·工程作答〕：KV 是内容与位置的函数；换图后旧 KV 对应旧像素，注意力会持续加权过时信息，输出漂移且不报错。</p>
+<p><b>追问 2</b>〔推断〕：部署上怎么做划算？<br><b>答</b>〔推断·工程作答〕：区分稳定段（系统提示/指令）与易变段（观测）：稳定段缓存复用，观测段每步重算；配合滑动窗口或周期性重 prefill，并做前缀不变性测试兜底。</p>
+<p><b>易错</b>：把 LLM 文本场景"cache 一直复用"搬到 VLA——机器人每步观测都在变，复用边界由 token 结构决定。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md#c21" target="_blank" rel="noopener">卷一题源 C21</a>。题面为维护者提供场次原题，展开为推断。</p>
+</details>
+<details class="chain" id="c22">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录主题+推断〕</span> <b>C22</b> · Subtask 语言监督对单任务 SFT 的成功率有多大收益？</summary>
+<p><b>答</b>〔推断·工程作答〕：没有普适数字，收益取决于任务长度与阶段语义：短任务/无阶段切换时接近零甚至为负（约束表示、增加标注成本）；长程多阶段任务在切换点收益明显（显式切换条件、失败可归因）。答法是给消融框架：同数据同预算训有无 subtask 监督两版，分阶段报成功率与切换错误率，收益按任务分层报告。</p>
+<p><b>追问 1</b>〔推断〕：subtask 标注从哪来？<br><b>答</b>〔推断·工程作答〕：人工分段、规则/视觉事件切分或 VLM 自动生成加抽检；标注质量直接决定监督收益，脏标签会反噬。</p>
+<p><b>追问 2</b>〔推断〕：收益不稳的常见原因？<br><b>答</b>〔推断·工程作答〕：标签噪声、推理时 subtask 来源错误（自生成漂移）、任务本身不需要语义分段。</p>
+<p><b>易错</b>：把"加 subtask 涨了几个点"当方法属性——那是一次实验的口径，换个任务分布结论会变。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md#c22" target="_blank" rel="noopener">卷一题源 C22</a>。题面为维护者提供场次原题，展开为推断。</p>
 </details>
 <hr>
 <h2>本卷低频附注</h2>

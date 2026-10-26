@@ -149,3 +149,25 @@ TPLink主题顺序如上；PPO-VMC绑定、遥操作方案和指标归属均推�
 - [MIT机器人课程控制说明](https://manipulation.csail.mit.edu/force.html)：力/位置接口、阻抗和接触控制的条件。
 
 数值与控制例子是限定假设下的学习材料，不构成真机稳定性证明或安全控制方案。
+
+## 维护者提供场次（2026-10-27）
+
+两条一手面试题清单由维护者直接提供：**原帖链接待补**。题目文本仅作主题锚点，作答与展开逐层推断，不冒称现场作答、不据清单计频。
+
+### 落位
+
+- 原力灵机 VLA+RL 组：Q19 从最终效果确认 advantage 生效、Q20 RECAP Value Model 输入输出、Q21 30% 阈值来源、Q25 离线训练与在线分布偏移 → C17；Q22 稀疏奖励缓解、Q23 失败样本与人工纠正轨迹使用 → C18；Q24 RL Token 效果与适用性 → C17 追问 4
+- 银河通用：Q3 GRPO 优点 → C19；Q7 RLT 压缩信息损失 → C17 追问 4；Q6 训练时 vs 推理时 RTC → 卷一 C20（跨卷）
+- 银河通用其余问题（LeRobot、降采样滤波、Flow Matching 公式、π0.5 vs OpenVLA、触觉模态、推理排查）落位见 [卷一题源](https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md)。
+
+### C17（题面原文组）
+
+「怎样从最终效果确认 advantage 生效」「RECAP Value Model 的输入输出是什么」「Advantage 的 30% 阈值是怎样得到的」「RECAP 离线训练与在线行为分布偏移怎样处理」「RL Token 方法的效果和适用性如何」（含追问：压缩时丢失了多少信息）。
+
+### C18（题面原文组）
+
+「稀疏奖励可能失效，怎样缓解」「失败样本和人工纠正轨迹怎样使用」。
+
+### C19（题面原文）
+
+「讲一下 GRPO 的优点」。

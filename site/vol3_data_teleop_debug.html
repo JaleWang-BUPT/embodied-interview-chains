@@ -53,8 +53,8 @@ p,li,.note{overflow-wrap:anywhere}
 <body>
 <div class="top"><nav><span class="brand">具身智能面试追问链</span><a href="./index.html">卷目录</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains" target="_blank" rel="noopener">GitHub</a></nav></div>
 <main>
-<div class="review pass">独立审查 PASS · 第2轮 · 快照匹配 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol3_round2.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./vol2_rl_motion.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="./vol4_deployment_systems.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol3_data_teleop_debug.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>卷三 · 数据 · 遥操作 · 真机排障 · 追问链</h1>
-<div class="note">具身智能面试追问链题库 · 第三卷<br>题源：牛客 / GitHub / CSDN 一手面经与整理（2025-2026）；可访问来源与调研存证见各链「实录」行<br>本卷 <b>12 条链 · 48 个问答节点</b><br>难度分布：L1 <b>1</b> · L2 <b>9</b> · L3 <b>2</b></div>
+<div class="review stale">内容已变更 · 待复检 · <a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/reviews/vol3_round2.json" target="_blank" rel="noopener">审查记录与范围</a></div><nav class="volume-nav"><a href="./vol2_rl_motion.html">← 上一卷</a><a href="./index.html">全部七卷</a><a href="./vol4_deployment_systems.html">下一卷 →</a><a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/volumes/vol3_data_teleop_debug.md" target="_blank" rel="noopener">Markdown 源文</a></nav><h1>卷三 · 数据 · 遥操作 · 真机排障 · 追问链</h1>
+<div class="note">具身智能面试追问链题库 · 第三卷<br>题源：牛客 / GitHub / CSDN 一手面经与整理（2025-2026）；可访问来源与调研存证见各链「实录」行<br>本卷 <b>15 条链 · 57 个问答节点</b><br>难度分布：L1 <b>1</b> · L2 <b>12</b> · L3 <b>2</b></div>
 <p><b>使用方式</b>：这卷不要背「先看日志、再逐层排查」这种空话。回答时固定走三步：<b>先保安全与复现现场 → 按时间线/信号链切层 → 给每个假设配一个可证伪的观测</b>。数据题则要把时间戳、坐标系、标签语义说成一条可执行的数据契约。</p>
 <p><b>证据边界</b>：易错项均为编者工程归纳，除明确引用外，不代表原帖候选人曾犯该错误。原题仅由搜索索引保存的链注明索引证据；只有题单而没有外部原文的 C06–C09 全链标推断。</p>
 <p><b>本卷追问模式</b>（来自调研结论）：</p>
@@ -167,6 +167,30 @@ p,li,.note{overflow-wrap:anywhere}
 <p><b>追问 2</b>〔推断〕：移动底盘和双臂怎样保持一致？<br><b>答</b>：在 map/odom 中规划底盘，在实时 base frame 表达双臂相对目标；每周期用最新 $T_{map}^{base}$ 变换，不把旧基座位姿烘进手臂目标。基座重定位/跳变时冻结或平滑手臂目标，并检查全身 IK、可达域与碰撞约束。</p>
 <p><b>易错</b>：把所有人的平移都当成底盘增量连续积分；或只给信号加低通，漂移速度变慢了，但坐标系和重锚错误仍在积累。</p>
 <p><b>实录</b>：<a href="https://github.com/Cgxiaoxin/Embodied_Learning/blob/main/interview/%E9%9D%A2%E8%AF%95%E5%A4%8D%E7%9B%98.md" target="_blank" rel="noopener">Cgxiaoxin 原始面试复盘</a>（湃特纳二面：人走动问题；原文未限定为基座漂移，答案与两层排查为推断）；技术参考 <a href="https://arxiv.org/abs/2301.04317" target="_blank" rel="noopener">Humanoid Teleoperation Survey</a>（不计频）</p>
+</details>
+<details class="chain" id="c13">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录主题+推断〕</span> <b>C13</b> · 全部示范都一次成功，模型就一定好吗？如何从数采减少累计误差？</summary>
+<p><b>答</b>：一次成功率 100% 的演示集是偏乐观分布：缺失败与恢复覆盖，闭环遇到扰动没有先验；操作者漂移也会被完整学习。减少累计误差从数采侧入手：任务分解与阶段重置点（允许中途复位重示范）、记录失败并附恢复段、操作者指令平滑、按初态/物体/扰动做多样性覆盖，而不是只堆同质成功。</p>
+<p><b>追问 1</b>〔推断〕：抽帧对训练和部署有什么问题？<br><b>答</b>〔推断·工程作答〕：抽帧丢快瞬态、时间间隔不均；训练侧动作-观测时间结构被破坏，部署侧观测频率与训练不一致会放大滞后与抖动。按固定节拍采并保留原始时间戳，比事后均匀抽帧稳。</p>
+<p><b>追问 2</b>〔推断〕：任务里哪个阶段最容易出错？为什么可能是"铺平"这类子任务？<br><b>答</b>〔推断·工程作答〕：柔性/接触密集子任务（铺平、插入、理线）状态部分可观测、形变难逆、误差跨阶段累积，失败率通常最高。按阶段统计失败率定位短板，而不是全任务均匀优化。</p>
+<p><b>易错</b>：用演示成功率预测部署成功率——分布覆盖比"好看的成功率"更决定闭环表现。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol3.md#c13" target="_blank" rel="noopener">卷三题源 C13</a>。题面为维护者提供场次原题，作答与展开为推断。</p>
+</details>
+<details class="chain" id="c14">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录主题+推断〕</span> <b>C14</b> · 主从位姿不齐，为何只偶尔抖动而非每次？</summary>
+<p><b>答</b>：抖动"偶尔"出现说明有触发条件：①主从标定误差在工作空间大部分区域被控制器吸收，靠近奇异位形或边界时被放大；②传动间隙/摩擦只在换向时显性化；③丢包或插值节拍错位只在特定时序组合出现；④操作者指令在死区附近往复。排查用复现法：记录抖动时刻的位形、速度方向与通信日志，找共性条件。</p>
+<p><b>追问 1</b>〔推断〕：怎么系统性消除？<br><b>答</b>〔推断·工程作答〕：全空间标定并验证误差分布、换向区死区补偿或摩擦前馈、指令平滑限幅、通信时间戳对齐；逐项消融确认主因再投入。</p>
+<p><b>追问 2</b>〔推断〕："不是每次都抖"能排除标定问题吗？<br><b>答</b>〔推断·工程作答〕：不能——标定误差本来就是位形/方向相关的，"偶尔触发"恰恰常是它的证据；用全空间网格测误差分布再下结论。</p>
+<p><b>易错</b>：凭"偶尔抖"直接排除标定——位形相关误差正是偶尔触发的典型来源。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol3.md#c14" target="_blank" rel="noopener">卷三题源 C14</a>。题面为维护者提供场次原题，作答与展开为推断。</p>
+</details>
+<details class="chain" id="c15">
+<summary><span class="lv lv-l2">L2</span> <span class="freq">〔实录主题+推断〕</span> <b>C15</b> · 原始数据如何做降采样滤波？</summary>
+<p><b>答</b>：先定目标频率（控制/训练节拍）再看信号带宽：降采样前必须抗混叠低通（截止 &lt; 新奈奎斯特频率），否则高频噪声折叠成假信号。滤波选择：离线用 Butterworth + 零相位 filtfilt；在线因果回路用滑动均值/中值（去尖刺），并把相位滞后计入稳定裕度。图像/状态/力各通道分别定参，滤波器参数写进数据契约，训练与部署保持一致。</p>
+<p><b>追问 1</b>〔推断〕：在线回路和离线数据集的做法有何不同？<br><b>答</b>〔推断·工程作答〕：在线只能因果滤波（有延迟代价），离线可用零相位；两条管线滤波不一致会造成训练-部署分布差。</p>
+<p><b>追问 2</b>〔推断〕：降采样丢的信息怎么评估？<br><b>答</b>〔推断·工程作答〕：对比降采样前后的重构误差/高频能量与下游任务指标；接触瞬间等关键快变量优先保采样率。</p>
+<p><b>易错</b>：先降采样后滤波（顺序反了必然混叠）；所有通道共用一个截止频率。</p>
+<p><b>实录</b>：<a href="https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol3.md#c15" target="_blank" rel="noopener">卷三题源 C15</a>。题面为维护者提供场次原题，作答与展开为推断。</p>
 </details>
 <hr>
 <h2>本卷题源说明</h2>

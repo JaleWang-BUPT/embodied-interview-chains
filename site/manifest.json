@@ -3,45 +3,65 @@
     {
       "file": "vol1_vla_il.html",
       "title": "卷一 · VLA 与模仿学习 · 追问链",
-      "chains": 17,
-      "nodes": 53,
+      "chains": 22,
+      "nodes": 72,
       "status": {
-        "kind": "pass",
-        "label": "独立审查 PASS · 第3轮 · 快照匹配",
-        "record": "research/reviews/vol1_round3.json"
+        "kind": "stale",
+        "label": "内容已变更 · 待复检",
+        "record": "research/reviews/vol1_round3.json",
+        "stale": [
+          "volumes/vol1_vla_il.md",
+          "research/sources-vol1.md",
+          "WORKFLOW.md"
+        ]
       }
     },
     {
       "file": "vol2_rl_motion.html",
       "title": "卷二 · 强化学习与运动控制 · 追问链",
-      "chains": 16,
-      "nodes": 71,
+      "chains": 19,
+      "nodes": 82,
       "status": {
-        "kind": "pass",
-        "label": "独立审查 PASS · 第5轮 · 快照匹配",
-        "record": "research/reviews/vol2_round5.json"
+        "kind": "stale",
+        "label": "内容已变更 · 待复检",
+        "record": "research/reviews/vol2_round5.json",
+        "stale": [
+          "volumes/vol2_rl_motion.md",
+          "research/sources-vol2.md",
+          "WORKFLOW.md"
+        ]
       }
     },
     {
       "file": "vol3_data_teleop_debug.html",
       "title": "卷三 · 数据 · 遥操作 · 真机排障 · 追问链",
-      "chains": 12,
-      "nodes": 48,
+      "chains": 15,
+      "nodes": 57,
       "status": {
-        "kind": "pass",
-        "label": "独立审查 PASS · 第2轮 · 快照匹配",
-        "record": "research/reviews/vol3_round2.json"
+        "kind": "stale",
+        "label": "内容已变更 · 待复检",
+        "record": "research/reviews/vol3_round2.json",
+        "stale": [
+          "WORKFLOW.md",
+          "volumes/vol3_data_teleop_debug.md",
+          "research/sources-vol3.md"
+        ]
       }
     },
     {
       "file": "vol4_deployment_systems.html",
       "title": "卷四 · 部署与系统 · 追问链",
-      "chains": 14,
-      "nodes": 61,
+      "chains": 15,
+      "nodes": 64,
       "status": {
-        "kind": "pass",
-        "label": "独立审查 PASS · 第3轮 · 快照匹配",
-        "record": "research/reviews/vol4_round3.json"
+        "kind": "stale",
+        "label": "内容已变更 · 待复检",
+        "record": "research/reviews/vol4_round3.json",
+        "stale": [
+          "WORKFLOW.md",
+          "volumes/vol4_deployment_systems.md",
+          "research/sources-vol4.md"
+        ]
       }
     },
     {
@@ -50,9 +70,12 @@
       "chains": 11,
       "nodes": 40,
       "status": {
-        "kind": "pass",
-        "label": "独立审查 PASS · 第2轮 · 快照匹配",
-        "record": "research/reviews/vol5_round2.json"
+        "kind": "stale",
+        "label": "内容已变更 · 待复检",
+        "record": "research/reviews/vol5_round2.json",
+        "stale": [
+          "WORKFLOW.md"
+        ]
       }
     },
     {
@@ -61,25 +84,34 @@
       "chains": 3,
       "nodes": 18,
       "status": {
-        "kind": "pass",
-        "label": "独立审查 PASS · 第2轮 · 快照匹配",
-        "record": "research/reviews/vol6_round2.json"
+        "kind": "stale",
+        "label": "内容已变更 · 待复检",
+        "record": "research/reviews/vol6_round2.json",
+        "stale": [
+          "WORKFLOW.md"
+        ]
       }
     },
     {
       "file": "vol7_coding_appendix.html",
       "title": "附录 · 手撕追问链",
-      "chains": 8,
-      "nodes": 31,
+      "chains": 9,
+      "nodes": 34,
       "status": {
-        "kind": "pass",
-        "label": "独立审查 PASS · 第5轮 · 快照匹配",
-        "record": "research/reviews/appendix_round5.json"
+        "kind": "stale",
+        "label": "内容已变更 · 待复检",
+        "record": "research/reviews/appendix_round5.json",
+        "stale": [
+          "WORKFLOW.md",
+          "volumes/vol7_coding_appendix.md",
+          "research/sources-appendix.md",
+          "research/sources-vol2.md"
+        ]
       }
     }
   ],
   "totals": {
-    "chains": 81,
-    "nodes": 322
+    "chains": 94,
+    "nodes": 367
   }
 }
