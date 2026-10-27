@@ -180,3 +180,9 @@ TPLink主题顺序如上；PPO-VMC绑定、遥操作方案和指标归属均推�
 - 智元 Q5「用人工判定替换奖励分类器，如何设计实验」→ C18 追问 3
 - 小米 Q5「怎样组织一份 VLA 与 RL 结合的综述」→ C16 追问 3
 - 其余问题落位见 [卷一题源](https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md)。
+
+## 原帖检索结果（2026-10-27）
+
+- 小米场次原帖已找到并逐字核验：[小米具身智能算法实习1面](https://www.nowcoder.com/feed/main/detail/1e392445e9ce4dfc8da287ff285c1d71)，其中"怎样组织一份 VLA+RL 综述"即 C16 追问 3 题面。
+- 原力灵机场次原帖（三面记录）见 [卷一题源](https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md)；C17/C18 的逐题清单仍为维护者提供文本。
+- 银河通用 9 问（含 C19 GRPO、C17 追问 4 RLT）未检索到公开原帖，原帖链接继续待补。

@@ -34,3 +34,7 @@ C05早期PD/抗饱和/旋转/牛顿链未留URL；C08只留链表/第k大/路径
 ### C09（题面原文组）
 
 「写一个带 KV Cache 的自回归注意力伪代码」「写出 Training-time RTC 场景中 KV Cache 复用的伪代码」。实现边界与测试口径见 examples/ 与 tests/，不声称对应原面试者写法。
+
+## 原帖检索结果（2026-10-27）
+
+- 原力灵机场次原帖（三面记录，同场次吻合、无逐题清单）见 [卷一题源](https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md)；C09 逐题明细仍为维护者提供文本，原帖链接待补。

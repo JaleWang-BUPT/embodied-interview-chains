@@ -61,3 +61,9 @@
 - 智元 Q16「UMI 数据与增强遇到过哪些问题」→ C04 追问 4；Q17「抽帧会影响精度吗，是否要补更多数据」→ C13 追问 1；Q18「想加速，为什么不直接采快一点」→ C15 追问 3
 - 苏度 Q1「给 5 条 LeRobot 轨迹，如何画 6 轴机械臂的 3D 运动」→ C16（新链）；Q5「深度转点云，以及 VR 遥操作的尺度怎样处理」→ C17（新链）；Q2/Q3/Q4 落位见 [卷一/卷二题源](https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md)
 - 自变量 Q2「UMI 与机器人数据的时间尺度如何对齐」→ C04 追问 5；其余（LeRobot 转换、失败数据、π0.5 交互、RTC 继续执行）为已覆盖主题锚点
+
+## 原帖检索结果（2026-10-27）
+
+- 原力灵机场次原帖（三面记录，同场次吻合、无逐题清单）见 [卷一题源](https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md)；C13/C14/C15 逐题明细仍为维护者提供文本。
+- 苏度场次仅找到同名企业主页（上海苏度科技，信息技术服务类），未检索到 VLA 面经原帖；C16/C17 题面仍为维护者提供文本，原帖链接待补（也请确认公司全称）。
+- 自变量场次为网络转述，未检索到原帖，维持原状。

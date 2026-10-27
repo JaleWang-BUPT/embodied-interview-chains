@@ -77,3 +77,7 @@
 ### C15（题面原文组）
 
 「为什么以 45 Hz 异步调度」「60 Hz 下动作幅度剧烈的根因是什么」「推理延迟具体是多少」「连续运行三小时依赖哪些容错机制」。
+
+## 原帖检索结果（2026-10-27）
+
+- 原力灵机场次原帖（三面记录，同场次吻合、无逐题清单）见 [卷一题源](https://github.com/JaleWang-BUPT/embodied-interview-chains/blob/main/research/sources-vol1.md)；C15 逐题明细仍为维护者提供文本，原帖链接待补。
